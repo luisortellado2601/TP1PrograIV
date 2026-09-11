@@ -1,0 +1,23 @@
+<section class="login">
+    <header class="login__header">
+        <h2>Login</h2>
+        <p>Inicia sesión para continuar</p>
+    </header>
+
+    <form class="login__form" (submit)="onSubmit($event)">
+        <label>
+            Email:
+            <input type="email" [formField]="loginForm.email" placeholder="correo@ejemplo.com" />
+        </label>
+        
+        <label>
+            Password:
+            <input type="password" [formField]="loginForm.password" placeholder="********" />
+        </label>
+        <button type="submit">Ingresar</button>
+    </form>
+
+    <div class="login__footer" style="text-align: center; margin-top: 1.5rem;">
+        <a routerLink="/register" style="color: #007bff; text-decoration: none; font-size: 0.9rem;">¿No tienes cuenta? Regístrate</a>
+    </div>
+</section>

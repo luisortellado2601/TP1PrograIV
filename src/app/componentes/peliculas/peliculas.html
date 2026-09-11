@@ -1,0 +1,27 @@
+<section class="peliculas">
+    <header class="peliculas__header">
+        <h2>Lista de películas</h2>
+        <p>{{ peliculas().length }} película{{ peliculas().length === 1 ? '' : 's' }}</p>
+    </header>
+
+    <form class="peliculas__form" (submit)="onSubmit($event)">
+        <label>
+            Nueva película
+            <input type="text" [formField]="peliculaForm.nombre" placeholder="Ej: Shrek" />
+        </label>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <ul class="peliculas__list" *ngIf="peliculas().length > 0; else emptyState">
+        <li class="peliculas__item" *ngFor="let pelicula of peliculas()">
+            <span class="peliculas__name">🎬 {{ pelicula.nombre }}</span>
+        </li>
+    </ul>
+
+    <ng-template #emptyState>
+        <div class="peliculas__empty">
+            <h3>Todavía no hay películas</h3>
+            <p>Cuando agregues una, va a aparecer en esta lista.</p>
+        </div>
+    </ng-template>
+</section>

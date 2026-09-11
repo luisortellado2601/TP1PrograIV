@@ -1,0 +1,146 @@
+/* Centramos todo el componente en la pantalla */
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Contenedor principal estilo "Tarjeta" */
+.peliculas {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #eaeaea;
+}
+
+/* Cabecera */
+.peliculas__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.peliculas__header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.peliculas__header p {
+  margin: 0.5rem 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Formulario */
+.peliculas__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.peliculas__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.peliculas__form input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.peliculas__form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.peliculas__form button {
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.peliculas__form button:hover {
+  background-color: #0056b3;
+}
+
+/* Lista de películas */
+.peliculas__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.peliculas__item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  transition: transform 0.2s ease;
+}
+
+.peliculas__item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.peliculas__id {
+  background-color: #e2e8f0;
+  color: #475569;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.peliculas__name {
+  font-weight: 500;
+  color: #222;
+  font-size: 1.05rem;
+}
+
+/* Estado vacío (cuando no hay pelis) */
+.peliculas__empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #666;
+  border: 2px dashed #ccc;
+}
+
+.peliculas__empty h3 {
+  margin: 0 0 0.5rem 0;
+  color: #444;
+}
+
+.peliculas__empty p {
+  margin: 0;
+  font-size: 0.95rem;
+}
