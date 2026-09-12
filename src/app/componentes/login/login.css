@@ -1,89 +1,102 @@
-    :host {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 2rem;
-    font-family: system-ui, -apple-system, sans-serif;
-    background-color: #f4f7f6;
-    }
+/* Estilos base de la página */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+}
 
-    /* Contenedor principal (coincide con tu HTML <div class="login-form">) */
-    .login-form {
-    background: white;
+/* Contenedor principal de Login (Centrado) */
+.login {
+    background: #ffffff;
+    padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     width: 100%;
     max-width: 400px;
-    border: 1px solid #eaeaea;
-    }
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
-    /* Título */
-    .login-form h2 {
-    margin: 0 0 1.5rem 0;
-    color: #333;
-    font-size: 1.8rem;
-    text-align: center;
-    }
+.login__header h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #1a202c;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
 
-    /* Formulario */
-    .login-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    }
-
-    .login-form label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    font-weight: 600;
-    color: #444;
+.login__header p {
+    color: #718096;
     font-size: 0.95rem;
-    }
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
 
-    .login-form input {
-    padding: 0.8rem;
-    border: 1px solid #ccc;
+.login__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.login__form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    gap: 0.5rem;
+}
+
+.login__form input[type="email"],
+.login__form input[type="password"] {
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
     border-radius: 8px;
     font-size: 1rem;
-    transition: all 0.2s ease;
-    }
-
-    .login-form input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-    }
+    transition: all 0.2s ease;
+    background-color: #fff;
+    color: #2d3748;
+}
 
-    .login-form button {
-    margin-top: 0.5rem;
-    padding: 0.9rem;
-    background-color: #007bff;
+.login__form input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+.login__form button[type="submit"] {
+    background-color: #3182ce;
     color: white;
     border: none;
+    padding: 0.75rem;
     border-radius: 8px;
-    font-size: 1.05rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    }
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 0.5rem;
+}
 
-    .login-form button:hover {
-    background-color: #0056b3;
-    }
+.login__form button[type="submit"]:hover {
+    background-color: #2b6cb0;
+}
 
-    /* Enlace de registro */
-    .login-form a {
-    display: block;
-    text-align: center;
-    margin-top: 1.5rem;
-    color: #007bff;
+.login__footer a {
+    display: inline-block;
+    color: #3182ce;
     text-decoration: none;
     font-size: 0.9rem;
-    }
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+    margin-top: 1rem;
+}
 
-    .login-form a:hover {
+.login__footer a:hover {
     text-decoration: underline;
-    }
+}

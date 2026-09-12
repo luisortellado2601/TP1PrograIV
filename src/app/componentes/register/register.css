@@ -1,0 +1,109 @@
+/* Contenedor principal de Register (Más ancho para 2 columnas) */
+.register {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 700px; /* Antes era 400px, lo ampliamos */
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.register h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #1a202c;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.register header p {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #4a5568;
+}
+
+/* Cambiamos de flex column a Grid de 2 columnas */
+.register form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.register label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    gap: 0.5rem;
+}
+
+.register input[type="email"],
+.register input[type="password"],
+.register input[type="text"],
+.register input[type="date"],
+.register input[type="number"],
+.register select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    color: #2d3748;
+}
+
+.register input:focus,
+.register select:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+}
+
+/* El botón debe ocupar las dos columnas enteras en la parte inferior */
+.register button[type="submit"] {
+    grid-column: 1 / -1; 
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 1rem;
+}
+
+.register button[type="submit"]:hover {
+    background-color: #2b6cb0;
+}
+
+.register > a {
+    display: block;
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.register > a:hover {
+    text-decoration: underline;
+}
+
+/* Para que en celulares vuelva a verse en 1 sola columna */
+@media (max-width: 600px) {
+    .register form {
+        grid-template-columns: 1fr;
+    }
+}

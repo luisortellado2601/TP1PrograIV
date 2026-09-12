@@ -1,14 +1,62 @@
 <div class="register">
-    <h2>Register</h2>
+    <h2>Registro</h2>
+    <header>
+        <p>Regístrate para continuar</p>
+    </header>
+    
+    <!-- Mantenemos el evento submit nativo pasando el $event -->
     <form (submit)="onSubmit($event)">
+        
         <label>
             Email:
-            <input type="email" [formField]="registerForm.email" />
+            <input type="email" [formField]="registerForm.email" placeholder="correo@ejemplo.com" />
         </label>
+        
         <label>
             Password:
-            <input type="password" [formField]="registerForm.password" />
+            <input type="password" [formField]="registerForm.password" placeholder="**********" />
         </label>
+
+        <label>
+            Nombre:
+            <input type="text" [formField]="registerForm.nombre" placeholder="Ej: Juan" />
+        </label>
+
+        <label>
+            Apellido:
+            <input type="text" [formField]="registerForm.apellido" placeholder="Ej: Pérez" />
+        </label>
+
+        <label>
+            Fecha de Nacimiento:
+            <input type="date" [formField]="registerForm.fecha_nacimiento" />
+        </label>
+
+        <label>
+            Tipo de Sangre:
+            <select [formField]="registerForm.tipo_sangre">
+                <option value="" disabled selected>Selecciona tu grupo...</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+        </label>
+
+        <label>
+            Color de Ojos:
+            <input type="text" [formField]="registerForm.color_ojos" placeholder="Ej: Marrón" />
+        </label>
+
+        <label>
+            Días de vacaciones por año:
+            <input type="number" [formField]="registerForm.dias_vacaciones" placeholder="Ej: 14" />
+        </label>
+
         <button type="submit">Registrarse</button>
     </form>
 
