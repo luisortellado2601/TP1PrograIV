@@ -1,0 +1,98 @@
+/* --- Contenedor Principal --- */
+.contenedor-cartelera {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- Título Principal con Efecto Cine --- */
+.titulo-cine {
+  text-align: center;
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 3.5rem;
+  
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Efecto de degradado en el texto */
+  background: linear-gradient(90deg, #1a202c, #3182ce, #1a202c);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subrayado luminoso estilo cine */
+.titulo-cine::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 10%;
+  width: 80%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #3182ce, transparent);
+  border-radius: 2px;
+}
+
+/* --- Grilla de Películas --- */
+.grilla-peliculas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+/* --- Tarjeta Individual --- */
+.tarjeta-pelicula {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tarjeta-pelicula:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Imagen del Póster --- */
+.poster {
+  width: 100%;
+  height: 400px; 
+  object-fit: cover; 
+}
+
+/* --- Información de la Película --- */
+.info-pelicula {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-pelicula h3 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.4rem;
+  color: #1a202c;
+  text-align: center;
+}
+
+/* --- Sinopsis con truncado automático --- */
+.sinopsis {
+  font-size: 0.95rem;
+  color: #4a5568;
+  line-height: 1.5;
+  margin: 0;
+  
+  /* El truco para que Angular no borre la configuración */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

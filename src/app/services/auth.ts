@@ -1,4 +1,4 @@
-import { Service } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
@@ -6,12 +6,27 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 export class Auth { 
     private supabase: SupabaseClient;
 
+    perfilActual = signal<any>(null);
+
     constructor() {
         this.supabase = createClient(environment.supabaseUrl, environment.supabasePublishableKey);
     }
 
-    signIn(email: string, password: string) {
-        return this.supabase.auth.signInWithPassword({ email, password });
+    async signIn(email: string, password: string) {
+        const response = await this.supabase.auth.signInWithPassword({ email, password });
+        if (response.error) return response;
+
+        if (response.data.user) {
+            const { data: perfil } = await this.supabase
+                .from('perfiles')
+                .select('*')
+                .eq('id', response.data.user.id)
+                .single();
+            if (perfil) {
+                this.perfilActual.set(perfil);
+            }
+        }
+        return response;
     }
 
     async signUp(
@@ -27,6 +42,7 @@ export class Auth {
         const response = await this.supabase.auth.signUp({ email, password });
 
         if (response.error) return response;
+
         if (response.data.user) {
             const { error: dbError } = await this.supabase.from('perfiles').insert([
                 {
@@ -38,7 +54,7 @@ export class Auth {
                     tipo_sangre: tipo_sangre,
                     color_ojos: color_ojos,
                     dias_vacaciones_por_ano: dias_vacaciones,
-                    rol: 'cliente' // Por defecto asignamos el rol
+                    rol: 'cliente' 
                 }
             ]);
             
@@ -49,8 +65,10 @@ export class Auth {
         return response;
     }
 
-    signOut() {
-        return this.supabase.auth.signOut();
+    async signOut() {
+        const response = await this.supabase.auth.signOut();
+        this.perfilActual.set(null);
+        return response;
     }
 
     getUser() {
@@ -59,5 +77,16 @@ export class Auth {
 
     getUsers() {
         return this.supabase.auth.admin.listUsers();
+    }
+
+    // Esta función es pública por defecto y puede acceder al supabase privado
+    async getRolUsuario(userId: string) {
+        const { data } = await this.supabase
+        .from('perfiles')
+        .select('rol')
+        .eq('id', userId)
+        .single();
+        
+        return data?.rol; // Devuelve 'cliente', 'empleado', 'gerente' o undefined
     }
 }

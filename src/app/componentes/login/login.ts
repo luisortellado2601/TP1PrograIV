@@ -28,16 +28,22 @@ export class Login {
 
     async onSubmit(event: Event) {
     event.preventDefault();
+
     const credentials = this.loginModel();
-  
     const result = await this.auth.signIn(credentials.email, credentials.password);
-    console.log('Login result:', result);
+    
+    console.log('Login exitoso:', result);
     if (result.error) {
-      console.error('Login failed:', result.error);
+      console.error('Login fallido:', result.error);
       return;
     }
-    console.log('Login successful:', result.data);
-    this.router.navigate(['/peliculas']);
-  }
 
+    const perfil = this.auth.perfilActual();
+
+    if (perfil?.rol === 'gerente' || perfil?.rol === 'empleado') {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/cartelera']);
+    }
+  }
 }

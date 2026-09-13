@@ -1,0 +1,19 @@
+<div class="contenedor-cartelera">
+  <h2 class="titulo-cine">Cartelera Exclusiva</h2>
+
+  <div class="grilla-peliculas">
+    @for (pelicula of listaPeliculas(); track pelicula.id) {
+      
+      <article class="tarjeta-pelicula">
+        <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
+        <div class="info-pelicula">
+          <h3>{{ pelicula.nombre }}</h3>
+          <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+        </div>
+      </article>
+
+    } @empty {
+      <p class="sin-resultados">No hay películas en cartelera en este momento.</p>
+    }
+  </div>
+</div>
