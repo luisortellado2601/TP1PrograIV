@@ -62,11 +62,11 @@
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* --- Imagen del Póster --- */
 .poster {
   width: 100%;
   height: 400px; 
-  object-fit: cover; 
+  object-fit: contain; /* Ajusta la imagen completa sin recortarla */
+  background-color: #f1f5f9; /* Opcional: un gris muy clarito por si quedan espacios a los lados */
 }
 
 /* --- Información de la Película --- */

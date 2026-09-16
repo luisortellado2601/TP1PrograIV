@@ -9,7 +9,10 @@ export class Auth {
     perfilActual = signal<any>(null);
 
     constructor() {
-        this.supabase = createClient(environment.supabaseUrl, environment.supabasePublishableKey);
+        this.supabase = createClient(
+            environment.supabaseUrl, 
+            environment.supabasePublishableKey,
+        );
     }
 
     async signIn(email: string, password: string) {
@@ -79,7 +82,6 @@ export class Auth {
         return this.supabase.auth.admin.listUsers();
     }
 
-    // Esta función es pública por defecto y puede acceder al supabase privado
     async getRolUsuario(userId: string) {
         const { data } = await this.supabase
         .from('perfiles')
@@ -87,6 +89,15 @@ export class Auth {
         .eq('id', userId)
         .single();
         
-        return data?.rol; // Devuelve 'cliente', 'empleado', 'gerente' o undefined
+        return data?.rol; 
+    }
+
+    async cerrarSesion() {
+        const { error } = await this.supabase.auth.signOut();
+        if (error) {
+            console.error('Error al cerrar sesión:', error.message);
+        } else {
+            this.perfilActual.set(null);
+        }
     }
 }

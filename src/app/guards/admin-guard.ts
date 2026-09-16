@@ -2,6 +2,7 @@ import { inject, PLATFORM_ID } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Auth } from '../services/auth';
+
 export const adminGuard: CanActivateFn = async (route, state) => {
   const platformId = inject(PLATFORM_ID);
   const router = inject(Router);
@@ -15,10 +16,8 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   
   if (respuesta.data?.user) {
     
-    // Llamamos a la función pública de tu servicio Auth
     const rol = await authService.getRolUsuario(respuesta.data.user.id);
 
-    // Validamos el rol devuelto
     if (rol === 'gerente' || rol === 'empleado') {
       return true; 
     } else {

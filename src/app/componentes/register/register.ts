@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { email, form, FormField, required, min } from '@angular/forms/signals';
+import { email, form, FormField, required, min, pattern } from '@angular/forms/signals';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
@@ -36,13 +36,23 @@ export class Register {
   registerForm = form(this.registerModel, (schemaPath) => {
     required(schemaPath.email, {message: 'Email requerido'});
     email(schemaPath.email, {message: 'Ingrese un email válido'});
+
     required(schemaPath.password, {message: 'Password requerido'});
+
     required(schemaPath.nombre, {message: 'Nombre requerido'});
+    pattern(schemaPath.nombre, /^[a-zA-Z]+$/, {message: 'Nombre solo puede contener letras'});
+
     required(schemaPath.apellido, {message: 'Apellido requerido'});
+    pattern(schemaPath.apellido, /^[a-zA-Z]+$/, {message: 'Apellido solo puede contener letras'});
+
     required(schemaPath.fecha_nacimiento, {message: 'Fecha de nacimiento requerida'});
+
     required(schemaPath.tipo_sangre, {message: 'Tipo de sangre requerido'});
+
     required(schemaPath.color_ojos, {message: 'Color de ojos requerido'});
+
     required(schemaPath.dias_vacaciones, {message: 'Días de vacaciones requeridos'});
+
     min(schemaPath.dias_vacaciones, 0, {message: 'Días de vacaciones no puede ser negativo'});
   });
 
@@ -50,24 +60,28 @@ export class Register {
 
     onSubmit(event: Event) {
       event.preventDefault();
-      const data = this.registerModel();
+      if (this.registerForm().valid()) {
+        const data = this.registerModel();
 
-      this.auth.signUp(
-        data.email, 
-        data.password,
-        data.nombre,
-        data.apellido,
-        data.fecha_nacimiento,
-        data.tipo_sangre,
-        data.color_ojos,
-        data.dias_vacaciones
-        ).then(resultado => {
-          if (resultado.error) {
-            alert('Error: ' + resultado.error.message);
-          } else {
-            alert('¡Registro exitoso!');
-            this.router.navigate(['/login']);
-          }
-      });
+        this.auth.signUp(
+          data.email, 
+          data.password,
+          data.nombre,
+          data.apellido,
+          data.fecha_nacimiento,
+          data.tipo_sangre,
+          data.color_ojos,
+          data.dias_vacaciones
+          ).then(resultado => {
+            if (resultado.error) {
+              alert('Error: ' + resultado.error.message);
+            } else {
+              alert('¡Registro exitoso!');
+              this.router.navigate(['/login']);
+            }
+        });
+    } else {
+        console.log(this.registerForm.nombre().errors());
     }
-  }
+  } 
+}
