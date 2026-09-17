@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { email, form, FormField, required, min, pattern } from '@angular/forms/signals';
+import { email, form, FormField, required, min, pattern, maxLength, minLength } from '@angular/forms/signals';
 import { RouterLink, Router } from '@angular/router';
 import { Auth } from '../../services/auth';
 
@@ -22,6 +22,7 @@ interface LoginData {
 })
 
 export class Register {
+  fechaHoy = new Date().toISOString().split('T')[0];
   registerModel = signal<LoginData>({
     email: '',
     password: '',
@@ -36,20 +37,30 @@ export class Register {
   registerForm = form(this.registerModel, (schemaPath) => {
     required(schemaPath.email, {message: 'Email requerido'});
     email(schemaPath.email, {message: 'Ingrese un email válido'});
+    maxLength(schemaPath.email, 30, { message: 'Email no puede superar los 30 caracteres'});
+    minLength(schemaPath.email, 6, { message: 'Longitud de email minima es de 6 caracteres'} )
 
     required(schemaPath.password, {message: 'Password requerido'});
+    maxLength(schemaPath.password, 15, { message: 'Contraseña no debe superar los 15 caracteres'});
+    minLength(schemaPath.password, 4, { message: 'Contraseña debe tener al menos 4 caracteres'})
+    
 
     required(schemaPath.nombre, {message: 'Nombre requerido'});
     pattern(schemaPath.nombre, /^[a-zA-Z]+$/, {message: 'Nombre solo puede contener letras'});
+    maxLength(schemaPath.nombre, 20, { message: 'Nombre no puede superar los 20 caracteres'});
+    minLength(schemaPath.nombre, 2, { message: 'Nombre debe contener al menos 2 caracteres'})
 
     required(schemaPath.apellido, {message: 'Apellido requerido'});
     pattern(schemaPath.apellido, /^[a-zA-Z]+$/, {message: 'Apellido solo puede contener letras'});
+    maxLength(schemaPath.apellido, 20, { message: 'Apellido no puede superar los 20 caracteres'});
+    minLength(schemaPath.apellido, 2, { message: 'Apellido debe contener al menos 2 caracteres'})
 
     required(schemaPath.fecha_nacimiento, {message: 'Fecha de nacimiento requerida'});
 
     required(schemaPath.tipo_sangre, {message: 'Tipo de sangre requerido'});
 
     required(schemaPath.color_ojos, {message: 'Color de ojos requerido'});
+
 
     required(schemaPath.dias_vacaciones, {message: 'Días de vacaciones requeridos'});
 
@@ -61,6 +72,7 @@ export class Register {
     onSubmit(event: Event) {
       event.preventDefault();
       if (this.registerForm().valid()) {
+
         const data = this.registerModel();
 
         this.auth.signUp(
@@ -80,8 +92,6 @@ export class Register {
               this.router.navigate(['/login']);
             }
         });
-    } else {
-        console.log(this.registerForm.nombre().errors());
-    }
+      } 
   } 
 }

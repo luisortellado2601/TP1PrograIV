@@ -5,7 +5,7 @@
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     width: 100%;
-    max-width: 700px; /* Antes era 400px, lo ampliamos */
+    max-width: 700px;
     box-sizing: border-box;
     position: absolute;
     top: 50%;
@@ -29,11 +29,19 @@
     color: #4a5568;
 }
 
-/* Cambiamos de flex column a Grid de 2 columnas */
+/* Grid de 2 columnas */
 .register form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    gap: 1.25rem; /* Separación general del grid */
+}
+
+/* NUEVO: Contenedor para evitar el Layout Shift */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 20px; /* Reserva el lugar exacto para el texto de error */
 }
 
 .register label {
@@ -43,6 +51,16 @@
     font-weight: 600;
     color: #4a5568;
     gap: 0.5rem;
+}
+
+/* MODIFICADO: Texto de error con posición absoluta */
+.error-msg {
+    color: #dc2626; 
+    font-size: 0.82rem;
+    font-weight: 500;
+    position: absolute;
+    bottom: 0; /* Se clava en el espacio reservado del form-group */
+    left: 0;
 }
 
 .register input[type="email"],
@@ -67,7 +85,7 @@
     box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
 }
 
-/* El botón debe ocupar las dos columnas enteras en la parte inferior */
+/* El botón ocupa las dos columnas enteras */
 .register button[type="submit"] {
     grid-column: 1 / -1; 
     background-color: #3182ce;
@@ -79,11 +97,17 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .register button[type="submit"]:hover {
     background-color: #2b6cb0;
+}
+
+.register button[type="submit"]:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .register > a {
@@ -101,7 +125,7 @@
     text-decoration: underline;
 }
 
-/* Para que en celulares vuelva a verse en 1 sola columna */
+/* Responsive para celulares */
 @media (max-width: 600px) {
     .register form {
         grid-template-columns: 1fr;
