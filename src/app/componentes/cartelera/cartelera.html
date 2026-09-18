@@ -1,19 +1,66 @@
-<div class="contenedor-cartelera">
-  <h2 class="titulo-cine">Cartelera Exclusiva</h2>
+<div class="cartelera-container">
+    
+    <header class="main-header">
+        <h1>🍿 Nuestra Cartelera</h1>
+        <p>Elegí tu próxima película</p>
+    </header>
 
-  <div class="grilla-peliculas">
-    @for (pelicula of listaPeliculas(); track pelicula.id) {
-      
-      <article class="tarjeta-pelicula">
-        <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
-        <div class="info-pelicula">
-          <h3>{{ pelicula.nombre }}</h3>
-          <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+    <section class="top3-section">
+        <h2>🔥 Top 3 de la Semana</h2>
+        <div class="top3-grid">
+            @for (pelicula of top3Peliculas(); track pelicula.id) {
+                <div class="top3-card">
+                    <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
+                    <div class="top3-info">
+                        <h3>{{ pelicula.nombre }}</h3>
+                    </div>
+                </div>
+            }
         </div>
-      </article>
+    </section>
 
-    } @empty {
-      <p class="sin-resultados">No hay películas en cartelera en este momento.</p>
-    }
-  </div>
+    <hr class="divisor">
+
+    <section class="catalogo-section">
+        <h2>Buscador por Géneros</h2>
+        
+        <div class="filtros-container">
+            <button 
+                [class.activo]="generoSeleccionado() === 'Todos'"
+                (click)="cambiarFiltro('Todos')">
+                Todos
+            </button>
+            
+            @for (genero of listaGeneros; track genero) {
+                <button 
+                    [class.activo]="generoSeleccionado() === genero"
+                    (click)="cambiarFiltro(genero)">
+                    {{ genero }}
+                </button>
+            }
+        </div>
+
+        <div class="resultados-grid">
+            @for (pelicula of peliculasFiltradas(); track pelicula.id) {
+                <div class="pelicula-card">
+                    <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
+                    <div class="pelicula-info">
+                        <h3>{{ pelicula.nombre }}</h3>
+                        <div class="tags">
+                            <span [appEdadColor]="pelicula.restriccion_edad">{{ pelicula.restriccion_edad }}</span>
+                            <span class="tag-duracion">{{ pelicula.duracion_minutos | formatoDuracion }}</span>
+                        </div>
+                        <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (peliculasFiltradas().length === 0) {
+            <div class="empty-state">
+                <p>No encontramos películas para el género seleccionado.</p>
+            </div>
+        }
+    </section>
+
 </div>

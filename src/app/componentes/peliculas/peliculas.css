@@ -1,51 +1,94 @@
-/* Centramos todo el componente en la pantalla */
-:host {
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  padding-bottom: 1.5rem; /* Espacio para el mensaje de error */
+}
+
+.checkbox-item {
   display: flex;
-  justify-content: center;
+  flex-direction: row; /* Casilla a la izquierda, texto a la derecha */
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: normal;
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: #444;
+}
+
+.checkbox-item input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.select-multiple {
+  min-height: 120px;
+}
+
+:host {
+  display: block;
   padding: 2rem;
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* Contenedor principal estilo "Tarjeta" */
-.peliculas {
+/* Layout principal de dos columnas */
+.admin-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* Contenedor principal estilo "Tarjeta" (Aplicado a ambos paneles) */
+.panel {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 2rem;
-  width: 100%;
-  max-width: 500px;
   border: 1px solid #eaeaea;
 }
 
-/* Cabecera */
-.peliculas__header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.peliculas__header h2 {
+/* Cabeceras de los paneles */
+.panel h2 {
   margin: 0;
   color: #333;
   font-size: 1.5rem;
+  text-align: center;
 }
 
-.peliculas__header p {
-  margin: 0.5rem 0 0;
+.panel header p {
+  margin: 0.5rem 0 2rem;
   color: #666;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 /* Formulario */
-.peliculas__form {
+form {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #eaeaea;
 }
 
-.peliculas__form label {
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  padding-bottom: 20px; /* Espacio para el mensaje de error */
+}
+
+label {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -54,21 +97,31 @@
   font-size: 0.95rem;
 }
 
-.peliculas__form input {
+input, select, textarea {
   padding: 0.8rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-.peliculas__form input:focus {
+input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
 }
 
-.peliculas__form button {
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 500;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+button[type="submit"] {
   padding: 0.8rem;
   background-color: #007bff;
   color: white;
@@ -78,55 +131,72 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
 }
 
-.peliculas__form button:hover {
+button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* Lista de películas */
-.peliculas__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+button[type="submit"]:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Lista de películas (Catálogo) */
+.movies-grid {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 }
 
-.peliculas__item {
+.movie-card {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
   background-color: #f8f9fa;
   border-radius: 8px;
   border: 1px solid #eee;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.peliculas__item:hover {
+.movie-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.peliculas__id {
-  background-color: #e2e8f0;
-  color: #475569;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: bold;
-}
-
-.peliculas__name {
+.movie-info h3 {
+  margin: 0 0 0.25rem 0;
   font-weight: 500;
   color: #222;
   font-size: 1.05rem;
 }
 
+.movie-meta {
+  margin: 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-delete:hover {
+  background: #fecaca;
+}
+
 /* Estado vacío (cuando no hay pelis) */
-.peliculas__empty {
+.empty-state {
   text-align: center;
   padding: 3rem 2rem;
   background-color: #f8f9fa;
@@ -135,12 +205,48 @@
   border: 2px dashed #ccc;
 }
 
-.peliculas__empty h3 {
-  margin: 0 0 0.5rem 0;
-  color: #444;
-}
-
-.peliculas__empty p {
+.empty-state p {
   margin: 0;
   font-size: 0.95rem;
+}
+
+/* Responsive para pantallas chicas */
+@media (max-width: 900px) {
+  .admin-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Botón Editar */
+.btn-edit {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-edit:hover {
+  background: #bae6fd;
+}
+
+/* Botón Cancelar Edición */
+.btn-cancelar {
+  padding: 0.8rem;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-cancelar:hover {
+  background-color: #5a6268;
 }

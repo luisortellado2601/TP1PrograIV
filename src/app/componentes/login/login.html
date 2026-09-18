@@ -3,7 +3,11 @@
         <h2>Iniciar sesión</h2>
         <p>Inicia sesión para continuar</p>
     </header>
-
+    @if (errorMessage()) {
+        <p class="error-msg" >
+            {{ errorMessage() }}
+        </p>
+    }
     <form class="login__form" (submit)="onSubmit($event)">
         <label>
             Email:

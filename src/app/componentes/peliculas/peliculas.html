@@ -1,27 +1,177 @@
-<section class="peliculas">
-    <header class="peliculas__header">
-        <h2>Lista de películas</h2>
-        <p>{{ peliculas().length }} película{{ peliculas().length === 1 ? '' : 's' }}</p>
-    </header>
+<div class="admin-container">
+    
+    <section class="panel form-panel">
+        <h2>Cargar Película</h2>
+        <header>
+            <p>Ingresá los datos de la nueva función</p>
+        </header>
 
-    <form class="peliculas__form" (submit)="onSubmit($event)">
-        <label>
-            Nueva película
-            <input type="text" [formField]="peliculaForm.nombre" placeholder="Ej: Shrek" />
-        </label>
-        <button type="submit">Agregar</button>
-    </form>
+        @if (mostrarFormulario()) {
+            <form (submit)="onSubmit($event)">
+                
+                <div class="form-group">
+                    <label>
+                        Nombre:
+                        <input type="text" [formField]="peliculaForm.nombre" placeholder="Ej: El Padrino" />
+                    </label>
+                    @if (peliculaForm.nombre().errors()?.length && peliculaForm.nombre().touched()) {
+                        <span class="error-msg">{{ peliculaForm.nombre().errors()[0].message }}</span>
+                    }
+                </div>
 
-    <ul class="peliculas__list" *ngIf="peliculas().length > 0; else emptyState">
-        <li class="peliculas__item" *ngFor="let pelicula of peliculas()">
-            <span class="peliculas__name">🎬 {{ pelicula.nombre }}</span>
-        </li>
-    </ul>
+                <div class="form-group">
+                    <label>
+                        URL de la Imagen (Póster):
+                        <input type="text" [formField]="peliculaForm.imagen" placeholder="https://ejemplo.com/poster.jpg" />
+                    </label>
+                </div>
 
-    <ng-template #emptyState>
-        <div class="peliculas__empty">
-            <h3>Todavía no hay películas</h3>
-            <p>Cuando agregues una, va a aparecer en esta lista.</p>
+                <div class="form-group">
+                    <label>
+                        Sinopsis:
+                        <textarea [formField]="peliculaForm.sinopsis" placeholder="Breve descripción..." rows="3"></textarea>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Géneros:</label>
+                    
+                    <div class="checkbox-grid">
+                        @for (genero of listaGeneros; track genero) {
+                            <label class="checkbox-item">
+                                <input 
+                                    type="checkbox" 
+                                    [value]="genero"
+                                    [checked]="peliculaModel().generos.includes(genero)"
+                                    (change)="toggleGenero(genero, $event)" 
+                                />
+                                {{ genero }}
+                            </label>
+                        }
+                    </div>
+
+                    @if (peliculaForm.generos().errors()?.length) {
+                        <span class="error-msg">{{ peliculaForm.generos().errors()[0].message }}</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Duración (min):
+                            <input type="number" [formField]="peliculaForm.duracion_minutos" placeholder="Ej: 120" />
+                        </label>
+                        @if (peliculaForm.duracion_minutos().errors()?.length && peliculaForm.duracion_minutos().touched()) {
+                            <span class="error-msg">{{ peliculaForm.duracion_minutos().errors()[0].message }}</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Edad:
+                            <select [formField]="peliculaForm.restriccion_edad">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                @for (edad of listaEdades; track edad) {
+                                    <option [value]="edad">{{ edad }}</option>
+                                }
+                            </select>
+                        </label>
+                        @if (peliculaForm.restriccion_edad().errors()?.length && peliculaForm.restriccion_edad().touched()) {
+                            <span class="error-msg">{{ peliculaForm.restriccion_edad().errors()[0].message }}</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Idioma:
+                            <select [formField]="peliculaForm.idiomas_disponibles">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                @for (idioma of listaIdiomas; track idioma) {
+                                    <option [value]="idioma">{{ idioma }}</option>
+                                }
+                            </select>
+                        </label>
+                        @if (peliculaForm.idiomas_disponibles().errors()?.length && peliculaForm.idiomas_disponibles().touched()) {
+                            <span class="error-msg">{{ peliculaForm.idiomas_disponibles().errors()[0].message }}</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Formatos:
+                            <select [formField]="peliculaForm.formatos_disponibles">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                @for (formato of listaFormatos; track formato) {
+                                    <option [value]="formato">{{ formato }}</option>
+                                }
+                            </select>
+                        </label>
+                        @if (peliculaForm.formatos_disponibles().errors()?.length && peliculaForm.formatos_disponibles().touched()) {
+                            <span class="error-msg">{{ peliculaForm.formatos_disponibles().errors()[0].message }}</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Precio Preventa ($):
+                            <input type="number" [formField]="peliculaForm.precio_preventa" placeholder="Ej: 5000" />
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Fin Preventa:
+                            <input type="date" [formField]="peliculaForm.fecha_fin_preventa" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                    <button type="submit" [disabled]="!peliculaForm().valid()">
+                        {{ peliculaEditandoId() ? 'Actualizar Película' : 'Guardar Película' }}
+                    </button>
+                    
+                    @if (peliculaEditandoId()) {
+                        <button type="button" class="btn-cancelar" (click)="cancelarEdicion()">Cancelar</button>
+                    }
+                </div>
+            </form>
+        }
+    </section>
+
+    <section class="panel list-panel">
+        <h2>Catálogo Actual</h2>
+        <header>
+            <p>Películas disponibles en el sistema</p>
+        </header>
+
+        <div class="movies-grid">
+            @for (pelicula of peliculas(); track pelicula.id) {
+                <div class="movie-card">
+                    <div class="movie-info">
+                        <h3>{{ pelicula.nombre | titlecase }}</h3>
+                        
+                        <p class="movie-meta">
+                            {{ pelicula.duracion_minutos | formatoDuracion }} | 
+                            <span [appEdadColor]="pelicula.restriccion_edad">{{ pelicula.restriccion_edad }}</span> | 
+                            {{ pelicula.idiomas_disponibles }}
+                        </p>
+                    </div>
+                    <div class="movie-actions">
+                        <button class="btn-edit" (click)="cargarParaEditar(pelicula)" style="margin-right: 5px;">✏️</button>
+                        <button class="btn-delete" (click)="eliminarPelicula(pelicula.id)">🗑</button>
+                    </div>
+                </div>
+            } @empty {
+                <div class="empty-state">
+                    <p>No hay películas cargadas todavía.</p>
+                </div>
+            }
         </div>
-    </ng-template>
-</section>
+    </section>
+
+</div>

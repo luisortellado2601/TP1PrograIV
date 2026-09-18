@@ -23,6 +23,8 @@ interface LoginData {
 
 export class Register {
   fechaHoy = new Date().toISOString().split('T')[0];
+  errorMessage = signal<string>('');
+  successMessage = signal<string>('');
   registerModel = signal<LoginData>({
     email: '',
     password: '',
@@ -71,6 +73,8 @@ export class Register {
 
     onSubmit(event: Event) {
       event.preventDefault();
+      this.errorMessage.set('');
+      this.successMessage.set(''); 
       if (this.registerForm().valid()) {
 
         const data = this.registerModel();
@@ -85,11 +89,21 @@ export class Register {
           data.color_ojos,
           data.dias_vacaciones
           ).then(resultado => {
-            if (resultado.error) {
-              alert('Error: ' + resultado.error.message);
+          if (resultado.error) {
+            let mensajeAmigable = 'Ocurrió un error inesperado al registrar el usuario.';
+            const errorSupabase = resultado.error.message.toLowerCase();
+            
+            if (errorSupabase.includes('already registered') || errorSupabase.includes('already exists')) {
+              mensajeAmigable = 'Este correo electrónico ya se encuentra registrado. Por favor, iniciá sesión.';
+            } else if (errorSupabase.includes('network') || errorSupabase.includes('fetch')) {
+              mensajeAmigable = 'Error de conexión. Revisá tu internet e intentá nuevamente.';
+            }
+            this.errorMessage.set(mensajeAmigable);
             } else {
-              alert('¡Registro exitoso!');
-              this.router.navigate(['/login']);
+              this.successMessage.set('Su registro ha sido exitoso. Redirigiendo...');
+              setTimeout(()=>{
+                this.router.navigate(['/login']);
+              }, 2000);
             }
         });
       } 

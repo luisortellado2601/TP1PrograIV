@@ -1,3 +1,14 @@
+.error-msg {
+    color: #dc2626; 
+    font-size: 0.82rem;
+    font-weight: 500;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    align-items: center;
+}
+
+
 /* Estilos base de la página */
 html, body {
     height: 100%;
@@ -28,6 +39,7 @@ html, body {
     color: #1a202c;
     font-size: 1.75rem;
     font-weight: 700;
+    text-align: center;
 }
 
 .login__header p {
@@ -35,6 +47,7 @@ html, body {
     font-size: 0.95rem;
     margin-top: 0;
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .login__form {

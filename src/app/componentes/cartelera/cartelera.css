@@ -1,98 +1,181 @@
-/* --- Contenedor Principal --- */
-.contenedor-cartelera {
+:host {
+  display: block;
   padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+}
+
+.cartelera-container {
   max-width: 1200px;
   margin: 0 auto;
-}
-
-/* --- Título Principal con Efecto Cine --- */
-.titulo-cine {
-  text-align: center;
-  font-size: 2.8rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 3.5rem;
-  
-  position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
-
-  /* Efecto de degradado en el texto */
-  background: linear-gradient(90deg, #1a202c, #3182ce, #1a202c);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Subrayado luminoso estilo cine */
-.titulo-cine::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 10%;
-  width: 80%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #3182ce, transparent);
-  border-radius: 2px;
-}
-
-/* --- Grilla de Películas --- */
-.grilla-peliculas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2.5rem;
-}
-
-/* --- Tarjeta Individual --- */
-.tarjeta-pelicula {
-  background-color: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  gap: 2rem;
 }
 
-.tarjeta-pelicula:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+.main-header {
+  text-align: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaeaea;
+}
+
+.main-header h1 {
+  margin: 0 0 0.5rem 0;
+  color: #222;
+  font-size: 2rem;
+}
+
+.main-header p {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.top3-section h2,
+.catalogo-section h2 {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.top3-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.top3-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaeaea;
+  transition: transform 0.2s ease;
+}
+
+.top3-card:hover {
+  transform: translateY(-4px);
 }
 
 .poster {
   width: 100%;
-  height: 400px; 
-  object-fit: contain; /* Ajusta la imagen completa sin recortarla */
-  background-color: #f1f5f9; /* Opcional: un gris muy clarito por si quedan espacios a los lados */
+  height: 300px;
+  object-fit: cover;
 }
 
-/* --- Información de la Película --- */
-.info-pelicula {
-  padding: 1.5rem;
+.top3-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.top3-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.divisor {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 1rem 0;
+}
+
+.filtros-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtros-container button {
+  padding: 0.6rem 1.2rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #444;
+  transition: all 0.2s ease;
+}
+
+.filtros-container button:hover {
+  background-color: #f0f0f0;
+}
+
+.filtros-container button.activo {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.resultados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.pelicula-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaeaea;
   display: flex;
   flex-direction: column;
 }
 
-.info-pelicula h3 {
-  margin: 0 0 0.8rem 0;
-  font-size: 1.4rem;
-  color: #1a202c;
-  text-align: center;
+.pelicula-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
 }
 
-/* --- Sinopsis con truncado automático --- */
-.sinopsis {
-  font-size: 0.95rem;
-  color: #4a5568;
-  line-height: 1.5;
+.pelicula-info h3 {
   margin: 0;
-  
-  /* El truco para que Angular no borre la configuración */
+  font-size: 1.2rem;
+  color: #222;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.tag-duracion {
+  color: #666;
+}
+
+.sinopsis {
+  margin: 0.5rem 0 0 0;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
   display: -webkit-box;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: white;
+  border-radius: 12px;
+  color: #666;
+  border: 2px dashed #ccc;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1rem;
 }

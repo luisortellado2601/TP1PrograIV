@@ -3,7 +3,16 @@
     <header>
         <p>Regístrate para continuar</p>
     </header>
-    
+    @if (errorMessage()) {
+        <span class="error-msg" style="position: relative; margin-bottom: 1rem; text-align: center;">
+            {{ errorMessage() }}
+        </span>
+    }
+    @if (successMessage()) {
+        <span style="color: #16a34a; font-size: 0.9rem; font-weight: 600; position: relative; margin-bottom: 1rem; text-align: center; display: block;">
+            {{ successMessage() }}
+        </span>
+    }
     <form (submit)="onSubmit($event)">
         
         <div class="form-group">
@@ -56,10 +65,10 @@
 
         <div class="form-group">
             <label>
-                Fecha de Nacimiento:
+                Fecha de nacimiento:
                 <input type="date" [formField]="registerForm.fecha_nacimiento" [max]="fechaHoy" />
             </label>
-            @if (registerForm.fecha_nacimiento().errors() && registerForm.fecha_nacimiento().touched()) {
+            @if (registerForm.fecha_nacimiento().errors()?.length && registerForm.fecha_nacimiento().touched()) {
                 <span class="error-msg">
                     {{ registerForm.fecha_nacimiento().errors()[0].message }}
                 </span>
@@ -68,7 +77,7 @@
 
         <div class="form-group">
             <label>
-                Tipo de Sangre:
+                Tipo de grupo sanguineo:
                 <select [formField]="registerForm.tipo_sangre">
                     <option value="" disabled selected>Selecciona tu grupo...</option>
                     <option value="A+">A+</option>
@@ -90,8 +99,16 @@
 
         <div class="form-group">
             <label>
-                Color de Ojos:
-                <input type="text" [formField]="registerForm.color_ojos" placeholder="Ej: Marrón" />
+                Color de ojos:
+                <select [formField]="registerForm.color_ojos">
+                    <option value="" disabled selected>Selecciona tu color...</option>
+                    <option value="castaño">Castaño / Marrón</option>
+                    <option value="azul">Azul</option>
+                    <option value="verde">Verde</option>
+                    <option value="gris">Gris</option>
+                    <option value="avellana">Avellana / Miel</option>
+                    <option value="otro">Otro</option>
+                </select>
             </label>
             @if (registerForm.color_ojos().errors()?.length && registerForm.color_ojos().touched()) {
                 <span class="error-msg">
@@ -102,7 +119,7 @@
 
         <div class="form-group">
             <label>
-                Días de vacaciones por año:
+                Dias de vacaciones al año:
                 <input type="number" [formField]="registerForm.dias_vacaciones" placeholder="Ej: 14" />
             </label>
             @if (registerForm.dias_vacaciones().errors()?.length && registerForm.dias_vacaciones().touched()) {
@@ -112,8 +129,7 @@
             }
         </div>
 
-        <button type="submit">Registrarse</button>
+        <button type="submit" [disabled]= "!registerForm().valid()">Registrarse</button>
     </form>
-    
     <a routerLink="/login">Iniciar sesión</a>
 </div>
