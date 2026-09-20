@@ -1,0 +1,110 @@
+:host {
+    display: block;
+    padding: 2rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: black;
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.dashboard-header {
+    text-align: center;
+    background: #1a1a1a;
+    padding: 2.5rem;
+    border-radius: 12px ;
+    box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+    border: 1px solid rgb(46, 45, 45);
+}
+
+.dashboard-header h1 {
+    margin: 0 0 0.5rem 0;
+    color: #fff8f8;
+    font-size: 2.2rem;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.module-card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgb(46, 45, 45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.module-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.module-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    color: white;
+}
+
+.module-card p {
+    margin: 0 0 2rem 0;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex-grow: 1;
+}
+
+.btn-primary {
+    display: inline-block;
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #e9ecef;
+    color: #6c757d;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: not-allowed;
+}

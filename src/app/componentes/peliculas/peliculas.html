@@ -35,7 +35,6 @@
 
                 <div class="form-group">
                     <label>Géneros:</label>
-                    
                     <div class="checkbox-grid">
                         @for (genero of listaGeneros; track genero) {
                             <label class="checkbox-item">
@@ -163,7 +162,7 @@
                     </div>
                     <div class="movie-actions">
                         <button class="btn-edit" (click)="cargarParaEditar(pelicula)" style="margin-right: 5px;">✏️</button>
-                        <button class="btn-delete" (click)="eliminarPelicula(pelicula.id)">🗑</button>
+                        <button class="btn-delete" (click)="eliminarPelicula(pelicula.id)">🗑️</button>
                     </div>
                 </div>
             } @empty {

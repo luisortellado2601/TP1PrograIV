@@ -1,1 +1,38 @@
-<h1>Panel de Administración</h1>
+<div class="dashboard-container">
+    
+    <header class="dashboard-header">
+        <h1>⚙️ Panel de Administración</h1>
+        <p>Gestión central del complejo de cines</p>
+    </header>
+
+    <div class="modules-grid">
+        
+        <div class="module-card">
+            <div class="module-icon">🎬</div>
+            <h3>Películas</h3>
+            <p>Alta, baja y modificación del catálogo de películas y preventas.</p>
+            <a routerLink="/peliculas" class="btn-primary">Ir a Películas</a>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">🏢</div>
+            <h3>Salas y Funciones</h3>
+            <p>Asignación automática, gestión de horarios y mapa de butacas.</p>
+            <button class="btn-secondary" disabled>Próximamente</button>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">🍿</div>
+            <h3>Candy Bar</h3>
+            <p>Administración de pochoclos, bebidas y combos especiales.</p>
+            <a routerLink="/admin-candy" class="btn-primary">Ir al Candy Bar</a>
+        </div>
+
+        <div class="module-card">
+            <div class="module-icon">📊</div>
+            <h3>Reportes</h3>
+            <p>Facturación, estadísticas, entradas vendidas y exportación a PDF.</p>
+            <button class="btn-secondary" disabled>Próximamente</button>
+        </div>
+    </div>
+</div>

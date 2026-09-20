@@ -1,0 +1,122 @@
+<div class="nav-volver">
+    <a routerLink="/admin" class="btn-cancelar" style="text-decoration: none; display: inline-block;">⬅ Volver al Panel</a>
+</div>
+
+<div class="admin-container">
+    
+    <section class="panel form-panel">
+        <h2>Cargar Producto</h2>
+        <header>
+            <p>Añadí snacks o combos al Candy Bar</p>
+        </header>
+
+        @if (mostrarFormulario()) {
+            <form (submit)="onSubmit($event)">
+                
+                <div class="form-group">
+                    <label>
+                        Nombre del Producto:
+                        <input type="text" [formField]="productoForm.nombre" placeholder="Ej: Combo Familiar" />
+                    </label>
+                    @if (productoForm.nombre().errors()?.length && productoForm.nombre().touched()) {
+                        <span class="error-msg">{{ productoForm.nombre().errors()[0].message }}</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Categoría:
+                            <select [formField]="productoForm.categoria">
+                                <option value="" disabled selected>Seleccionar...</option>
+                                @for (cat of listaCategorias; track cat) {
+                                    <option [value]="cat">{{ cat }}</option>
+                                }
+                            </select>
+                        </label>
+                        @if (productoForm.categoria().errors()?.length && productoForm.categoria().touched()) {
+                            <span class="error-msg">{{ productoForm.categoria().errors()[0].message }}</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            Precio ($):
+                            <input type="number" [formField]="productoForm.precio" placeholder="Ej: 8500" />
+                        </label>
+                        @if (productoForm.precio().errors()?.length && productoForm.precio().touched()) {
+                            <span class="error-msg">{{ productoForm.precio().errors()[0].message }}</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Costo en Puntos:
+                            <input type="number" [formField]="productoForm.costo_en_puntos" placeholder="Ej: 500" />
+                        </label>
+                        @if (productoForm.costo_en_puntos().errors()?.length && productoForm.costo_en_puntos().touched()) {
+                            <span class="error-msg">{{ productoForm.costo_en_puntos().errors()[0].message }}</span>
+                        }
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" 
+                                [checked]="productoModel().es_combo_destacado" 
+                                (change)="toggleDestacado($event)" />
+                            ¿Es un combo destacado?
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; gap: 10px;">
+                    <button type="submit" [disabled]="!productoForm().valid()">
+                        {{ productoEditandoId() ? 'Actualizar Producto' : 'Guardar Producto' }}
+                    </button>
+                    
+                    @if (productoEditandoId()) {
+                        <button type="button" class="btn-cancelar" (click)="cancelarEdicion()">Cancelar</button>
+                    }
+                </div>
+            </form>
+        }
+    </section>
+
+    <section class="panel list-panel">
+        <h2>Menú Actual</h2>
+        <header>
+            <p>Productos disponibles en el Candy Bar</p>
+        </header>
+
+        <div class="movies-grid">
+            @for (producto of productos(); track producto.id) {
+                <div class="movie-card">
+                    <div class="movie-info">
+                        <h3 [appDestacadoColor]="producto.es_combo_destacado">
+                            {{ producto.nombre | titlecase }} 
+                            @if (producto.es_combo_destacado) {
+                                <span class="badge-destacado">🔥</span>
+                            }
+                        </h3>
+                        <p class="movie-meta">
+                            <strong>{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong> | 
+                            {{ producto.categoria }} | 
+                            ⭐ {{ producto.costo_en_puntos | formatoPuntos }}
+                        </p>
+                    </div>
+                    <div class="movie-actions">
+                        <button class="btn-edit" (click)="cargarParaEditar(producto)">✏️</button>
+                        <button class="btn-delete" (click)="eliminarProducto(producto.id)">🗑️</button>
+                    </div>
+                </div>
+            } @empty {
+                <div class="empty-state">
+                    <p>No hay productos cargados en el Candy Bar.</p>
+                </div>
+            }
+        </div>
+    </section>
+
+</div>

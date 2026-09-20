@@ -30,5 +30,9 @@ export const routes: Routes = [
         path: 'admin',
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin),
         canActivate: [adminGuard]
+    },
+    {
+        path: 'admin-candy',
+        loadComponent: ()=> import('./componentes/admin-candy/admin-candy').then(m => m.Candy)
     }
 ];

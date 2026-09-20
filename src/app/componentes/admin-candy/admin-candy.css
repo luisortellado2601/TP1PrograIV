@@ -1,44 +1,17 @@
-
 :host {
   display: block;
   padding: 2rem;
   font-family: system-ui, -apple-system, sans-serif;
-  background-color: black;
+  background-color: #000000;
   min-height: 100vh;
-  color: white;
+  color: #ffffff;
 }
 
-/* Checkbox */
-.checkbox-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
-  padding-bottom: 1.5rem;
+.nav-volver {
+  max-width: 1200px;
+  margin: 0 auto 1.5rem auto;
 }
 
-.checkbox-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: normal;
-  font-size: 0.95rem;
-  cursor: pointer;
-  color: white;
-}
-
-.checkbox-item input {
-  width: auto;
-  margin: 0;
-  cursor: pointer;
-}
-
-.select-multiple {
-  min-height: 120px;
-}
-
-/* Layout principal */
 .admin-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -48,31 +21,28 @@
   align-items: start;
 }
 
-/* Paneles */
 .panel {
-  background-color: #1a1a1a;
+  background: #1a1a1a;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   padding: 2rem;
-  border: 1px solid rgb(46, 45, 45);
+  border: 1px solid #333333;
 }
 
-/* Cabeceras */
 .panel h2 {
   margin: 0;
-  color: white;
+  color: #ffffff;
   font-size: 1.5rem;
   text-align: center;
 }
 
 .panel header p {
   margin: 0.5rem 0 2rem;
-  color: #bdbdbd;
+  color: #aaaaaa;
   font-size: 0.9rem;
   text-align: center;
 }
 
-/* Formulario */
 form {
   display: flex;
   flex-direction: column;
@@ -98,46 +68,47 @@ label {
   flex-direction: column;
   gap: 0.5rem;
   font-weight: 600;
-  color: #e0e0e0;
+  color: #dddddd;
   font-size: 0.95rem;
 }
 
-/* Inputs */
-input,
-select,
-textarea {
+.checkbox-group {
+  justify-content: center;
+  padding-bottom: 0;
+}
+
+.checkbox-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}
+
+input, select, textarea {
   padding: 0.8rem;
-  background-color: #111;
-  color: white;
-  border: 1px solid rgb(46, 45, 45);
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444444;
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease;
   font-family: inherit;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #777;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
+input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* Opciones del select */
-select option {
-  background-color: #111;
-  color: white;
-}
-
-/* Mensajes de error */
 .error-msg {
-  color: #dc2626;
+  color: #ef4444;
   font-size: 0.8rem;
   font-weight: 500;
   position: absolute;
@@ -145,7 +116,6 @@ select option {
   left: 0;
 }
 
-/* Botón guardar */
 button[type="submit"] {
   padding: 0.8rem;
   background-color: #007bff;
@@ -157,6 +127,7 @@ button[type="submit"] {
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-top: 0.5rem;
+  flex-grow: 1;
 }
 
 button[type="submit"]:hover {
@@ -164,101 +135,14 @@ button[type="submit"]:hover {
 }
 
 button[type="submit"]:disabled {
-  background-color: #444;
-  color: #999;
+  background-color: #444444;
+  color: #888888;
   cursor: not-allowed;
 }
 
-/* Lista de películas */
-.movies-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-/* Tarjeta de película */
-.movie-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #111;
-  border-radius: 8px;
-  border: 1px solid rgb(46, 45, 45);
-  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.movie-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.12);
-}
-
-.movie-info h3 {
-  margin: 0 0 0.25rem 0;
-  font-weight: 500;
-  color: white;
-  font-size: 1.05rem;
-}
-
-.movie-meta {
-  margin: 0;
-  color: #999;
-  font-size: 0.85rem;
-}
-
-/* Botón eliminar */
-.btn-delete {
-  background: #3a1717;
-  color: #f87171;
-  border: 1px solid #552020;
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 1rem;
-}
-
-.btn-delete:hover {
-  background: #521f1f;
-}
-
-/* Estado vacío */
-.empty-state {
-  text-align: center;
-  padding: 3rem 2rem;
-  background-color: #111;
-  border-radius: 8px;
-  color: #999;
-  border: 2px dashed rgb(46, 45, 45);
-}
-
-.empty-state p {
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-/* Botón editar */
-.btn-edit {
-  background: #102a3a;
-  color: #38bdf8;
-  border: 1px solid #164e63;
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 1rem;
-}
-
-.btn-edit:hover {
-  background: #153b50;
-}
-
-/* Botón cancelar */
 .btn-cancelar {
   padding: 0.8rem;
-  background-color: #444;
+  background-color: #4b5563;
   color: white;
   border: none;
   border-radius: 8px;
@@ -270,10 +154,107 @@ button[type="submit"]:disabled {
 }
 
 .btn-cancelar:hover {
-  background-color: #555;
+  background-color: #374151;
 }
 
-/* Responsive */
+.movies-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.movie-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #222222;
+  border-radius: 8px;
+  border: 1px solid #333333;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-2px);
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.movie-info h3 {
+  margin: 0 0 0.4rem 0;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge-destacado {
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.movie-meta {
+  margin: 0;
+  color: #aaaaaa;
+  font-size: 0.85rem;
+}
+
+.movie-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.btn-edit {
+  background: #0369a1;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-edit:hover {
+  background: #0284c7;
+}
+
+.btn-delete {
+  background: #991b1b;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-delete:hover {
+  background: #b91c1c;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #222222;
+  border-radius: 8px;
+  color: #888888;
+  border: 2px dashed #444444;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 900px) {
   .admin-container {
     grid-template-columns: 1fr;

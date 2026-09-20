@@ -1,9 +1,12 @@
+
+
 :host {
   display: block;
   padding: 2rem;
   font-family: system-ui, -apple-system, sans-serif;
-  background-color: #f4f6f8;
+  background-color: black;
   min-height: 100vh;
+  color: white;
 }
 
 .cartelera-container {
@@ -14,34 +17,37 @@
   gap: 2rem;
 }
 
+/* Header principal */
 .main-header {
   text-align: center;
-  background: white;
+  background-color: #1a1a1a;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  border: 1px solid rgb(46, 45, 45);
 }
 
 .main-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #222;
+  color: white;
   font-size: 2rem;
 }
 
 .main-header p {
   margin: 0;
-  color: #666;
+  color: #bdbdbd;
   font-size: 1rem;
 }
 
+/* Títulos de secciones */
 .top3-section h2,
 .catalogo-section h2 {
-  color: #333;
+  color: white;
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
+/* Top 3 */
 .top3-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -49,11 +55,11 @@
 }
 
 .top3-card {
-  background: white;
+  background-color: #111;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  border: 1px solid rgb(46, 45, 45);
   transition: transform 0.2s ease;
 }
 
@@ -63,8 +69,10 @@
 
 .poster {
   width: 100%;
-  height: 300px;
-  object-fit: cover;
+  height: 450px;
+  object-fit: contain;
+  background-color: #0a0a0a;
+  display: block;
 }
 
 .top3-info {
@@ -75,15 +83,17 @@
 .top3-info h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #222;
+  color: white;
 }
 
+/* Divisor */
 .divisor {
   border: none;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid rgb(46, 45, 45);
   margin: 1rem 0;
 }
 
+/* Filtros */
 .filtros-container {
   display: flex;
   flex-wrap: wrap;
@@ -93,18 +103,18 @@
 
 .filtros-container button {
   padding: 0.6rem 1.2rem;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  color: #444;
+  color: #ddd;
   transition: all 0.2s ease;
 }
 
 .filtros-container button:hover {
-  background-color: #f0f0f0;
+  background-color: #222;
 }
 
 .filtros-container button.activo {
@@ -113,18 +123,20 @@
   border-color: #007bff;
 }
 
+/* Grid de películas */
 .resultados-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
+/* Tarjeta de película */
 .pelicula-card {
-  background: white;
+  background-color: #111;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  border: 1px solid rgb(46, 45, 45);
   display: flex;
   flex-direction: column;
 }
@@ -140,7 +152,7 @@
 .pelicula-info h3 {
   margin: 0;
   font-size: 1.2rem;
-  color: #222;
+  color: white;
 }
 
 .tags {
@@ -151,12 +163,12 @@
 }
 
 .tag-duracion {
-  color: #666;
+  color: #999;
 }
 
 .sinopsis {
   margin: 0.5rem 0 0 0;
-  color: #555;
+  color: #aaa;
   font-size: 0.9rem;
   line-height: 1.4;
   display: -webkit-box;
@@ -165,14 +177,15 @@
   overflow: hidden;
 }
 
+/* Estado vacío */
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
   padding: 3rem 2rem;
-  background-color: white;
+  background-color: #111;
   border-radius: 12px;
-  color: #666;
-  border: 2px dashed #ccc;
+  color: #999;
+  border: 2px dashed rgb(46, 45, 45);
 }
 
 .empty-state p {
