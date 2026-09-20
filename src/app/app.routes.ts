@@ -34,5 +34,9 @@ export const routes: Routes = [
     {
         path: 'admin-candy',
         loadComponent: ()=> import('./componentes/admin-candy/admin-candy').then(m => m.Candy)
+    },
+    {
+        path: 'candy-cliente',
+        loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente)
     }
 ];

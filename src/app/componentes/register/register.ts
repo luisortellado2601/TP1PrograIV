@@ -44,7 +44,7 @@ export class Register {
 
     required(schemaPath.password, {message: 'Password requerido'});
     maxLength(schemaPath.password, 15, { message: 'Contraseña no debe superar los 15 caracteres'});
-    minLength(schemaPath.password, 4, { message: 'Contraseña debe tener al menos 4 caracteres'})
+    minLength(schemaPath.password, 6, { message: 'Contraseña debe tener al menos 6 caracteres'})
     
 
     required(schemaPath.nombre, {message: 'Nombre requerido'});

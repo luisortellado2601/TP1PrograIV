@@ -8,14 +8,14 @@ export const adminGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
   const authService = inject(Auth);
 
+
   if (!isPlatformBrowser(platformId)) {
-    return true; 
+    return false; 
   }
 
   const respuesta = await authService.getUser();
   
   if (respuesta.data?.user) {
-    
     const rol = await authService.getRolUsuario(respuesta.data.user.id);
 
     if (rol === 'gerente' || rol === 'empleado') {

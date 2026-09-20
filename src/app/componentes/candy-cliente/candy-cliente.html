@@ -1,0 +1,90 @@
+<div class="nav-volver">
+    <a routerLink="/cartelera" class="btn-secundario">⬅ Volver a Cartelera</a>
+</div>
+
+<div class="cliente-container">
+    
+    <!-- Sección del Menú -->
+    <section class="menu-section">
+        <header class="seccion-header">
+            <h2>🍿 Candy Bar</h2>
+            <p>Agregá snacks y bebidas a tu entrada</p>
+        </header>
+
+        <div class="productos-grid">
+            @for (producto of productos(); track producto.id) {
+                <div class="producto-card">
+                    <div class="producto-icono">
+                        {{ producto.categoria === 'Pochoclos' ? '🍿' : producto.categoria === 'Bebidas' ? '🥤' : '🍫' }}
+                    </div>
+                    
+                    <div class="producto-info">
+                        <h3 [appDestacadoColor]="producto.es_combo_destacado">
+                            {{ producto.nombre | titlecase }}
+                            @if (producto.es_combo_destacado) {
+                                <span class="badge-fuego">🔥</span>
+                            }
+                        </h3>
+                        <span class="categoria-tag">{{ producto.categoria }}</span>
+                        
+                        <div class="precios-wrapper">
+                            <span class="precio-plata">{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                            <span class="precio-puntos">⭐ {{ producto.costo_en_puntos | formatoPuntos }}</span>
+                        </div>
+                    </div>
+
+                    <div class="producto-controles">
+                        @if (obtenerCantidad(producto.id) === 0) {
+                            <button class="btn-agregar" (click)="agregarAlCarrito(producto)">Agregar</button>
+                        } @else {
+                            <div class="control-cantidad">
+                                <button class="btn-restar" (click)="quitarDelCarrito(producto.id!)">-</button>
+                                <span class="cantidad-actual">{{ obtenerCantidad(producto.id) }}</span>
+                                <button class="btn-sumar" (click)="agregarAlCarrito(producto)">+</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @empty {
+                <div class="empty-state">
+                    <p>Cargando el menú del Candy Bar...</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Sección del Carrito Lateral -->
+    <aside class="carrito-section">
+        <div class="carrito-panel">
+            <h3>Tu Pedido</h3>
+            
+            <div class="carrito-items">
+                @for (item of carrito(); track item.id) {
+                    <div class="item-fila">
+                        <div class="item-detalles">
+                            <span class="item-cantidad">{{ item.cantidad }}x</span>
+                            <span class="item-nombre">{{ item.nombre }}</span>
+                        </div>
+                        <span class="item-subtotal">{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                } @empty {
+                    <div class="carrito-vacio">
+                        <p>No agregaste nada aún 😢</p>
+                    </div>
+                }
+            </div>
+
+            <div class="carrito-footer">
+                <div class="total-fila">
+                    <span>Total:</span>
+                    <strong>{{ totalPagar() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                </div>
+                
+                <button class="btn-comprar" [disabled]="carrito().length === 0">
+                    Continuar al Pago
+                </button>
+            </div>
+        </div>
+    </aside>
+
+</div>
