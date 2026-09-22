@@ -53,4 +53,14 @@ export class PeliculasService {
         }
         return data;
     }
+
+    async getPeliculaById(id: string) {
+        const { data, error } = await this.supabase
+            .from('peliculas')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        return { data, error };
+        }
 }

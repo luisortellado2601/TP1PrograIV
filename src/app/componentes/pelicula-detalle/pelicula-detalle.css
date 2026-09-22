@@ -1,0 +1,296 @@
+* {
+  box-sizing: border-box;
+}
+
+.btn-detalles {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+:host {
+  display: block;
+  padding: 2rem;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+.detalle-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.detalle-content {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 3rem;
+  background-color: #111;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid rgb(46, 45, 45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  overflow: hidden;
+}
+
+.poster-col img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+h1, .sinopsis, .spec-item {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: white;
+  line-height: 1.2;
+}
+
+.tags, .generos {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tag-genero {
+  background-color: #222;
+  padding: 0.4rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 1px solid rgb(46, 45, 45);
+  color: #ddd;
+}
+
+.sinopsis {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin: 0;
+}
+
+.especificaciones {
+  background-color: #1a1a1a;
+  padding: 1.2rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border: 1px solid rgb(46, 45, 45);
+}
+
+.spec-item {
+  font-size: 0.95rem;
+  color: #bbb;
+}
+
+.spec-item strong {
+  color: white;
+}
+
+.funciones-container {
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(46, 45, 45);
+}
+
+.funciones-container h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.fechas-list {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.btn-fecha {
+  padding: 0.6rem 1.2rem;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  color: #bbb;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-fecha:hover {
+  background-color: #2a2a2a;
+}
+
+.btn-fecha.activo {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+.horarios-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+}
+
+.btn-horario {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-horario:hover {
+  border-color: #007bff;
+}
+
+.btn-horario.activo {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-color: #007bff;
+}
+
+.btn-horario .hora {
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.btn-horario .formato {
+  color: #aaa;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.acciones {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-comprar, .btn-volver {
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.btn-comprar {
+  background-color: #007bff;
+  color: white;
+  flex: 1;
+}
+
+.btn-comprar:hover {
+  background-color: #0056b3;
+}
+
+.btn-volver {
+  background-color: transparent;
+  color: #bbb;
+  border: 1px solid #555;
+  flex: 1;
+}
+
+.btn-volver:hover {
+  background-color: #222;
+  color: white;
+  border-color: white;
+}
+
+.loader, .error-state {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 900px) {
+  .detalle-content {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .detalle-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.2rem;
+  }
+  
+  .poster-col img {
+    max-width: 260px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .tags, .generos {
+    justify-content: center;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .poster-col img {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  .horarios-list {
+    grid-template-columns: 1fr;
+  }
+}

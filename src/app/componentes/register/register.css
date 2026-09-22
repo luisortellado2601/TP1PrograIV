@@ -1,9 +1,16 @@
-/* Contenedor principal de Register (Más ancho para 2 columnas) */
+:host {
+    display: block;
+    background-color: #000000;
+    min-height: 100vh;
+    color: #ffffff;
+}
+
 .register {
-    background: #ffffff;
+    background: #1a1a1a;
     padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid #333333;
     width: 100%;
     max-width: 700px;
     box-sizing: border-box;
@@ -18,7 +25,7 @@
 .register h2 {
     margin-top: 0;
     margin-bottom: 0.5rem;
-    color: #1a202c;
+    color: #ffffff;
     font-size: 1.75rem;
     font-weight: 700;
 }
@@ -26,22 +33,20 @@
 .register header p {
     margin-top: 0;
     margin-bottom: 1.5rem;
-    color: #4a5568;
+    color: #aaaaaa;
 }
 
-/* Grid de 2 columnas */
 .register form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem; /* Separación general del grid */
+    gap: 1.25rem;
 }
 
-/* NUEVO: Contenedor para evitar el Layout Shift */
 .form-group {
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-bottom: 20px; /* Reserva el lugar exacto para el texto de error */
+    padding-bottom: 20px;
 }
 
 .register label {
@@ -49,17 +54,16 @@
     flex-direction: column;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #4a5568;
+    color: #dddddd;
     gap: 0.5rem;
 }
 
-/* MODIFICADO: Texto de error con posición absoluta */
 .error-msg {
-    color: #dc2626; 
+    color: #ef4444; 
     font-size: 0.82rem;
     font-weight: 500;
     position: absolute;
-    bottom: 0; /* Se clava en el espacio reservado del form-group */
+    bottom: 0;
     left: 0;
 }
 
@@ -70,25 +74,25 @@
 .register input[type="number"],
 .register select {
     padding: 0.75rem 1rem;
-    border: 1px solid #cbd5e0;
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
     border-radius: 8px;
+    color: #ffffff;
     font-size: 1rem;
     outline: none;
     transition: all 0.2s ease;
-    background-color: #fff;
-    color: #2d3748;
+    font-family: inherit;
 }
 
 .register input:focus,
 .register select:focus {
-    border-color: #3182ce;
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
-/* El botón ocupa las dos columnas enteras */
 .register button[type="submit"] {
     grid-column: 1 / -1; 
-    background-color: #3182ce;
+    background-color: #007bff;
     color: white;
     border: none;
     padding: 0.75rem;
@@ -101,18 +105,19 @@
 }
 
 .register button[type="submit"]:hover {
-    background-color: #2b6cb0;
+    background-color: #0056b3;
 }
 
 .register button[type="submit"]:disabled {
-    background-color: #a0aec0;
+    background-color: #444444;
+    color: #888888;
     cursor: not-allowed;
     transform: none;
 }
 
 .register > a {
     display: block;
-    color: #3182ce;
+    color: #3b82f6;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -125,7 +130,6 @@
     text-decoration: underline;
 }
 
-/* Responsive para celulares */
 @media (max-width: 600px) {
     .register form {
         grid-template-columns: 1fr;

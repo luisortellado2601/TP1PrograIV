@@ -5,13 +5,16 @@ import { adminGuard } from './guards/admin-guard';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'cartelera',
         pathMatch: 'full'
     },
     {
         path: 'cartelera',
         loadComponent: () => import('./componentes/cartelera/cartelera').then(m => m.Cartelera),
-        canActivate: [authGuard]
+    },
+    {
+        path: 'pelicula-detalle/:id',
+        loadComponent: () => import('./componentes/pelicula-detalle/pelicula-detalle').then(m => m.PeliculaDetalle),
     },
     {
         path: 'login',
@@ -31,7 +34,6 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin),
         canMatch: [adminGuard]
     },
-    
     {
         path: 'admin-candy',
         loadComponent: ()=> import('./componentes/admin-candy/admin-candy').then(m => m.Candy),

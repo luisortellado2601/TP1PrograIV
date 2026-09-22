@@ -1,0 +1,76 @@
+<div class="detalle-container">
+    @if (cargando()) {
+        <div class="loader">Cargando película...</div>
+    } @else if (pelicula(); as peli) {
+        <div class="detalle-content">
+            <div class="poster-col">
+                <img [src]="peli.imagen" [alt]="peli.nombre">
+            </div>
+            
+            <div class="info-col">
+                <h1>{{ peli.nombre }}</h1>
+                
+                <div class="tags">
+                    <span [appEdadColor]="peli.restriccion_edad">{{ peli.restriccion_edad }}</span>
+                    <span class="tag-duracion">{{ peli.duracion_minutos | formatoDuracion }}</span>
+                </div>
+
+                <div class="generos">
+                    @for (genero of peli.generos; track genero) {
+                        <span class="tag-genero">{{ genero }}</span>
+                    }
+                </div>
+
+                <p class="sinopsis">{{ peli.sinopsis }}</p>
+
+                <div class="especificaciones">
+                    <div class="spec-item">
+                        <strong>Formatos disponibles:</strong> {{ peli.formatos_disponibles }}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Idiomas:</strong> {{ peli.idiomas_disponibles }}
+                    </div>
+                </div>
+
+                <!-- NUEVO: Contenedor reservado para fechas y horarios -->
+                <div class="funciones-container">
+                    <h3>Seleccioná tu función</h3>
+                    
+                    <div class="fechas-list">
+                        <!-- Estos son botones estáticos de prueba. Luego los iterarán con los datos reales -->
+                        <button class="btn-fecha activo ">Hoy, 22 Sep</button>
+                        <button class="btn-fecha">Mañana, 23 Sep</button>
+                        <button class="btn-fecha">Jueves, 24 Sep</button>
+                    </div>
+
+                    <div class="horarios-list">
+                        <!-- Estos son botones estáticos de prueba -->
+                        <button class="btn-horario">
+                            <span class="hora">18:00 hs</span>
+                            <span class="formato">2D Subtitulada</span>
+                        </button>
+                        <button class="btn-horario activo">
+                            <span class="hora">20:30 hs</span>
+                            <span class="formato">2D Castellano</span>
+                        </button>
+                        <button class="btn-horario">
+                            <span class="hora">23:15 hs</span>
+                            <span class="formato">2D Subtitulada</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="acciones">
+                    <!-- Más adelante pueden enlazar el [disabled] si no hay función seleccionada -->
+                    <button class="btn-comprar" [routerLink]="['/comprar', peli.id]">Continuar Compra</button>
+                    <button class="btn-volver" routerLink="/cartelera">Volver a Cartelera</button>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <div class="error-state">
+            <h2>Película no encontrada</h2>
+            <button class="btn-volver" routerLink="/cartelera">Volver a Cartelera</button>
+        </div>
+    }
+</div>

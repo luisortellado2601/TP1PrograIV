@@ -5,10 +5,11 @@ import { PeliculasService } from '../../services/peliculas';
 import { Pelicula, GENEROS } from '../../models/pelicula'; 
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cartelera',
-  imports: [CommonModule, FormsModule, FormatoDuracionPipe, EdadColorDirective],
+  imports: [CommonModule, FormsModule, FormatoDuracionPipe, EdadColorDirective, RouterLink],
   templateUrl: './cartelera.html',
   styleUrl: './cartelera.css'
 })

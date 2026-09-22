@@ -1,0 +1,44 @@
+<nav class="navbar-container">
+    <div class="nav-content">
+        <button class="btn-hamburguesa" (click)="toggleMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+
+        <a routerLink="/cartelera" class="logo">
+            <span></span> CINEMASTER
+        </a>
+
+        <div class="nav-right">
+            <button class="btn-login" routerLink="/login">Ingresar</button>
+        </div>
+    </div>
+</nav>
+
+<div class="overlay" [class.activo]="menuAbierto()" (click)="cerrarMenu()"></div>
+
+<aside class="sidebar" [class.abierto]="menuAbierto()">
+    <div class="sidebar-header">
+        <span class="sidebar-logo"> CINEMASTER</span>
+        <button class="btn-cerrar" (click)="cerrarMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <nav class="sidebar-links">
+        <a routerLink="/cartelera" (click)="cerrarMenu()">Cartelera</a>
+        <a routerLink="/proximamente" (click)="cerrarMenu()">Próximos Estrenos</a>
+        <a routerLink="/candy-cliente" (click)="cerrarMenu()">Candy Bar</a>
+        <a routerLink="/fidelizacion" (click)="cerrarMenu()">Programa de Puntos</a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="btn-login-lateral" routerLink="/login" (click)="cerrarMenu()">Iniciar Sesión</button>
+    </div>
+</aside>

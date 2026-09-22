@@ -1,18 +1,19 @@
 <div class="cartelera-container">
     
     <header class="main-header">
-        <h1>🍿 Nuestra Cartelera</h1>
+        <h1>PELICULAS EN CARTELERA</h1>
         <p>Elegí tu próxima película</p>
     </header>
 
     <section class="top3-section">
-        <h2>🔥 Top 3 de la Semana</h2>
-        <div class="top3-grid">
+        <h2> TOP 3 DE LA SEMANA</h2>
+        <div class="top3-grid" >
             @for (pelicula of top3Peliculas(); track pelicula.id) {
-                <div class="top3-card">
+                <div class="top3-card" [routerLink]="['/pelicula-detalle', pelicula.id]">
                     <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
                     <div class="top3-info">
                         <h3>{{ pelicula.nombre }}</h3>
+                        <button class="btn-detalles" [routerLink]="['/pelicula-detalle', pelicula.id]">Ver Detalles</button>
                     </div>
                 </div>
             }
@@ -22,7 +23,7 @@
     <hr class="divisor">
 
     <section class="catalogo-section">
-        <h2>Buscador de Películas</h2>
+        <h2>BUSCADOR DE PELICULAS</h2>
         
         <div class="buscador-container" style="margin-bottom: 15px;">
             <input 
@@ -51,7 +52,7 @@
 
         <div class="resultados-grid">
             @for (pelicula of peliculasFiltradas(); track pelicula.id) {
-                <div class="pelicula-card">
+                <div class="pelicula-card" [routerLink]="['/pelicula-detalle', pelicula.id]">
                     <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
                     <div class="pelicula-info">
                         <h3>{{ pelicula.nombre }}</h3>
@@ -60,6 +61,7 @@
                             <span class="tag-duracion">{{ pelicula.duracion_minutos | formatoDuracion }}</span>
                         </div>
                         <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+                        <button class="btn-detalles" [routerLink]="['/pelicula-detalle', pelicula.id]">Ver Detalles</button>
                     </div>
                 </div>
             }
