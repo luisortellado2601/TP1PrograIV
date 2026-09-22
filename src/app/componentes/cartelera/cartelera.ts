@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PeliculasService } from '../../services/peliculas'; 
 import { Pelicula, GENEROS } from '../../models/pelicula'; 
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
@@ -7,7 +8,7 @@ import { EdadColorDirective } from '../../directives/edad-color-directive';
 
 @Component({
   selector: 'app-cartelera',
-  imports: [CommonModule, FormatoDuracionPipe, EdadColorDirective],
+  imports: [CommonModule, FormsModule, FormatoDuracionPipe, EdadColorDirective],
   templateUrl: './cartelera.html',
   styleUrl: './cartelera.css'
 })
@@ -16,13 +17,18 @@ export class Cartelera implements OnInit {
   listaPeliculas = signal<Pelicula[]>([]);
   cargando = signal<boolean>(true); 
   generoSeleccionado = signal<string>('Todos');
+  terminoBusqueda = signal<string>('');
 
   peliculasFiltradas = computed(() => {
     const genero = this.generoSeleccionado();
+    const busqueda = this.terminoBusqueda().toLowerCase();
     const todas = this.listaPeliculas();
     
-    if (genero === 'Todos') return todas;
-    return todas.filter(p => p.generos?.includes(genero));
+    return todas.filter(p => {
+      const coincideTexto = p.nombre.toLowerCase().includes(busqueda);
+      const coincideGenero = genero === 'Todos' || p.generos?.includes(genero);
+      return coincideTexto && coincideGenero;
+    });
   });
 
   top3Peliculas = computed(() => {
@@ -48,5 +54,9 @@ export class Cartelera implements OnInit {
 
   cambiarFiltro(genero: string) {
     this.generoSeleccionado.set(genero);
+  }
+
+  cambiarBusqueda(termino: string) {
+    this.terminoBusqueda.set(termino);
   }
 }

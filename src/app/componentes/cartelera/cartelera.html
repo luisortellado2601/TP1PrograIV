@@ -22,7 +22,16 @@
     <hr class="divisor">
 
     <section class="catalogo-section">
-        <h2>Buscador por Géneros</h2>
+        <h2>Buscador de Películas</h2>
+        
+        <div class="buscador-container" style="margin-bottom: 15px;">
+            <input 
+                type="text" 
+                placeholder="Buscar por título de película..." 
+                [ngModel]="terminoBusqueda()" 
+                (ngModelChange)="cambiarBusqueda($event)"
+                class="input-buscador">
+        </div>
         
         <div class="filtros-container">
             <button 
@@ -58,7 +67,7 @@
 
         @if (peliculasFiltradas().length === 0) {
             <div class="empty-state">
-                <p>No encontramos películas para el género seleccionado.</p>
+                <p>No encontramos películas para la búsqueda seleccionada.</p>
             </div>
         }
     </section>

@@ -10,7 +10,7 @@ export const adminGuard: CanActivateFn = async (route, state) => {
 
 
   if (!isPlatformBrowser(platformId)) {
-    return false; 
+    return true; 
   }
 
   const respuesta = await authService.getUser();

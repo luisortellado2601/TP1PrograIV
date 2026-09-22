@@ -9,6 +9,11 @@ export const routes: Routes = [
         pathMatch: 'full'
     },
     {
+        path: 'cartelera',
+        loadComponent: () => import('./componentes/cartelera/cartelera').then(m => m.Cartelera),
+        canActivate: [authGuard]
+    },
+    {
         path: 'login',
         loadComponent: () => import('./componentes/login/login').then(m => m.Login)
     },
@@ -17,26 +22,25 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/register/register').then(m => m.Register)
     },
     {
-        path: 'peliculas',
-        loadComponent: () => import('./componentes/peliculas/peliculas').then(m => m.Peliculas),
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'cartelera',
-        loadComponent: () => import('./componentes/cartelera/cartelera').then(m => m.Cartelera),
+        path: 'candy-cliente',
+        loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente),
         canActivate: [authGuard]
     },
     {
         path: 'admin',
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin),
-        canActivate: [adminGuard]
+        canMatch: [adminGuard]
     },
+    
     {
         path: 'admin-candy',
-        loadComponent: ()=> import('./componentes/admin-candy/admin-candy').then(m => m.Candy)
+        loadComponent: ()=> import('./componentes/admin-candy/admin-candy').then(m => m.Candy),
+        canMatch: [adminGuard]
     },
     {
-        path: 'candy-cliente',
-        loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente)
-    }
-];
+        path: 'peliculas',
+        loadComponent: () => import('./componentes/peliculas/peliculas').then(m => m.Peliculas),
+        canMatch: [adminGuard]
+    },
+
+]
