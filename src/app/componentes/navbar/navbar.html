@@ -1,3 +1,4 @@
+
 <nav class="navbar-container">
     <div class="nav-content">
         <button class="btn-hamburguesa" (click)="toggleMenu()">
@@ -13,7 +14,11 @@
         </a>
 
         <div class="nav-right">
-            <button class="btn-login" routerLink="/login">Ingresar</button>
+            @if (perfilActual()) {
+                <button class="btn-login" (click)="onLogout()">Cerrar sesión</button>
+            } @else {
+                <button class="btn-login" routerLink="/login">Ingresar</button>
+            }
         </div>
     </div>
 </nav>
@@ -39,6 +44,10 @@
     </nav>
 
     <div class="sidebar-footer">
-        <button class="btn-login-lateral" routerLink="/login" (click)="cerrarMenu()">Iniciar Sesión</button>
+        @if (perfilActual()) {
+            <button class="btn-login-lateral" (click)="onLogout(); cerrarMenu()">Cerrar Sesión</button>
+        } @else {
+            <button class="btn-login-lateral" routerLink="/login" (click)="cerrarMenu()">Iniciar Sesión</button>
+        }
     </div>
 </aside>

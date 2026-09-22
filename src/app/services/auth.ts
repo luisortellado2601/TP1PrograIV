@@ -13,6 +13,27 @@ export class Auth {
             environment.supabaseUrl, 
             environment.supabasePublishableKey,
         );
+        this.recuperarSesion();
+    }
+
+    private async recuperarSesion(){
+        const { data: { session }} = await this.supabase.auth.getSession();
+
+        if (session?.user){
+            const { data: perfil } = await this.supabase
+                .from('perfiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+            if (perfil){
+                this.perfilActual.set(perfil);
+            }
+        }
+        this.supabase.auth.onAuthStateChange((event) => {
+            if (event === 'SIGNED_OUT'){
+                this.perfilActual.set(null);
+            }
+        });
     }
 
     async signIn(email: string, password: string) {
