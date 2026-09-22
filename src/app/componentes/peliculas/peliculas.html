@@ -121,15 +121,23 @@
                         </label>
                     </div>
 
-                    <div class="form-group">
-                        <label>
-                            Fin Preventa:
-                            <input type="date" [formField]="peliculaForm.fecha_fin_preventa" />
-                        </label>
-                    </div>
                 </div>
 
-                <div class="form-actions" style="display: flex; gap: 10px;">
+                <div class="form-group">
+                    <label>
+                        Fin Preventa:
+                        <input 
+                            type="text" 
+                            [formField]="peliculaForm.fecha_fin_preventa" 
+                            (input)="formatearFecha($event)"
+                            placeholder="DD/MM/AAAA" 
+                        />
+                    </label>
+                    @if (peliculaForm.fecha_fin_preventa().errors()?.length && peliculaForm.fecha_fin_preventa().touched()) {
+                        <span class="error-msg">{{ peliculaForm.fecha_fin_preventa().errors()[0].message }}</span>
+                    }
+                </div>
+                <div class="form-actions">
                     <button type="submit" [disabled]="!peliculaForm().valid()">
                         {{ peliculaEditandoId() ? 'Actualizar Película' : 'Guardar Película' }}
                     </button>
