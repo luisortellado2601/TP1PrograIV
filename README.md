@@ -69,6 +69,7 @@ src/app/
 │   ├── peliculas/          ABM de películas y preventa
 │   ├── admin-candy/        ABM de productos del candy
 │   ├── admin-funciones/    Programación de funciones (asignación automática)
+│   ├── admin-configuracion/  Precios, recargo VIP, puntos y cupones
 │   ├── selector-horario/   Selector de hora reutilizable (@Input / @Output)
 │   └── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
 ├── services/               auth, peliculas, candy, funciones (acceso a Supabase)
@@ -87,7 +88,7 @@ src/app/
 | `/login`, `/register` | Público | Lazy |
 | `/candy-cliente` | Usuario con sesión (`authGuard`) | Lazy |
 | `/admin` | Empleado o gerente (`adminGuard`) | Lazy |
-| `/peliculas`, `/admin-candy`, `/admin-funciones` | Empleado o gerente (`adminGuard`) | Lazy |
+| `/peliculas`, `/admin-candy`, `/admin-funciones`, `/admin-configuracion` | Empleado o gerente (`adminGuard`) | Lazy |
 
 ## Modelo de datos
 
@@ -186,7 +187,8 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | "Próximamente" y alertas de estreno | ⏳ | Tabla `alertas_estreno` creada |
 | Compra con mapa de butacas en tiempo real | ⏳ | Estructura de datos y reglas listas |
 | PDF con QR, validación por empleados y carga manual del código | ⏳ | |
-| Cupón de bienvenida (20 %) y cupón para mayores de 50 | 🔧 | Configurables en la base; falta aplicarlos en la compra |
+| Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
+| Cupón de bienvenida (20 %) y cupón para mayores de 50 | 🔧 | Se crean y editan desde el panel; falta aplicarlos en la compra |
 | Restricción de edad | 🔧 | Clasificación cargada; falta el bloqueo y el aviso en la compra |
 | Puntos, canjes y crédito | ⏳ | Tablas creadas |
 | Cancelación hasta 2 horas antes, con crédito | ⏳ | |

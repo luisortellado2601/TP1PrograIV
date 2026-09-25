@@ -1,0 +1,156 @@
+<div class="admin-container">
+
+    <section class="panel">
+        <h2>Precios y Puntos</h2>
+        <header>
+            <p>Todo lo que se cobra y se premia en el cine</p>
+        </header>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver</button>
+
+        <form [formGroup]="formPrecios" (ngSubmit)="guardar()">
+            <h4 class="subtitulo">Precio de la entrada por formato ($)</h4>
+            <div class="grilla-formatos">
+                @for (f of formatos; track f) {
+                    <div class="form-group">
+                        <label>
+                            {{ f }}
+                            <input type="number" min="0" [formControlName]="f" />
+                        </label>
+                        @if (invalidoPrecio(f)) {
+                            <span class="error-msg">{{ mensajeNumero(formPrecios.get(f)) }}</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div [formGroup]="formConfig" class="grupo-config">
+                <h4 class="subtitulo">Butacas, puntos y cancelaciones</h4>
+                <div class="form-row">
+                    @for (c of camposConfig; track c.clave) {
+                        <div class="form-group">
+                            <label>
+                                {{ c.etiqueta }}
+                                <input type="number" min="0" [formControlName]="c.clave" />
+                            </label>
+                            @if (invalidoConfig(c.clave)) {
+                                <span class="error-msg">{{ mensajeNumero(formConfig.get(c.clave)) }}</span>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (mensaje()) {
+                <p class="mensaje" [class.error]="mensajeEsError()">{{ mensaje() }}</p>
+            }
+
+            <button type="submit" [disabled]="guardando()">
+                {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+            </button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Cupones</h2>
+        <header>
+            <p>Descuentos para clientes registrados</p>
+        </header>
+
+        <form [formGroup]="formCupon" (ngSubmit)="guardarCupon()">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        Código:
+                        <input type="text" formControlName="codigo" placeholder="Ej: MAYORES50" />
+                    </label>
+                    @if (invalidoCupon('codigo')) {
+                        <span class="error-msg">{{ mensajeCupon('codigo') }}</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Descuento (%):
+                        <input type="number" formControlName="porcentaje" />
+                    </label>
+                    @if (invalidoCupon('porcentaje')) {
+                        <span class="error-msg">{{ mensajeCupon('porcentaje') }}</span>
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        Edad mínima (opcional):
+                        <input type="number" formControlName="edad_minima" placeholder="Ej: 50" />
+                    </label>
+                    @if (invalidoCupon('edad_minima')) {
+                        <span class="error-msg">{{ mensajeCupon('edad_minima') }}</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" formControlName="solo_primera_compra" />
+                        Solo primera compra
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    Descripción:
+                    <input type="text" formControlName="descripcion" placeholder="Ej: Descuento para mayores de 50" />
+                </label>
+            </div>
+
+            @if (errorCupon()) {
+                <p class="mensaje error">{{ errorCupon() }}</p>
+            }
+
+            <div class="form-actions">
+                <button type="submit">{{ cuponEditandoId() ? 'Actualizar cupón' : 'Crear cupón' }}</button>
+                @if (cuponEditandoId()) {
+                    <button type="button" class="btn-cancelar" (click)="limpiarCupon()">Cancelar</button>
+                }
+            </div>
+        </form>
+
+        <div class="movies-grid">
+            @for (c of cupones(); track c.id) {
+                <div class="movie-card">
+                    <div class="movie-info">
+                        <h3>{{ c.codigo }} · {{ c.porcentaje }}%</h3>
+                        <p class="movie-meta">
+                            @if (c.edad_minima) { +{{ c.edad_minima }} años | }
+                            @if (c.solo_primera_compra) { Primera compra | }
+                            {{ c.descripcion || 'Sin descripción' }}
+                        </p>
+                    </div>
+                    <div class="movie-actions">
+                        <button type="button" class="btn-estado" [class.activo]="c.activo" (click)="alternarActivo(c)">
+                            {{ c.activo ? 'Activo' : 'Inactivo' }}
+                        </button>
+                        <button type="button" class="btn-edit" (click)="cargarParaEditar(c)">✏️</button>
+                        <button type="button" class="btn-delete" (click)="pedirEliminar(c)">🗑️</button>
+                    </div>
+                </div>
+            } @empty {
+                <div class="empty-state">
+                    <p>No hay cupones cargados todavía.</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    @if (cuponAEliminar(); as cupon) {
+        <app-ventana-confirmacion
+            titulo="Eliminar cupón"
+            [mensaje]="'¿Estás seguro de que querés eliminar el cupón ' + cupon.codigo + '?'"
+            textoConfirmar="Eliminar"
+            (confirmar)="confirmarEliminar()"
+            (cancelar)="cancelarEliminar()" />
+    }
+
+</div>

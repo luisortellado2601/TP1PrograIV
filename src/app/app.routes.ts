@@ -49,5 +49,10 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/admin-funciones/admin-funciones').then(m => m.AdminFunciones),
         canMatch: [adminGuard]
     },
+    {
+        path: 'admin-configuracion',
+        loadComponent: () => import('./componentes/admin-configuracion/admin-configuracion').then(m => m.AdminConfiguracion),
+        canMatch: [adminGuard]
+    },
 
 ]
