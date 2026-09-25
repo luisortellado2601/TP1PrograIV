@@ -8,14 +8,4 @@ import { Auth } from '../../services/auth';
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })
-export class Admin {
-
-  constructor(
-    private router: Router,
-    public authService: Auth) {}
-
-  volverCartelera() {
-    this.router.navigate(['/cartelera']); 
-  }
-  
-}
+export class Admin {}

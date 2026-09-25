@@ -209,7 +209,7 @@ export class Peliculas implements OnInit {
   }
 
   volverAtras(){
-    this.router.navigate(['/cartelera'])
+    this.router.navigate(['/admin'])
   }
 
 }
