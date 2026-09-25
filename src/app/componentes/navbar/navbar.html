@@ -15,7 +15,7 @@
 
         <div class="nav-right">
             @if (perfilActual()) {
-                <button class="btn-login" (click)="onLogout()">Cerrar sesión</button>
+                <button class="btn-login" (click)="onLogout()">Salir</button>
             } @else {
                 <button class="btn-login" routerLink="/login">Ingresar</button>
             }
@@ -45,7 +45,7 @@
 
     <div class="sidebar-footer">
         @if (perfilActual()) {
-            <button class="btn-login-lateral" (click)="onLogout(); cerrarMenu()">Cerrar Sesión</button>
+            <button class="btn-login-lateral" (click)="onLogout(); cerrarMenu()">Salir</button>
         } @else {
             <button class="btn-login-lateral" routerLink="/login" (click)="cerrarMenu()">Iniciar Sesión</button>
         }

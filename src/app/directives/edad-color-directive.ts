@@ -10,7 +10,7 @@ export class EdadColorDirective implements OnChanges {
   constructor(private el: ElementRef) {}
 
   ngOnChanges() {
-    let color = '#718096'; // Gris por defecto
+    let color = '#718096'; 
 
     if (this.edad === 'ATP') color = '#16a34a'; // Verde
     if (this.edad === '+13' || this.edad === '+16') color = '#ca8a04'; // Naranja

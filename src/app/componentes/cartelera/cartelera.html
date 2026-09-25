@@ -1,4 +1,9 @@
 <div class="cartelera-container">
+    @if (authService.perfilActual()?.rol === 'gerente' || authService.perfilActual()?.rol === 'empleado') {
+    <button class="btn-admin" type="button" (click)="volverAdmin()">
+        Ir al Panel Admin
+    </button>
+    }
     
     <header class="main-header">
         <h1>PELICULAS EN CARTELERA</h1>

@@ -5,7 +5,8 @@ import { Pelicula, RESTRICCIONES_EDAD, IDIOMAS, FORMATOS, GENEROS } from '../../
 import { PeliculasService } from '../../services/peliculas';
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
-
+import { Router } from '@angular/router';
+import { Auth } from '../../services/auth';
 
 @Component({
   imports: [CommonModule, FormField, EdadColorDirective, TitleCasePipe, FormatoDuracionPipe],
@@ -49,7 +50,10 @@ export class Peliculas implements OnInit {
 
   peliculas = signal<Pelicula[]>([]);
 
-  constructor(private peliculasService: PeliculasService) {}
+  constructor(
+    private peliculasService: PeliculasService, 
+    private router: Router,
+    private authService: Auth) {}
 
   ngOnInit() {
     this.cargarPeliculas();
@@ -142,7 +146,7 @@ export class Peliculas implements OnInit {
         hoy.setHours(0, 0, 0, 0);
         if (fechaIngresada < hoy) {
           alert('Error: La fecha de fin de preventa no puede ser anterior a la fecha actual')
-          return;
+          return
         }
         payload.fecha_fin_preventa = `${anio}-${mes}-${dia}`;
       }
@@ -203,4 +207,9 @@ export class Peliculas implements OnInit {
       });
     }
   }
+
+  volverAtras(){
+    this.router.navigate(['/cartelera'])
+  }
+
 }

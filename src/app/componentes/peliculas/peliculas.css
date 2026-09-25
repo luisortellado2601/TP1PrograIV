@@ -159,6 +159,20 @@ button[type="submit"] {
   margin-top: 0.5rem;
 }
 
+.btn-volver{
+  margin-bottom: 20px;
+  padding: 0.7rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
 button[type="submit"]:hover {
   background-color: #0056b3;
 }

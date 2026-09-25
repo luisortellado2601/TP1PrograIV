@@ -25,6 +25,7 @@ export class Register {
   fechaHoy = new Date().toISOString().split('T')[0];
   errorMessage = signal<string>('');
   successMessage = signal<string>('');
+  
   registerModel = signal<LoginData>({
     email: '',
     password: '',
@@ -37,7 +38,7 @@ export class Register {
   });
 
   registerForm = form(this.registerModel, (schemaPath) => {
-    required(schemaPath.email, {message: 'Email requerido'});
+    required(schemaPath.email,  {message: 'Email requerido'});
     email(schemaPath.email, {message: 'Ingrese un email válido'});
     maxLength(schemaPath.email, 30, { message: 'Email no puede superar los 30 caracteres'});
     minLength(schemaPath.email, 6, { message: 'Longitud de email minima es de 6 caracteres'} )
@@ -65,7 +66,6 @@ export class Register {
 
 
     required(schemaPath.dias_vacaciones, {message: 'Días de vacaciones requeridos'});
-
     min(schemaPath.dias_vacaciones, 0, {message: 'Días de vacaciones no puede ser negativo'});
   });
 

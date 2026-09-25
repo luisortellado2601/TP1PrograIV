@@ -5,10 +5,10 @@
         <header>
             <p>Ingresá los datos de la nueva función</p>
         </header>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver</button>
 
         @if (mostrarFormulario()) {
             <form (submit)="onSubmit($event)">
-                
                 <div class="form-group">
                     <label>
                         Nombre:

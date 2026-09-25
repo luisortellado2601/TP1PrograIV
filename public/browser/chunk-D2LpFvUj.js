@@ -1,0 +1,1 @@
+var i=[`ATP`,`+13`,`+18`];var n=[`Castellano`,`Subtitulada`];var e=[`2D`,`3D`,`4D`,`5D`];var r=[`Acción`,`Comedia`,`Drama`,`Terror`,`Ciencia Ficción`,`Animación`,`Suspenso`,`Romance`];export{r as i,i as n,n as r,e as t};

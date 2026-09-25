@@ -20,6 +20,21 @@
   font-family: 'Michroma',sans-serif;
 }
 
+.btn-admin{
+    width: fit-content;
+    margin-bottom: 20px;
+    padding: 0.7rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 0.5rem;
+}
+
 .btn-detalles:hover {
   background-color: #007bff;
   color: white;

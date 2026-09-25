@@ -6,6 +6,8 @@ import { Pelicula, GENEROS } from '../../models/pelicula';
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
 import { RouterLink } from '@angular/router';
+import { Auth } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cartelera',
@@ -36,7 +38,10 @@ export class Cartelera implements OnInit {
     return this.listaPeliculas().slice(0, 3);
   });
 
-  constructor(private peliculasService: PeliculasService) {}
+  constructor(
+    private peliculasService: PeliculasService,
+    public authService: Auth,
+    private router: Router) {}
 
   async ngOnInit() {
     const { data, error } = await this.peliculasService.getPeliculas();
@@ -60,4 +65,8 @@ export class Cartelera implements OnInit {
   cambiarBusqueda(termino: string) {
     this.terminoBusqueda.set(termino);
   }
+
+  volverAdmin(){
+    this.router.navigate(['/admin']);
+  } 
 }
