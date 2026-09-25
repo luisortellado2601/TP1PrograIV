@@ -1,0 +1,54 @@
+.selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.etiqueta {
+  font-weight: 600;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.grilla {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.horas {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.minutos {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.chip {
+  padding: 0.55rem 0;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  border-color: #007bff;
+}
+
+.chip.activo {
+  background-color: #007bff;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+.elegido {
+  color: #bdbdbd;
+  font-size: 0.85rem;
+}
+
+.elegido strong {
+  color: white;
+}

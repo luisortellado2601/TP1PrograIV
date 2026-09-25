@@ -1,0 +1,276 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.admin-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.panel {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  padding: 2rem;
+  border: 1px solid rgb(46, 45, 45);
+}
+
+.panel h2 {
+  margin: 0;
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.panel header p {
+  margin: 0.5rem 0 2rem;
+  color: #bdbdbd;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+input[type="text"],
+select {
+  padding: 0.8rem;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+input::placeholder {
+  color: #777;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+select option {
+  background-color: #111;
+  color: white;
+}
+
+.error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 500;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* Días de la semana */
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+}
+
+.dia-chip {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.55rem 0;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: normal;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dia-chip:hover {
+  border-color: #007bff;
+}
+
+.dia-chip.activo {
+  background-color: #007bff;
+  border-color: #007bff;
+  font-weight: bold;
+}
+
+.dia-chip input {
+  display: none;
+}
+
+.aviso {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+/* Botones */
+button[type="submit"] {
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+button[type="submit"]:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.btn-volver {
+  margin-bottom: 20px;
+  padding: 0.7rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+/* Resultado de la creación */
+.resultados {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+}
+
+.resumen {
+  margin: 0;
+  font-weight: 600;
+}
+
+.resultados ul {
+  margin: 0.8rem 0 0;
+  padding-left: 1.2rem;
+  color: #dc2626;
+  font-size: 0.85rem;
+}
+
+/* Lista de funciones */
+.movies-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.movie-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #111;
+  border-radius: 8px;
+  border: 1px solid rgb(46, 45, 45);
+  transition: transform 0.2s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-2px);
+}
+
+.movie-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
+  color: white;
+  font-size: 1.05rem;
+}
+
+.movie-meta {
+  margin: 0;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.btn-delete {
+  background: #3a1717;
+  color: #f87171;
+  border: 1px solid #552020;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-delete:hover {
+  background: #521f1f;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #111;
+  border-radius: 8px;
+  color: #999;
+  border: 2px dashed rgb(46, 45, 45);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .admin-container {
+    grid-template-columns: 1fr;
+  }
+}

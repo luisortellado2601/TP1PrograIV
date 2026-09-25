@@ -35,12 +35,12 @@
 
                     <div class="producto-controles">
                         @if (obtenerCantidad(producto.id) === 0) {
-                            <button class="btn-agregar" (click)="agregarAlCarrito(producto)">Agregar</button>
+                            <button class="btn-agregar" [disabled]="totalArticulos() >= LIMITE_ITEMS" (click)="agregarAlCarrito(producto)">Agregar</button>
                         } @else {
                             <div class="control-cantidad">
                                 <button class="btn-restar" (click)="quitarDelCarrito(producto.id!)">-</button>
                                 <span class="cantidad-actual">{{ obtenerCantidad(producto.id) }}</span>
-                                <button class="btn-sumar" (click)="agregarAlCarrito(producto)">+</button>
+                                <button class="btn-sumar" [disabled]="totalArticulos() >= LIMITE_ITEMS" (click)="agregarAlCarrito(producto)">+</button>
                             </div>
                         }
                     </div>
@@ -57,6 +57,10 @@
     <aside class="carrito-section">
         <div class="carrito-panel">
             <h3>Tu Pedido</h3>
+
+            @if (totalArticulos() >= LIMITE_ITEMS) {
+                <p class="alerta-limite">⚠️ Alcanzaste el límite de artículos.</p>
+            }
             
             <div class="carrito-items">
                 @for (item of carrito(); track item.id) {

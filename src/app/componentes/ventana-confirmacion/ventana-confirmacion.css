@@ -1,0 +1,70 @@
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.ventana {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  font-family: system-ui, -apple-system, sans-serif;
+  text-align: center;
+}
+
+.ventana h3 {
+  margin: 0 0 0.8rem 0;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.ventana p {
+  margin: 0 0 1.8rem 0;
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.acciones {
+  display: flex;
+  gap: 1rem;
+}
+
+.acciones button {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar {
+  background-color: #444;
+  color: white;
+  border: none;
+}
+
+.btn-cancelar:hover {
+  background-color: #555;
+}
+
+.btn-confirmar {
+  background: #3a1717;
+  color: #f87171;
+  border: 1px solid #552020;
+}
+
+.btn-confirmar:hover {
+  background: #521f1f;
+}

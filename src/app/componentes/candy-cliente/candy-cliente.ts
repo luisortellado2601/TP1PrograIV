@@ -41,6 +41,13 @@ export class CandyCliente implements OnInit {
     return this.carrito().reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
   });
 
+  // Cantidad total de artículos en el carrito (suma de todas las cantidades)
+  totalArticulos = computed(() => {
+    return this.carrito().reduce((acc, item) => acc + item.cantidad, 0);
+  });
+
+  LIMITE_ITEMS = 6;
+
   constructor(private candyService: CandyService) {}
 
   ngOnInit() {
@@ -50,6 +57,8 @@ export class CandyCliente implements OnInit {
   }
 
   agregarAlCarrito(producto: ProductoCandy) {
+    if (this.totalArticulos() >= this.LIMITE_ITEMS) return;
+
     this.carrito.update(items => {
       const existe = items.find(i => i.id === producto.id);
       if (existe) {

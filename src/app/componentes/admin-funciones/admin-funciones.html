@@ -1,0 +1,184 @@
+<div class="admin-container">
+
+    <section class="panel form-panel">
+        <h2>Programar Funciones</h2>
+        <header>
+            <p>La sala se asigna sola, sin solapamientos y con 30 min entre funciones</p>
+        </header>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver</button>
+
+        <form [formGroup]="form" (ngSubmit)="crear()">
+            <div class="form-group">
+                <label>
+                    Película:
+                    <select formControlName="peliculaId" (change)="alCambiarPelicula()">
+                        <option value="" disabled>Seleccionar...</option>
+                        @for (p of peliculas(); track p.id) {
+                            <option [value]="p.id">{{ p.nombre }} · {{ p.duracion_minutos | formatoDuracion }}</option>
+                        }
+                    </select>
+                </label>
+                @if (invalido('peliculaId')) {
+                    <span class="error-msg">Seleccioná una película</span>
+                }
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        Formato:
+                        <select formControlName="formato">
+                            <option value="" disabled>Seleccionar...</option>
+                            @for (f of opcionesFormato(); track f) {
+                                <option [value]="f">{{ f }}</option>
+                            }
+                        </select>
+                    </label>
+                    @if (invalido('formato')) {
+                        <span class="error-msg">Requerido</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Idioma:
+                        <select formControlName="idioma">
+                            <option value="" disabled>Seleccionar...</option>
+                            @for (i of opcionesIdioma(); track i) {
+                                <option [value]="i">{{ i }}</option>
+                            }
+                        </select>
+                    </label>
+                    @if (invalido('idioma')) {
+                        <span class="error-msg">Requerido</span>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <app-selector-horario
+                    etiqueta="Horario de inicio"
+                    [valor]="form.controls.hora.value"
+                    (valorChange)="elegirHora($event)" />
+                @if (invalido('hora')) {
+                    <span class="error-msg">Elegí el horario</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label>Días de la semana:</label>
+                <div class="dias-grid">
+                    @for (d of diasSemana; track d.valor) {
+                        <label class="dia-chip" [class.activo]="form.controls.dias.value.includes(d.valor)">
+                            <input type="checkbox" [checked]="form.controls.dias.value.includes(d.valor)"
+                                (change)="toggleDia(d.valor, $event)" />
+                            {{ d.nombre }}
+                        </label>
+                    }
+                </div>
+                @if (invalido('dias')) {
+                    <span class="error-msg">Elegí al menos un día</span>
+                }
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        Desde:
+                        <input type="text" formControlName="desde" inputmode="numeric"
+                            placeholder="DD/MM/AAAA" (input)="formatearFecha('desde', $event)" />
+                    </label>
+                    @if (invalido('desde')) {
+                        <span class="error-msg">Fecha inválida (DD/MM/AAAA)</span>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        Hasta:
+                        <input type="text" formControlName="hasta" inputmode="numeric"
+                            placeholder="DD/MM/AAAA" (input)="formatearFecha('hasta', $event)" />
+                    </label>
+                    @if (invalido('hasta')) {
+                        <span class="error-msg">Fecha inválida (DD/MM/AAAA)</span>
+                    }
+                </div>
+            </div>
+
+            @if (form.errors?.['rango'] && form.controls.desde.valid && form.controls.hasta.valid) {
+                <p class="aviso">{{ form.errors?.['rango'] }}</p>
+            }
+
+            @if (aviso()) {
+                <p class="aviso">{{ aviso() }}</p>
+            }
+
+            <button type="submit" [disabled]="creando()">
+                {{ creando() ? 'Creando funciones...' : 'Crear funciones' }}
+            </button>
+        </form>
+
+        @if (resultados().length) {
+            <div class="resultados">
+                <p class="resumen">
+                    ✅ {{ creadas() }} creada(s)
+                    @if (fallidas()) { · ⚠️ {{ fallidas() }} sin sala disponible }
+                </p>
+                @if (fallidas()) {
+                    <ul>
+                        @for (r of resultados(); track r.fecha) {
+                            @if (!r.ok) {
+                                <li><strong>{{ r.fecha }}</strong>: {{ r.mensaje }}</li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    </section>
+
+    <section class="panel list-panel">
+        <h2>Próximas Funciones</h2>
+        <header>
+            <p>Programación cargada en el sistema</p>
+        </header>
+
+        <div class="movies-grid">
+            @if (!cargandoFunciones()) {
+                @for (f of funciones(); track f.id) {
+                    <div class="movie-card">
+                        <div class="movie-info">
+                            <h3>{{ f.peliculas?.nombre }}</h3>
+                            <p class="movie-meta">
+                                {{ formatoFuncion(f.fecha_hora_inicio) }} hs |
+                                {{ f.salas?.nombre }} |
+                                {{ f.formato }} · {{ f.idioma }}
+                            </p>
+                        </div>
+                        <div class="movie-actions">
+                            <button class="btn-delete" type="button" (click)="pedirEliminar(f)">🗑️</button>
+                        </div>
+                    </div>
+                } @empty {
+                    <div class="empty-state">
+                        <p>No hay funciones programadas todavía.</p>
+                    </div>
+                }
+            } @else {
+                <div class="empty-state">
+                    <p>Cargando funciones...</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    @if (funcionAEliminar(); as funcion) {
+        <app-ventana-confirmacion
+            titulo="Eliminar función"
+            [mensaje]="mensajeEliminar(funcion)"
+            textoConfirmar="Eliminar"
+            (confirmar)="confirmarEliminar()"
+            (cancelar)="cancelarEliminar()" />
+    }
+
+</div>

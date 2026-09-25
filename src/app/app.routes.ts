@@ -44,5 +44,10 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/peliculas/peliculas').then(m => m.Peliculas),
         canMatch: [adminGuard]
     },
+    {
+        path: 'admin-funciones',
+        loadComponent: () => import('./componentes/admin-funciones/admin-funciones').then(m => m.AdminFunciones),
+        canMatch: [adminGuard]
+    },
 
 ]

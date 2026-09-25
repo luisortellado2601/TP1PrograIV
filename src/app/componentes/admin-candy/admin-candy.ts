@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { CandyService } from '../../services/candy';
 import { FormatoPuntosPipe } from '../../pipes/formato-puntos-pipe-pipe';
 import { DestacadoColorDirective } from '../../directives/destacado-color-directive';
+import { VentanaConfirmacion } from '../ventana-confirmacion/ventana-confirmacion';
 
 export interface ProductoCandy {
     id?: string;
@@ -33,7 +34,8 @@ const CATEGORIAS_CANDY = [
         CurrencyPipe,
         RouterLink,
         FormatoPuntosPipe,
-        DestacadoColorDirective
+        DestacadoColorDirective,
+        VentanaConfirmacion
     ]
 })
 export class Candy implements OnInit {
@@ -43,6 +45,8 @@ export class Candy implements OnInit {
     mostrarFormulario = signal(true);
 
     productoEditandoId = signal<string | null>(null);
+
+    productoAEliminar = signal<ProductoCandy | null>(null);
 
     productoModel = signal<ProductoCandy>({
         nombre: '',
@@ -189,15 +193,25 @@ export class Candy implements OnInit {
         }, 0);
     }
 
-    eliminarProducto(id?: string) {
+    // Abre la ventana de confirmación con el producto elegido
+    pedirEliminar(producto: ProductoCandy) {
+        this.productoAEliminar.set(producto);
+    }
+
+    cancelarEliminar() {
+        this.productoAEliminar.set(null);
+    }
+
+    confirmarEliminar() {
+        const id = this.productoAEliminar()?.id;
+        this.productoAEliminar.set(null);
+
         if (!id) {
             return;
         }
 
-        if (confirm('¿Estás seguro de que querés eliminar este producto?')) {
-            this.candyService.deleteProducto(id).then(() => {
-                this.cargarProductos();
-            });
-        }
+        this.candyService.deleteProducto(id).then(() => {
+            this.cargarProductos();
+        });
     }
 }

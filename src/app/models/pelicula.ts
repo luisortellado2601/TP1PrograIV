@@ -9,7 +9,9 @@ export interface Pelicula {
     idiomas_disponibles: string; 
     generos: string []; 
     fecha_fin_preventa: string; 
-    precio_preventa: number; 
+    precio_preventa: number;
+    fecha_estreno?: string;
+    activa?: boolean;
 }
 
 export const RESTRICCIONES_EDAD = ['ATP', '+13', '+18']; 

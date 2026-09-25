@@ -7,9 +7,10 @@ import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
 import { Router } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { VentanaConfirmacion } from '../ventana-confirmacion/ventana-confirmacion';
 
 @Component({
-  imports: [CommonModule, FormField, EdadColorDirective, TitleCasePipe, FormatoDuracionPipe],
+  imports: [CommonModule, FormField, EdadColorDirective, TitleCasePipe, FormatoDuracionPipe, VentanaConfirmacion],
   selector: 'app-peliculas',
   styleUrl: './peliculas.css',
   templateUrl: './peliculas.html',
@@ -22,6 +23,7 @@ export class Peliculas implements OnInit {
   
   mostrarFormulario = signal(true);
   peliculaEditandoId = signal<string | null>(null);
+  peliculaAEliminar = signal<Pelicula | null>(null);
 
   peliculaModel = signal<Pelicula>({
     nombre: '',
@@ -199,13 +201,23 @@ export class Peliculas implements OnInit {
     setTimeout(() => this.mostrarFormulario.set(true), 0);
   }
 
-  eliminarPelicula(id?: string) {
+  // Abre la ventana de confirmación con la película elegida
+  pedirEliminar(pelicula: Pelicula) {
+    this.peliculaAEliminar.set(pelicula);
+  }
+
+  cancelarEliminar() {
+    this.peliculaAEliminar.set(null);
+  }
+
+  confirmarEliminar() {
+    const id = this.peliculaAEliminar()?.id;
+    this.peliculaAEliminar.set(null);
     if (!id) return;
-    if (confirm('¿Estás seguro de que querés eliminar esta película?')) {
-      this.peliculasService.deletePelicula(id).then(() => {
-        this.cargarPeliculas(); 
-      });
-    }
+
+    this.peliculasService.deletePelicula(id).then(() => {
+      this.cargarPeliculas();
+    });
   }
 
   volverAtras(){

@@ -177,7 +177,7 @@
 
                         <button
                             class="btn-delete"
-                            (click)="eliminarProducto(producto.id)"
+                            (click)="pedirEliminar(producto)"
                         >
                             🗑️
                         </button>
@@ -195,5 +195,14 @@
 
         </div>
     </section>
+
+    @if (productoAEliminar(); as producto) {
+        <app-ventana-confirmacion
+            titulo="Eliminar producto"
+            [mensaje]="'¿Estás seguro de que querés eliminar ' + producto.nombre + '?'"
+            textoConfirmar="Eliminar"
+            (confirmar)="confirmarEliminar()"
+            (cancelar)="cancelarEliminar()" />
+    }
 
 </div>

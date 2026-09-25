@@ -1,0 +1,11 @@
+<div class="fondo" (click)="cancelar.emit()">
+    <div class="ventana" role="dialog" (click)="$event.stopPropagation()">
+        <h3>{{ titulo }}</h3>
+        <p>{{ mensaje }}</p>
+
+        <div class="acciones">
+            <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
+            <button type="button" class="btn-confirmar" (click)="confirmar.emit()">{{ textoConfirmar }}</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="selector">
+    <span class="etiqueta">{{ etiqueta }}</span>
+
+    <div class="grilla horas" role="group" aria-label="Hora">
+        @for (h of horas; track h) {
+            <button type="button" class="chip" [class.activo]="hora === h" (click)="elegirHora(h)">{{ h }}</button>
+        }
+    </div>
+
+    <div class="grilla minutos" role="group" aria-label="Minutos">
+        @for (m of minutos; track m) {
+            <button type="button" class="chip" [class.activo]="minuto === m" (click)="elegirMinuto(m)">:{{ m }}</button>
+        }
+    </div>
+
+    <span class="elegido">
+        @if (hora && minuto) { Inicio: <strong>{{ hora }}:{{ minuto }} hs</strong> } @else { Elegí hora y minutos }
+    </span>
+</div>
