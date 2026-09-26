@@ -116,19 +116,21 @@
 }
 
 .sala {
-  --asiento: clamp(14px, calc((100vw - 9rem) / 36), 30px);
+  --asiento: clamp(16px, calc((100vw - 9rem) / 36), 30px);
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: calc(var(--asiento) * 0.2);
   padding: 0.5rem 0 1.5rem 0;
   overflow-x: auto;
 }
 
+/* margin auto: centra la fila si entra; si es más ancha que la pantalla, queda alineada a la izquierda y se puede deslizar */
 .fila {
   display: flex;
   align-items: center;
   gap: calc(var(--asiento) * 0.8);
+  width: max-content;
+  margin: 0 auto;
 }
 
 .bloque {

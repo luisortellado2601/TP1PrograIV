@@ -194,7 +194,7 @@ export class MapaButacas implements OnInit, OnDestroy {
     }
 
     if (this.seleccionadas().length >= this.maxButacas) {
-      this.aviso.set(`Podés elegir hasta ${this.maxButacas} butacas por compra.`);
+      this.aviso.set(`¡Ya elegiste tus ${this.maxButacas} butacas! Si querés cambiar alguna, tocá una de las elegidas para liberarla.`);
       return;
     }
 
