@@ -2,7 +2,7 @@ import { Service } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Observable, from, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { FuncionAdmin, PeliculaResumen, aTextoLocal } from '../models/funcion';
+import { FuncionAdmin, FuncionPublica, PeliculaResumen, aTextoLocal } from '../models/funcion';
 
 @Service()
 export class FuncionesService {
@@ -38,6 +38,22 @@ export class FuncionesService {
             map(({ data, error }) => {
                 if (error) throw new Error(error.message);
                 return (data ?? []) as unknown as FuncionAdmin[];
+            })
+        );
+    }
+
+    // Funciones futuras de una película, para que el cliente elija cuál ver
+    getFuncionesDePelicula(peliculaId: string): Observable<FuncionPublica[]> {
+        return from(this.supabase
+            .from('funciones')
+            .select('id, fecha_hora_inicio, formato, idioma')
+            .eq('pelicula_id', peliculaId)
+            .gte('fecha_hora_inicio', aTextoLocal(new Date()))
+            .order('fecha_hora_inicio')
+        ).pipe(
+            map(({ data, error }) => {
+                if (error) throw new Error(error.message);
+                return (data ?? []) as FuncionPublica[];
             })
         );
     }

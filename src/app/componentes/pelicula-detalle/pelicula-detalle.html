@@ -32,41 +32,119 @@
                     </div>
                 </div>
 
-                <!-- NUEVO: Contenedor reservado para fechas y horarios -->
+                @if (peli.restriccion_edad === '+13' || peli.restriccion_edad === '+18') {
+                    <p class="aviso-edad">
+                        ⚠️ Clasificación {{ peli.restriccion_edad }}: no pueden comprar entradas los menores de
+                        {{ peli.restriccion_edad === '+18' ? 18 : 13 }} años. Las entradas indican que debe asistir un adulto.
+                    </p>
+                }
+
                 <div class="funciones-container">
                     <h3>Seleccioná tu función</h3>
-                    
-                    <div class="fechas-list">
-                        <!-- Estos son botones estáticos de prueba. Luego los iterarán con los datos reales -->
-                        <button class="btn-fecha activo ">Hoy, 22 Sep</button>
-                        <button class="btn-fecha">Mañana, 23 Sep</button>
-                        <button class="btn-fecha">Jueves, 24 Sep</button>
-                    </div>
 
-                    <div class="horarios-list">
-                        <!-- Estos son botones estáticos de prueba -->
-                        <button class="btn-horario">
-                            <span class="hora">18:00 hs</span>
-                            <span class="formato">2D Subtitulada</span>
-                        </button>
-                        <button class="btn-horario activo">
-                            <span class="hora">20:30 hs</span>
-                            <span class="formato">2D Castellano</span>
-                        </button>
-                        <button class="btn-horario">
-                            <span class="hora">23:15 hs</span>
-                            <span class="formato">2D Subtitulada</span>
-                        </button>
-                    </div>
+                    @if (funciones().length) {
+                        <div class="fechas-list">
+                            @for (dia of dias(); track dia) {
+                                <button type="button" class="btn-fecha" [class.activo]="dia === diaSeleccionado()"
+                                    (click)="elegirDia(dia)">{{ etiquetaDia(dia) }}</button>
+                            }
+                        </div>
+
+                        <div class="horarios-list">
+                            @for (f of funcionesDelDia(); track f.id) {
+                                <button type="button" class="btn-horario" [class.activo]="f.id === funcionSeleccionada()?.id"
+                                    (click)="elegirFuncion(f)">
+                                    <span class="hora">{{ horaFuncion(f) }} hs</span>
+                                    <span class="formato">{{ f.formato }} {{ f.idioma }}</span>
+                                </button>
+                            }
+                        </div>
+                    } @else {
+                        <p class="sin-funciones">Todavía no hay funciones programadas para esta película.</p>
+                    }
                 </div>
 
                 <div class="acciones">
-                    <!-- Más adelante pueden enlazar el [disabled] si no hay función seleccionada -->
-                    <button class="btn-comprar" [routerLink]="['/comprar', peli.id]">Continuar Compra</button>
+                    <button class="btn-comprar" type="button" [disabled]="!funcionSeleccionada()"
+                        (click)="elegirButacas()">Elegir butacas</button>
                     <button class="btn-volver" routerLink="/cartelera">Volver a Cartelera</button>
                 </div>
             </div>
         </div>
+
+        <section class="resenas-section">
+            <div class="resenas-header">
+                <h2>Reseñas</h2>
+                <div class="resumen-puntaje">
+                    @if (resenas().length) {
+                        <span class="promedio">{{ promedio().toFixed(1) }}</span>
+                        <span class="estrellas-fijas">
+                            @for (n of rango; track n) {
+                                <span class="estrella" [class.llena]="n <= promedioRedondeado()">★</span>
+                            }
+                        </span>
+                        <span class="cantidad">({{ resenas().length }} {{ resenas().length === 1 ? 'reseña' : 'reseñas' }})</span>
+                    } @else {
+                        <span class="cantidad">Todavía no hay reseñas</span>
+                    }
+                </div>
+            </div>
+
+            @if (authService.perfilActual()) {
+                @if (!miResena() || editando()) {
+                <form class="form-resena" [formGroup]="formResena" (ngSubmit)="publicarResena()">
+                    <h4>{{ miResena() ? 'Editá tu reseña' : 'Dejá tu reseña' }}</h4>
+
+                    <div class="estrellas-elegir">
+                        @for (n of rango; track n) {
+                            <button type="button" class="estrella" [class.llena]="n <= estrellasElegidas()"
+                                (click)="elegirEstrellas(n)">★</button>
+                        }
+                    </div>
+
+                    <textarea formControlName="comentario" rows="3" maxlength="200"
+                        placeholder="Comentario corto (opcional)"></textarea>
+
+                    @if (errorResena()) {
+                        <p class="error-resena">{{ errorResena() }}</p>
+                    }
+
+                    <div class="acciones-resena">
+                        <button type="submit" class="btn-comprar" [disabled]="guardandoResena()">
+                            {{ guardandoResena() ? 'Guardando...' : (miResena() ? 'Guardar cambios' : 'Publicar reseña') }}
+                        </button>
+                        @if (editando()) {
+                            <button type="button" class="btn-volver" (click)="cancelarEdicion()">Cancelar</button>
+                        }
+                    </div>
+                </form>
+                }
+            } @else {
+                <p class="aviso-login">Iniciá sesión para dejar tu reseña. <a routerLink="/login">Ingresar</a></p>
+            }
+
+            <div class="resenas-lista">
+                @for (r of resenas(); track r.id) {
+                    <article class="resena">
+                        <div class="resena-cabecera">
+                            <strong>{{ r.nombre_autor || 'Cliente' }}</strong>
+                            <span class="estrellas-fijas">
+                                @for (n of rango; track n) {
+                                    <span class="estrella" [class.llena]="n <= r.estrellas">★</span>
+                                }
+                            </span>
+                            <span class="fecha">{{ r.creada_en | date:'dd/MM/yyyy' }}</span>
+                            @if (r.id === miResena()?.id && !editando()) {
+                                <button type="button" class="btn-editar" (click)="editarMiResena()">Editar</button>
+                            }
+                        </div>
+                        @if (r.comentario_corto) {
+                            <p class="comentario">{{ r.comentario_corto }}</p>
+                        }
+                    </article>
+                }
+            </div>
+        </section>
     } @else {
         <div class="error-state">
             <h2>Película no encontrada</h2>

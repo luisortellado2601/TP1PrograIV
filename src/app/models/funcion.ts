@@ -21,6 +21,14 @@ export interface FuncionAdmin {
     salas: { nombre: string } | null;
 }
 
+// Función tal como la ve el cliente en el detalle de la película
+export interface FuncionPublica {
+    id: string;
+    fecha_hora_inicio: string;
+    formato: string | null;
+    idioma: string | null;
+}
+
 export interface ResultadoCreacion {
     fecha: string;
     ok: boolean;

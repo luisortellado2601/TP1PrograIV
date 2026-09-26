@@ -72,8 +72,8 @@ src/app/
 │   ├── admin-configuracion/  Precios, recargo VIP, puntos y cupones
 │   ├── selector-horario/   Selector de hora reutilizable (@Input / @Output)
 │   └── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
-├── services/               auth, peliculas, candy, funciones (acceso a Supabase)
-├── models/                 pelicula.ts, funcion.ts
+├── services/               auth, peliculas, candy, funciones, configuracion, resenas (acceso a Supabase)
+├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts
 ├── guards/                 auth-guard, admin-guard
 ├── directives/             edad-color, destacado-color
 └── pipes/                  formato-duracion, formato-puntos
@@ -179,17 +179,17 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | Roles, guards y RLS | ✅ | Cliente, empleado y gerente |
 | ABM de películas | ✅ | Con géneros múltiples, clasificación y preventa |
 | ABM del candy (productos y categorías) | ✅ | |
-| Combos | 🔧 | Tablas creadas; falta el ABM |
+| Combos | ✅ | Se cargan como productos de categoría "Combos", con precio fijo y marca de destacado |
 | Funciones y asignación automática de salas | ✅ | Con recurrencia y validación en la base |
 | Cartelera con buscador y filtro por género | ✅ | |
 | Las 3 películas más vendidas primero | 🔧 | Hoy muestra las tres primeras; falta el ranking real por ventas |
-| Detalle de película con funciones y reseñas | 🔧 | Ficha lista; falta mostrar funciones y reseñas (tabla lista) |
+| Detalle de película con funciones y reseñas | ✅ | Funciones por día y horario; reseñas con estrellas, comentario y promedio (una por usuario registrado) |
 | "Próximamente" y alertas de estreno | ⏳ | Tabla `alertas_estreno` creada |
 | Compra con mapa de butacas en tiempo real | ⏳ | Estructura de datos y reglas listas |
 | PDF con QR, validación por empleados y carga manual del código | ⏳ | |
 | Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
 | Cupón de bienvenida (20 %) y cupón para mayores de 50 | 🔧 | Se crean y editan desde el panel; falta aplicarlos en la compra |
-| Restricción de edad | 🔧 | Clasificación cargada; falta el bloqueo y el aviso en la compra |
+| Restricción de edad | 🔧 | Clasificación cargada y aviso en el detalle de la película; falta el aviso en la entrada y el bloqueo en la compra |
 | Puntos, canjes y crédito | ⏳ | Tablas creadas |
 | Cancelación hasta 2 horas antes, con crédito | ⏳ | |
 | Preventa por película | 🔧 | Campos cargados; falta aplicar el precio en la compra |

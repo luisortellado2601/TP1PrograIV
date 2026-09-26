@@ -224,6 +224,211 @@ h1 {
   background-color: #0056b3;
 }
 
+.btn-comprar:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.aviso-edad {
+  margin: 0;
+  padding: 0.9rem 1.2rem;
+  background-color: #1a1a1a;
+  border: 1px solid #ca8a04;
+  border-radius: 8px;
+  color: #ddd;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.sin-funciones {
+  margin: 0;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+/* Reseñas */
+.resenas-section {
+  margin-top: 2rem;
+  background-color: #111;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  border: 1px solid rgb(46, 45, 45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.resenas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resenas-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.resumen-puntaje {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.promedio {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.cantidad {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.estrella {
+  color: #444;
+  font-size: 1.2rem;
+}
+
+.estrella.llena {
+  color: #facc15;
+}
+
+.form-resena {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+}
+
+.form-resena h4 {
+  margin: 0;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.estrellas-elegir {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.estrellas-elegir .estrella {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.estrellas-elegir .estrella:hover {
+  transform: scale(1.15);
+}
+
+.form-resena textarea {
+  padding: 0.8rem;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.form-resena textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.form-resena textarea::placeholder {
+  color: #777;
+}
+
+.form-resena .btn-comprar {
+  flex: none;
+}
+
+.error-resena {
+  margin: 0;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.aviso-login {
+  margin: 0 0 1.5rem 0;
+  color: #bbb;
+}
+
+.aviso-login a {
+  color: #007bff;
+}
+
+.resenas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.resena {
+  padding: 1rem;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+}
+
+.resena-cabecera {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.resena-cabecera strong {
+  color: white;
+}
+
+.resena-cabecera .fecha {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.acciones-resena {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-editar {
+  margin-left: auto;
+  background: #102a3a;
+  color: #38bdf8;
+  border: 1px solid #164e63;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn-editar:hover {
+  background: #153b50;
+}
+
+.comentario {
+  margin: 0.6rem 0 0 0;
+  color: #ccc;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
 .btn-volver {
   background-color: transparent;
   color: #bbb;
