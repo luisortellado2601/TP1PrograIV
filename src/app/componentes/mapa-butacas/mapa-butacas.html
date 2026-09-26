@@ -1,0 +1,106 @@
+<div class="mapa-container">
+    @if (cargando()) {
+        <div class="estado">Cargando función...</div>
+    } @else if (errorCarga()) {
+        <div class="estado">
+            <p>{{ errorCarga() }}</p>
+            <button class="btn-volver" type="button" routerLink="/cartelera">Volver a Cartelera</button>
+        </div>
+    } @else if (funcion(); as f) {
+        <header class="cabecera">
+            <button class="btn-volver" type="button" (click)="volver()">⬅ Volver</button>
+            <div class="cabecera-info">
+                <h1>{{ f.peliculas?.nombre }}</h1>
+                <p>{{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}</p>
+            </div>
+        </header>
+
+        @if (edadMinima()) {
+            <p class="aviso-edad">
+                ⚠️ Clasificación +{{ edadMinima() }}: no pueden comprar entradas los menores de {{ edadMinima() }} años.
+                Las entradas indican que debe asistir un adulto.
+            </p>
+        }
+
+        <div class="leyenda">
+            <span class="item"><i class="muestra"></i> Libre</span>
+            <span class="item"><i class="muestra seleccionada"></i> Elegida</span>
+            <span class="item"><i class="muestra vendida"></i> Ocupada</span>
+            <span class="item"><i class="muestra reservada"></i> Reservada</span>
+            <span class="item"><i class="muestra accesible"></i> Accesible</span>
+            <span class="item"><i class="muestra vip"></i> VIP</span>
+        </div>
+
+        <div class="pantalla">PANTALLA</div>
+
+        <div class="sala">
+            @for (fila of sala; track fila.letra) {
+                <div class="fila">
+                    <span class="letra">{{ fila.letra }}</span>
+
+                    @for (bloque of fila.bloques; track $index) {
+                        <div class="bloque">
+                            @for (b of bloque; track $index) {
+                                @if (b) {
+                                    <button type="button" class="asiento" [class]="clasesButaca(b)"
+                                        [disabled]="bloqueada(b)" [title]="tituloButaca(b)"
+                                        (click)="alternar(b)">{{ b.numero }}</button>
+                                } @else {
+                                    <span class="hueco"></span>
+                                }
+                            }
+                        </div>
+                    }
+
+                    <span class="letra">{{ fila.letra }}</span>
+                </div>
+            }
+        </div>
+
+        <section class="resumen">
+            <p class="seleccion">
+                @if (seleccionadas().length) {
+                    Asientos seleccionados: {{ textoSeleccion() }}
+                } @else {
+                    Elegí tus butacas (hasta {{ maxButacas }} por compra)
+                }
+            </p>
+
+            @if (aviso()) {
+                <p class="aviso">{{ aviso() }}</p>
+            }
+
+            @if (seleccionadas().length) {
+                <ul class="lineas">
+                    @for (b of seleccionadas(); track b.fila + '-' + b.numero) {
+                        <li>
+                            <span>
+                                {{ b.fila }}-{{ b.numero }}
+                                @if (b.tipo === 'vip') { <span class="etiqueta vip">VIP</span> }
+                                @if (b.tipo === 'accesible') { <span class="etiqueta accesible">Accesible</span> }
+                            </span>
+                            <span>{{ precioButaca(b) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                        </li>
+                    }
+                </ul>
+
+                @if (tieneVip()) {
+                    <p class="aviso-vip">
+                        ⭐ Tu selección incluye butacas VIP, con un recargo de
+                        {{ recargoVip() | currency:'ARS':'symbol-narrow':'1.0-0' }} cada una.
+                    </p>
+                }
+
+                <div class="total">
+                    <span>Total</span>
+                    <strong>{{ total() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                </div>
+            }
+
+            <p class="nota">Las butacas elegidas quedan reservadas por 5 minutos.</p>
+
+            <button class="btn-confirmar" type="button" [disabled]="!seleccionadas().length"
+                (click)="continuar()">Confirmar compra</button>
+        </section>
+    }
+</div>

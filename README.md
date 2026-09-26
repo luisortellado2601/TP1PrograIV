@@ -71,9 +71,10 @@ src/app/
 │   ├── admin-funciones/    Programación de funciones (asignación automática)
 │   ├── admin-configuracion/  Precios, recargo VIP, puntos y cupones
 │   ├── selector-horario/   Selector de hora reutilizable (@Input / @Output)
-│   └── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
-├── services/               auth, peliculas, candy, funciones, configuracion, resenas (acceso a Supabase)
-├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts
+│   ├── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
+│   └── mapa-butacas/       Mapa de butacas en tiempo real con reserva temporal
+├── services/               auth, peliculas, candy, funciones, configuracion, resenas, butacas (acceso a Supabase)
+├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts, butaca.ts
 ├── guards/                 auth-guard, admin-guard
 ├── directives/             edad-color, destacado-color
 └── pipes/                  formato-duracion, formato-puntos
@@ -86,6 +87,7 @@ src/app/
 | `/cartelera` | Público | Lazy |
 | `/pelicula-detalle/:id` | Público | Lazy |
 | `/login`, `/register` | Público | Lazy |
+| `/butacas/:funcionId` | Público (también compradores anónimos) | Lazy |
 | `/candy-cliente` | Usuario con sesión (`authGuard`) | Lazy |
 | `/admin` | Empleado o gerente (`adminGuard`) | Lazy |
 | `/peliculas`, `/admin-candy`, `/admin-funciones`, `/admin-configuracion` | Empleado o gerente (`adminGuard`) | Lazy |
@@ -124,6 +126,7 @@ erDiagram
 | Nunca dos funciones a la vez en la misma sala, con **30 minutos** de margen entre una y otra | Constraint de exclusión `funciones_sin_solape` (índice GiST sobre sala y rango de tiempo) |
 | Asignación automática de sala | Función SQL `crear_funcion`: calcula el fin según la duración de la película y usa la primera sala libre; si ninguna sirve, devuelve un error claro |
 | Una butaca no se vende dos veces | Índice único parcial sobre `(funcion_id, fila, columna)` para entradas no canceladas |
+| Reserva temporal (5 min) y máximo de 6 butacas por compra | Función SQL `reservar_butaca` (con clave primaria por función, fila y columna: dos personas no pueden reservar la misma butaca) |
 | Solo existen butacas válidas | Constraint `butaca_valida` (ver distribución abajo) |
 | Cada usuario solo ve lo suyo | Políticas RLS por tabla |
 | Registro de actividad | Trigger `log_cambio` sobre funciones, precios, configuración, productos y combos |
@@ -185,7 +188,8 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | Las 3 películas más vendidas primero | 🔧 | Hoy muestra las tres primeras; falta el ranking real por ventas |
 | Detalle de película con funciones y reseñas | ✅ | Funciones por día y horario; reseñas con estrellas, comentario y promedio (una por usuario registrado) |
 | "Próximamente" y alertas de estreno | ⏳ | Tabla `alertas_estreno` creada |
-| Compra con mapa de butacas en tiempo real | ⏳ | Estructura de datos y reglas listas |
+| Mapa de butacas en tiempo real | ✅ | Filas A a T, J accesible, VIP en R, S y T, reserva temporal y máximo de 6 |
+| Confirmación de la compra (pago simulado) | ⏳ | El botón "Confirmar compra" del mapa lleva a la compra, que se arma en el siguiente bloque |
 | PDF con QR, validación por empleados y carga manual del código | ⏳ | |
 | Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
 | Cupón de bienvenida (20 %) y cupón para mayores de 50 | 🔧 | Se crean y editan desde el panel; falta aplicarlos en la compra |

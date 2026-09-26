@@ -25,6 +25,10 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/register/register').then(m => m.Register)
     },
     {
+        path: 'butacas/:funcionId',
+        loadComponent: () => import('./componentes/mapa-butacas/mapa-butacas').then(m => m.MapaButacas),
+    },
+    {
         path: 'candy-cliente',
         loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente),
         canActivate: [authGuard]
