@@ -114,6 +114,23 @@
   font-size: 0.9rem;
 }
 
+/* Combos */
+.panel-combos {
+  border-color: #facc15;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.12);
+}
+
+.combo-card {
+  border-color: #facc15;
+  background-color: #1a1607;
+}
+
+.combo-descripcion {
+  color: #facc15;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
 /* Candy */
 .productos-grid {
   display: grid;
@@ -334,68 +351,6 @@
   padding: 0.5rem 0;
   color: #bdbdbd;
   font-size: 0.9rem;
-}
-
-.campo-cupon {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin: 0.5rem 0;
-  font-size: 0.85rem;
-  color: #bdbdbd;
-  font-weight: 600;
-}
-
-.fila-cupon {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.campo-cupon input {
-  flex: 1;
-  min-width: 0;
-  padding: 0.6rem;
-  background-color: #111;
-  color: white;
-  border: 1px solid rgb(46, 45, 45);
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-family: inherit;
-}
-
-.campo-cupon input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.campo-cupon button {
-  padding: 0.6rem 1rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.campo-cupon button:hover {
-  background-color: #0056b3;
-}
-
-.btn-quitar-cupon {
-  margin-left: 0.5rem;
-  padding: 0.1rem 0.5rem;
-  background: transparent;
-  color: #facc15;
-  border: 1px solid #facc15;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.btn-quitar-cupon:hover {
-  background-color: rgba(250, 204, 21, 0.1);
 }
 
 .aviso-cupon {

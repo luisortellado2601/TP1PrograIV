@@ -68,7 +68,6 @@ export class CandyCliente implements OnInit {
   errorPago = signal('');
   mostrarConfirmacion = signal(false);
   resultado = signal<ResultadoCompra | null>(null);
-  cuponManual = signal('');
 
   LIMITE_ITEMS = 6;
 
@@ -107,17 +106,8 @@ export class CandyCliente implements OnInit {
     return candidatos.reduce((mejor, c) => c.porcentaje > mejor.porcentaje ? c : mejor);
   });
 
-  // Si el usuario escribe un código a mano, ese manda; si no, se aplica el automático
-  cuponEfectivo = computed<Cupon | null>(() => {
-    const codigo = this.cuponManual().trim().toUpperCase();
-    if (!codigo) return this.cuponElegible();
-    return this.cupones().find(c => c.codigo.toUpperCase() === codigo && c.activo !== false) ?? null;
-  });
-
-  cuponInvalido = computed(() => !!this.cuponManual().trim() && !this.cuponEfectivo());
-
   descuento = computed(() => {
-    const cupon = this.cuponEfectivo();
+    const cupon = this.cuponElegible();
     return cupon ? Number((this.totalPagar() * cupon.porcentaje / 100).toFixed(2)) : 0;
   });
 
@@ -127,7 +117,9 @@ export class CandyCliente implements OnInit {
 
   ngOnInit() {
     this.candyService.getProductos().then(result => {
-      this.productos.set(result.data || []);
+      // "Combo Económico" incluye una entrada obligatoria: acá no hay ninguna, así que no se ofrece.
+      // La categoría "Combos" (ya existente) sí se sigue mostrando, como siempre.
+      this.productos.set((result.data || []).filter(p => p.categoria !== 'Combo Económico'));
     });
 
     this.configuracionService.getCupones().subscribe({
@@ -186,14 +178,6 @@ export class CandyCliente implements OnInit {
     return mensajes[campo];
   }
 
-  aplicarCupon(codigo: string) {
-    this.cuponManual.set(codigo.trim());
-  }
-
-  quitarCupon() {
-    this.cuponManual.set('');
-  }
-
   pedirConfirmacion() {
     if (!this.carrito().length) return;
     if (this.formPago.invalid) {
@@ -213,7 +197,7 @@ export class CandyCliente implements OnInit {
     this.errorPago.set('');
 
     const candy = this.carrito().map(i => ({ producto_id: i.id!, cantidad: i.cantidad }));
-    const cuponCodigo = this.cuponEfectivo()?.codigo ?? null;
+    const cuponCodigo = this.cuponElegible()?.codigo ?? null;
 
     this.comprasService.comprar(null, null, cuponCodigo, candy).subscribe({
       next: resultado => {

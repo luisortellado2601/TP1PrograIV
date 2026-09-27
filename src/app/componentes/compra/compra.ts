@@ -87,7 +87,6 @@ export class Compra implements OnInit {
   mostrarConfirmacion = signal(false);
   mostrarCancelar = signal(false);
   resultado = signal<ResultadoCompra | null>(null);
-  cuponManual = signal('');
 
   formPago = this.fb.nonNullable.group({
     titular: ['', [Validators.required, Validators.minLength(3)]],
@@ -109,6 +108,11 @@ export class Compra implements OnInit {
   totalCandy = computed(() => this.carrito().reduce((acc, i) => acc + i.precio * i.cantidad, 0));
   totalArticulosCandy = computed(() => this.carrito().reduce((acc, i) => acc + i.cantidad, 0));
 
+  // Los combos (entrada + pochoclos + bebida a precio fijo) se muestran aparte, destacados.
+  // Cualquier categoría que empiece con "Combo" cuenta (Combos, Combo Económico, etc.)
+  combos = computed(() => this.productos().filter(p => p.categoria?.startsWith('Combo')));
+  candyRegular = computed(() => this.productos().filter(p => !p.categoria?.startsWith('Combo')));
+
   subtotal = computed(() => this.totalEntradas() + this.totalCandy());
 
   // El cupón lo elige el sistema: entre los que le corresponden al usuario, el de mayor descuento (uno solo, no acumulable).
@@ -127,17 +131,8 @@ export class Compra implements OnInit {
     return candidatos.reduce((mejor, c) => c.porcentaje > mejor.porcentaje ? c : mejor);
   });
 
-  // Si el usuario escribe un código a mano, ese manda; si no, se aplica el automático
-  cuponEfectivo = computed<Cupon | null>(() => {
-    const codigo = this.cuponManual().trim().toUpperCase();
-    if (!codigo) return this.cuponElegible();
-    return this.cupones().find(c => c.codigo.toUpperCase() === codigo && c.activo !== false) ?? null;
-  });
-
-  cuponInvalido = computed(() => !!this.cuponManual().trim() && !this.cuponEfectivo());
-
   descuento = computed(() => {
-    const cupon = this.cuponEfectivo();
+    const cupon = this.cuponElegible();
     return cupon ? Number((this.subtotal() * cupon.porcentaje / 100).toFixed(2)) : 0;
   });
 
@@ -291,14 +286,6 @@ export class Compra implements OnInit {
     return mensajes[campo];
   }
 
-  aplicarCupon(codigo: string) {
-    this.cuponManual.set(codigo.trim());
-  }
-
-  quitarCupon() {
-    this.cuponManual.set('');
-  }
-
   pedirConfirmacion() {
     if (this.bloqueadoPorEdad()) return;
     if (this.formPago.invalid) {
@@ -318,7 +305,7 @@ export class Compra implements OnInit {
     this.errorPago.set('');
 
     const candy = this.carrito().map(i => ({ producto_id: i.id!, cantidad: i.cantidad }));
-    const cuponCodigo = this.cuponEfectivo()?.codigo ?? null;
+    const cuponCodigo = this.cuponElegible()?.codigo ?? null;
 
     this.comprasService.comprar(this.funcionId, this.sesionId, cuponCodigo, candy).subscribe({
       next: resultado => {

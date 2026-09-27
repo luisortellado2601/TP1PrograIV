@@ -20,7 +20,8 @@ const CATEGORIAS_CANDY = [
     'Pochoclos',
     'Bebidas',
     'Golosinas',
-    'Combos'
+    'Combos',
+    'Combo Económico'
 ];
 
 @Component({

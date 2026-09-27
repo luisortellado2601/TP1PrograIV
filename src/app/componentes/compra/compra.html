@@ -51,6 +51,44 @@
         <div class="grilla">
             <div class="columna-principal">
                 <!-- Candy -->
+                @if (combos().length) {
+                    <section class="panel panel-combos">
+                        <header class="panel-header">
+                            <h2>🔥 Combos</h2>
+                            <p>Entrada + pochoclos + bebida a precio fijo</p>
+                        </header>
+
+                        <div class="productos-grid">
+                            @for (producto of combos(); track producto.id) {
+                                <div class="producto-card combo-card">
+                                    <div class="producto-info">
+                                        <h3 [appDestacadoColor]="producto.es_combo_destacado">
+                                            {{ producto.nombre | titlecase }}
+                                        </h3>
+                                        @if (producto.categoria === 'Combo Económico') {
+                                            <div class="combo-descripcion">Pack entrada + gaseosa + pochoclo</div>
+                                        }
+                                        <span class="precio">{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                                    </div>
+
+                                    @if (obtenerCantidadCandy(producto.id) === 0) {
+                                        <button class="btn-agregar" type="button"
+                                            [disabled]="totalArticulosCandy() >= maxCandy"
+                                            (click)="agregarCandy(producto)">Agregar</button>
+                                    } @else {
+                                        <div class="control-cantidad">
+                                            <button type="button" (click)="quitarCandy(producto.id!)">-</button>
+                                            <span>{{ obtenerCantidadCandy(producto.id) }}</span>
+                                            <button type="button" [disabled]="totalArticulosCandy() >= maxCandy"
+                                                (click)="agregarCandy(producto)">+</button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+
                 <section class="panel">
                     <header class="panel-header">
                         <h2>🍿 Sumá candy (opcional)</h2>
@@ -58,7 +96,7 @@
                     </header>
 
                     <div class="productos-grid">
-                        @for (producto of productos(); track producto.id) {
+                        @for (producto of candyRegular(); track producto.id) {
                             <div class="producto-card">
                                 <div class="producto-info">
                                     <h3 [appDestacadoColor]="producto.es_combo_destacado">
@@ -160,24 +198,9 @@
                     <span>{{ subtotal() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
                 </div>
 
-                <form class="campo-cupon" (ngSubmit)="aplicarCupon(campoCupon.value)">
-                    <label for="cupon-compra">¿Tenés un cupón?</label>
-                    <div class="fila-cupon">
-                        <input #campoCupon id="cupon-compra" type="text" placeholder="Código"
-                            [value]="cuponManual()" />
-                        <button type="submit">Aplicar</button>
-                    </div>
-                </form>
-                @if (cuponInvalido()) {
-                    <p class="error-campo">Ese cupón no existe o no está activo.</p>
-                }
-
-                @if (cuponEfectivo(); as cupon) {
+                @if (cuponElegible(); as cupon) {
                     <p class="aviso-cupon">
                         🎁 Se aplicó el cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% de descuento).
-                        @if (cuponManual()) {
-                            <button type="button" class="btn-quitar-cupon" (click)="quitarCupon()">Quitar</button>
-                        }
                     </p>
                     <div class="linea-subtotal">
                         <span>Descuento</span>

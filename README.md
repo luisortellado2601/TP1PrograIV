@@ -64,7 +64,7 @@ src/app/
 │   ├── pelicula-detalle/   Ficha de la película
 │   ├── login/ register/    Acceso y alta de usuarios
 │   ├── navbar/             Navegación según el rol
-│   ├── candy-cliente/      Candy bar con carrito (cliente)
+│   ├── candy-cliente/      Candy bar con carrito, cupón y pago simulado (candy solo, sin butacas)
 │   ├── admin/              Panel principal de administración
 │   ├── peliculas/          ABM de películas y preventa
 │   ├── admin-candy/        ABM de productos del candy
@@ -72,9 +72,10 @@ src/app/
 │   ├── admin-configuracion/  Precios, recargo VIP, puntos y cupones
 │   ├── selector-horario/   Selector de hora reutilizable (@Input / @Output)
 │   ├── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
-│   └── mapa-butacas/       Mapa de butacas en tiempo real con reserva temporal
-├── services/               auth, peliculas, candy, funciones, configuracion, resenas, butacas (acceso a Supabase)
-├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts, butaca.ts
+│   ├── mapa-butacas/       Mapa de butacas en tiempo real con reserva temporal
+│   └── compra/             Compra de entradas + candy: cupón, bloqueo por edad y pago simulado
+├── services/               auth, peliculas, candy, funciones, configuracion, resenas, butacas, compras (acceso a Supabase)
+├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts, butaca.ts, compra.ts
 ├── guards/                 auth-guard, admin-guard
 ├── directives/             edad-color, destacado-color
 └── pipes/                  formato-duracion, formato-puntos
@@ -88,7 +89,8 @@ src/app/
 | `/pelicula-detalle/:id` | Público | Lazy |
 | `/login`, `/register` | Público | Lazy |
 | `/butacas/:funcionId` | Público (también compradores anónimos) | Lazy |
-| `/candy-cliente` | Usuario con sesión (`authGuard`) | Lazy |
+| `/compra/:funcionId` | Público (también compradores anónimos) | Lazy |
+| `/candy-cliente` | Público (candy solo, sin butacas; también anónimos) | Lazy |
 | `/admin` | Empleado o gerente (`adminGuard`) | Lazy |
 | `/peliculas`, `/admin-candy`, `/admin-funciones`, `/admin-configuracion` | Empleado o gerente (`adminGuard`) | Lazy |
 
@@ -127,6 +129,7 @@ erDiagram
 | Asignación automática de sala | Función SQL `crear_funcion`: calcula el fin según la duración de la película y usa la primera sala libre; si ninguna sirve, devuelve un error claro |
 | Una butaca no se vende dos veces | Índice único parcial sobre `(funcion_id, fila, columna)` para entradas no canceladas |
 | Reserva temporal (5 min) y máximo de 6 butacas por compra | Función SQL `reservar_butaca` (con clave primaria por función, fila y columna: dos personas no pueden reservar la misma butaca) |
+| Precio, recargo VIP, cupón, edad y puntos siempre calculados por el servidor | Función SQL `comprar`: recibe solo lo elegido (butacas reservadas, candy y código de cupón) y devuelve el total y el QR ya validados |
 | Solo existen butacas válidas | Constraint `butaca_valida` (ver distribución abajo) |
 | Cada usuario solo ve lo suyo | Políticas RLS por tabla |
 | Registro de actividad | Trigger `log_cambio` sobre funciones, precios, configuración, productos y combos |
@@ -145,7 +148,7 @@ La grilla se genera por código, ya que es idéntica en todas las salas.
 
 - **Roles:** `cliente`, `empleado` y `gerente`. Un empleado o gerente accede al panel de administración; solo el gerente puede editar perfiles y roles.
 - **RLS activo en todas las tablas.** El catálogo (películas, salas, funciones, productos, combos, precios) es de lectura pública y solo lo modifica un administrador. Compras, puntos y crédito solo los ve su dueño o un administrador.
-- **Las compras no se insertan directo desde el cliente.** Se harán mediante una función SQL segura que valida precios y cupones, de modo que nadie pueda fijar su propio precio. Esto permite además la compra **anónima** sin abrir escritura pública.
+- **Las compras no se insertan directo desde el cliente.** Se hacen mediante la función SQL `comprar`, que valida precios, recargo VIP, cupón y edad, de modo que nadie pueda fijar su propio precio. Esto permite además la compra **anónima** sin abrir escritura pública.
 
 ## Temas de la materia aplicados
 
@@ -182,19 +185,19 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | Roles, guards y RLS | ✅ | Cliente, empleado y gerente |
 | ABM de películas | ✅ | Con géneros múltiples, clasificación y preventa |
 | ABM del candy (productos y categorías) | ✅ | |
-| Combos | ✅ | Se cargan como productos de categoría "Combos", con precio fijo y marca de destacado |
+| Combos | 🔧 | Hoy es una categoría más del candy (con marca de "destacado"); falta el combo real de entrada + pochoclos + bebida a precio fijo |
 | Funciones y asignación automática de salas | ✅ | Con recurrencia y validación en la base |
 | Cartelera con buscador y filtro por género | ✅ | |
 | Las 3 películas más vendidas primero | 🔧 | Hoy muestra las tres primeras; falta el ranking real por ventas |
 | Detalle de película con funciones y reseñas | ✅ | Funciones por día y horario; reseñas con estrellas, comentario y promedio (una por usuario registrado) |
 | "Próximamente" y alertas de estreno | ⏳ | Tabla `alertas_estreno` creada |
 | Mapa de butacas en tiempo real | ✅ | Filas A a T, J accesible, VIP en R, S y T, reserva temporal y máximo de 6 |
-| Confirmación de la compra (pago simulado) | ⏳ | El botón "Confirmar compra" del mapa lleva a la compra, que se arma en el siguiente bloque |
-| PDF con QR, validación por empleados y carga manual del código | ⏳ | |
+| Confirmación de la compra (pago simulado) | ✅ | Formulario de tarjeta simulado (titular, número, vencimiento no vencido, CVV) con ventana de confirmación antes de pagar; la función SQL `comprar` recalcula precio, recargo VIP, cupón y puntos |
+| PDF con QR, validación por empleados y carga manual del código | ⏳ | La compra ya devuelve un código QR (texto) desde `comprar`; falta generarlo como PDF descargable y el panel de empleados para validarlo o cargarlo a mano |
 | Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
-| Cupón de bienvenida (20 %) y cupón para mayores de 50 | 🔧 | Se crean y editan desde el panel; falta aplicarlos en la compra |
-| Restricción de edad | 🔧 | Clasificación cargada y aviso en el detalle de la película; falta el aviso en la entrada y el bloqueo en la compra |
-| Puntos, canjes y crédito | ⏳ | Tablas creadas |
+| Cupón de bienvenida (20 %) y cupón para mayores de 50 | ✅ | Se aplican automáticamente según elegibilidad (o a mano con código) en la compra de entradas y en el candy solo; la base los recalcula y consume |
+| Restricción de edad | ✅ | Bloquea el pago si el usuario logueado no cumple la edad de la película; los anónimos solo ven el aviso |
+| Puntos, canjes y crédito | 🔧 | Se calculan y suman en cada compra (`puntos_ganados`); falta la pantalla de canje y el crédito visible en el perfil |
 | Cancelación hasta 2 horas antes, con crédito | ⏳ | |
 | Preventa por película | 🔧 | Campos cargados; falta aplicar el precio en la compra |
 | "Mis películas" | ⏳ | |

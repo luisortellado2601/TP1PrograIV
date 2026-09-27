@@ -102,24 +102,9 @@
             </div>
 
             <div class="carrito-footer">
-                <form class="campo-cupon" (ngSubmit)="aplicarCupon(campoCupon.value)">
-                    <label for="cupon-candy">¿Tenés un cupón?</label>
-                    <div class="fila-cupon">
-                        <input #campoCupon id="cupon-candy" type="text" placeholder="Código"
-                            [value]="cuponManual()" />
-                        <button type="submit">Aplicar</button>
-                    </div>
-                </form>
-                @if (cuponInvalido()) {
-                    <p class="error-campo">Ese cupón no existe o no está activo.</p>
-                }
-
-                @if (cuponEfectivo(); as cupon) {
+                @if (cuponElegible(); as cupon) {
                     <p class="aviso-cupon">
-                        🎁 Cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% off)
-                        @if (cuponManual()) {
-                            <button type="button" class="btn-quitar-cupon" (click)="quitarCupon()">Quitar</button>
-                        }
+                        🎁 Cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% off) aplicado automáticamente
                     </p>
                     <div class="total-fila secundaria">
                         <span>Subtotal:</span>
