@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
@@ -29,9 +28,12 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/mapa-butacas/mapa-butacas').then(m => m.MapaButacas),
     },
     {
+        path: 'compra/:funcionId',
+        loadComponent: () => import('./componentes/compra/compra').then(m => m.Compra),
+    },
+    {
         path: 'candy-cliente',
         loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente),
-        canActivate: [authGuard]
     },
     {
         path: 'admin',

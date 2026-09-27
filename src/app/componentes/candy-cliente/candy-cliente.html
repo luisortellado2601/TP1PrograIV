@@ -2,6 +2,29 @@
     <a routerLink="/cartelera" class="btn-secundario">⬅ Volver a Cartelera</a>
 </div>
 
+@if (resultado(); as r) {
+    <div class="confirmacion-container">
+        <section class="confirmacion">
+            <h1>✅ ¡Pedido confirmado!</h1>
+            <p>Mostrá este código en el candy bar para retirarlo.</p>
+            <p class="codigo">{{ r.codigo_qr }}</p>
+
+            <ul class="lineas">
+                <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.descuento) {
+                    <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                }
+                <li class="total"><span>Total pagado</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.puntos_ganados) {
+                    <li><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></li>
+                }
+            </ul>
+
+            <button class="btn-comprar" type="button" (click)="pedirOtroPedido()">Hacer otro pedido</button>
+        </section>
+    </div>
+} @else {
+
 <div class="cliente-container">
     
     <!-- Sección del Menú -->
@@ -79,16 +102,90 @@
             </div>
 
             <div class="carrito-footer">
+                <form class="campo-cupon" (ngSubmit)="aplicarCupon(campoCupon.value)">
+                    <label for="cupon-candy">¿Tenés un cupón?</label>
+                    <div class="fila-cupon">
+                        <input #campoCupon id="cupon-candy" type="text" placeholder="Código"
+                            [value]="cuponManual()" />
+                        <button type="submit">Aplicar</button>
+                    </div>
+                </form>
+                @if (cuponInvalido()) {
+                    <p class="error-campo">Ese cupón no existe o no está activo.</p>
+                }
+
+                @if (cuponEfectivo(); as cupon) {
+                    <p class="aviso-cupon">
+                        🎁 Cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% off)
+                        @if (cuponManual()) {
+                            <button type="button" class="btn-quitar-cupon" (click)="quitarCupon()">Quitar</button>
+                        }
+                    </p>
+                    <div class="total-fila secundaria">
+                        <span>Subtotal:</span>
+                        <span>{{ totalPagar() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                    <div class="total-fila secundaria">
+                        <span>Descuento:</span>
+                        <span>-{{ descuento() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                }
+
                 <div class="total-fila">
                     <span>Total:</span>
-                    <strong>{{ totalPagar() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                    <strong>{{ totalFinal() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
                 </div>
-                
-                <button class="btn-comprar" [disabled]="carrito().length === 0">
-                    Continuar al Pago
-                </button>
+
+                @if (carrito().length) {
+                    <form class="form-pago" [formGroup]="formPago" (ngSubmit)="pedirConfirmacion()">
+                        <label>
+                            Titular de la tarjeta
+                            <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
+                            @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
+                        </label>
+
+                        <label>
+                            Número de tarjeta
+                            <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
+                            @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
+                        </label>
+
+                        <div class="fila-doble">
+                            <label>
+                                Vencimiento
+                                <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
+                                @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                            </label>
+
+                            <label>
+                                CVV
+                                <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
+                                @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                            </label>
+                        </div>
+
+                        @if (errorPago()) {
+                            <p class="error-campo">{{ errorPago() }}</p>
+                        }
+
+                        <button class="btn-comprar" type="submit" [disabled]="procesando()">
+                            {{ procesando() ? 'Procesando...' : 'Pagar' }}
+                        </button>
+                    </form>
+                }
             </div>
         </div>
     </aside>
 
 </div>
+
+@if (mostrarConfirmacion()) {
+    <app-ventana-confirmacion
+        titulo="Confirmar pedido"
+        [mensaje]="'Vas a pagar ' + (totalFinal() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás el pedido?'"
+        textoConfirmar="Pagar"
+        (confirmar)="confirmarCompra()"
+        (cancelar)="cancelarConfirmacion()" />
+}
+
+}

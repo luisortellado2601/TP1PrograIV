@@ -68,25 +68,42 @@ export class Auth {
         if (response.error) return response;
 
         if (response.data.user) {
-            const { error: dbError } = await this.supabase.from('perfiles').insert([
-                {
-                    id: response.data.user.id, 
-                    email: email,
-                    nombre: nombre,
-                    apellido: apellido,
-                    fecha_nacimiento: fecha_nacimiento,
-                    tipo_sangre: tipo_sangre,
-                    color_ojos: color_ojos,
-                    dias_vacaciones_por_ano: dias_vacaciones,
-                    rol: 'cliente' 
-                }
-            ]);
-            
+            const perfil = {
+                id: response.data.user.id,
+                email: email,
+                nombre: nombre,
+                apellido: apellido,
+                fecha_nacimiento: fecha_nacimiento,
+                tipo_sangre: tipo_sangre,
+                color_ojos: color_ojos,
+                dias_vacaciones_por_ano: dias_vacaciones,
+                rol: 'cliente'
+            };
+
+            const { error: dbError } = await this.supabase.from('perfiles').insert([perfil]);
+
             if (dbError) {
-                return { data: null, error: dbError }; 
+                return { data: null, error: dbError };
             }
+
+            // Sin esto, el perfil recién creado no se ve hasta refrescar la página
+            this.perfilActual.set(perfil);
         }
         return response;
+    }
+
+    // Vuelve a traer el perfil desde la base (se usa después de una compra, porque cambian los puntos y el uso del cupón)
+    async refrescarPerfil() {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        if (!user) return;
+
+        const { data: perfil } = await this.supabase
+            .from('perfiles')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (perfil) this.perfilActual.set(perfil);
     }
 
     async signOut() {

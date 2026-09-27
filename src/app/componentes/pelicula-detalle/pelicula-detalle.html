@@ -152,3 +152,14 @@
         </div>
     }
 </div>
+
+@if (mostrarEleccionSesion()) {
+    <app-ventana-confirmacion
+        titulo="¿Cómo querés comprar?"
+        mensaje="Podés iniciar sesión para sumar puntos y usar tus cupones, o continuar como invitado."
+        textoConfirmar="Iniciar sesión"
+        textoCancelar="Continuar sin cuenta"
+        color="verde"
+        (confirmar)="irAIniciarSesion()"
+        (cancelar)="continuarSinCuenta()" />
+}

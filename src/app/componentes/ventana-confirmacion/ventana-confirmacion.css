@@ -68,3 +68,13 @@
 .btn-confirmar:hover {
   background: #521f1f;
 }
+
+.btn-confirmar.verde {
+  background: #0f2a17;
+  color: #16a34a;
+  border: 1px solid #14532d;
+}
+
+.btn-confirmar.verde:hover {
+  background: #153b24;
+}

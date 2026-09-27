@@ -11,11 +11,12 @@ import { FuncionPublica } from '../../models/funcion';
 import { Resena } from '../../models/resena';
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
+import { VentanaConfirmacion } from '../ventana-confirmacion/ventana-confirmacion';
 
 @Component({
   selector: 'app-pelicula-detalle',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormatoDuracionPipe, EdadColorDirective],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, FormatoDuracionPipe, EdadColorDirective, VentanaConfirmacion],
   templateUrl: './pelicula-detalle.html',
   styleUrl: './pelicula-detalle.css'
 })
@@ -35,6 +36,7 @@ export class PeliculaDetalle implements OnInit {
   funciones = signal<FuncionPublica[]>([]);
   diaSeleccionado = signal<string>('');
   funcionSeleccionada = signal<FuncionPublica | null>(null);
+  mostrarEleccionSesion = signal<boolean>(false);
 
   dias = computed(() => Array.from(new Set(this.funciones().map(f => f.fecha_hora_inicio.substring(0, 10)))));
   funcionesDelDia = computed(() => this.funciones().filter(f => f.fecha_hora_inicio.startsWith(this.diaSeleccionado())));
@@ -109,8 +111,30 @@ export class PeliculaDetalle implements OnInit {
   }
 
   elegirButacas() {
+    if (!this.funcionSeleccionada()) return;
+
+    // A quien no tiene sesión se le pregunta antes de entrar al mapa: puede comprar como invitado o iniciar sesión primero
+    if (this.authService.perfilActual()) {
+      this.irAButacas();
+    } else {
+      this.mostrarEleccionSesion.set(true);
+    }
+  }
+
+  private irAButacas() {
     const funcion = this.funcionSeleccionada();
     if (funcion) this.router.navigate(['/butacas', funcion.id]);
+  }
+
+  continuarSinCuenta() {
+    this.mostrarEleccionSesion.set(false);
+    this.irAButacas();
+  }
+
+  irAIniciarSesion() {
+    this.mostrarEleccionSesion.set(false);
+    const funcion = this.funcionSeleccionada();
+    this.router.navigate(['/login'], { queryParams: funcion ? { returnUrl: `/butacas/${funcion.id}` } : {} });
   }
 
   private cargarResenas(peliculaId: string) {

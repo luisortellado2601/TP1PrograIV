@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { form, FormField, required, email } from '@angular/forms/signals';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { LoginData } from '../../models/login-data';
 import { Auth } from '../../services/auth';
 
@@ -25,7 +25,7 @@ export class Login {
     required(schemaPath.password, {message: 'Password requerido'});
   });
 
-  constructor(private auth: Auth, private router: Router) {}
+  constructor(private auth: Auth, private router: Router, private route: ActivatedRoute) {}
 
   async onSubmit(event: Event) {
     event.preventDefault();
@@ -50,11 +50,12 @@ export class Login {
       }
 
       const perfil = this.auth.perfilActual();
+      const volverA = this.route.snapshot.queryParamMap.get('returnUrl');
 
       if (perfil?.rol === 'gerente' || perfil?.rol === 'empleado') {
         this.router.navigate(['/admin']);
       } else {
-        this.router.navigate(['/cartelera']);
+        this.router.navigateByUrl(volverA || '/cartelera');
       }
     }
   }

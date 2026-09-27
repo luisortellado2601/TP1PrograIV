@@ -4,8 +4,8 @@
         <p>{{ mensaje }}</p>
 
         <div class="acciones">
-            <button type="button" class="btn-cancelar" (click)="cancelar.emit()">Cancelar</button>
-            <button type="button" class="btn-confirmar" (click)="confirmar.emit()">{{ textoConfirmar }}</button>
+            <button type="button" class="btn-cancelar" (click)="cancelar.emit()">{{ textoCancelar }}</button>
+            <button type="button" class="btn-confirmar" [class.verde]="color === 'verde'" (click)="confirmar.emit()">{{ textoConfirmar }}</button>
         </div>
     </div>
 </div>

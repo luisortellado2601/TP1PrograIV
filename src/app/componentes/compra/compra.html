@@ -1,0 +1,218 @@
+<div class="compra-container">
+    @if (cargando()) {
+        <div class="estado">Cargando tu compra...</div>
+    } @else if (error()) {
+        <div class="estado">
+            <p>{{ error() }}</p>
+            <button class="btn-volver" type="button" (click)="volverAlMapa()">⬅ Volver al mapa de butacas</button>
+        </div>
+    } @else if (resultado(); as r) {
+        <!-- Confirmación -->
+        <section class="panel confirmacion">
+            <h1>✅ ¡Compra confirmada!</h1>
+            <p>Guardá este código: lo vas a necesitar para entrar a la sala{{ totalArticulosCandy() ? ' y retirar tu candy' : '' }}.</p>
+            <p class="codigo">{{ r.codigo_qr }}</p>
+
+            <ul class="lineas">
+                <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.descuento) {
+                    <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                }
+                <li class="total"><span>Total pagado</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.puntos_ganados) {
+                    <li><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></li>
+                }
+            </ul>
+
+            <p class="nota">El PDF de la entrada con el código QR estará disponible próximamente.</p>
+            <a class="btn-confirmar" routerLink="/cartelera">Volver a Cartelera</a>
+        </section>
+    } @else if (funcion(); as f) {
+        <header class="cabecera">
+            <button class="btn-volver" type="button" (click)="volverAlMapa()">⬅ Volver al mapa</button>
+            <div class="cabecera-info">
+                <h1>{{ f.peliculas?.nombre }}</h1>
+                <p>{{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}</p>
+            </div>
+        </header>
+
+        @if (edadMinima() && !bloqueadoPorEdad()) {
+            <p class="aviso-edad">
+                ⚠️ Clasificación +{{ edadMinima() }}: no pueden ingresar los menores de {{ edadMinima() }} años sin un adulto.
+            </p>
+        }
+
+        @if (bloqueadoPorEdad()) {
+            <p class="aviso-bloqueo">
+                🚫 Esta película es +{{ edadMinima() }}. Con tu cuenta actual no podés comprar esta entrada.
+            </p>
+        }
+
+        <div class="grilla">
+            <div class="columna-principal">
+                <!-- Candy -->
+                <section class="panel">
+                    <header class="panel-header">
+                        <h2>🍿 Sumá candy (opcional)</h2>
+                        <p>Hasta {{ maxCandy }} artículos por compra</p>
+                    </header>
+
+                    <div class="productos-grid">
+                        @for (producto of productos(); track producto.id) {
+                            <div class="producto-card">
+                                <div class="producto-info">
+                                    <h3 [appDestacadoColor]="producto.es_combo_destacado">
+                                        {{ producto.nombre | titlecase }}
+                                        @if (producto.es_combo_destacado) { <span>🔥</span> }
+                                    </h3>
+                                    <span class="precio">{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                                </div>
+
+                                @if (obtenerCantidadCandy(producto.id) === 0) {
+                                    <button class="btn-agregar" type="button"
+                                        [disabled]="totalArticulosCandy() >= maxCandy"
+                                        (click)="agregarCandy(producto)">Agregar</button>
+                                } @else {
+                                    <div class="control-cantidad">
+                                        <button type="button" (click)="quitarCandy(producto.id!)">-</button>
+                                        <span>{{ obtenerCantidadCandy(producto.id) }}</span>
+                                        <button type="button" [disabled]="totalArticulosCandy() >= maxCandy"
+                                            (click)="agregarCandy(producto)">+</button>
+                                    </div>
+                                }
+                            </div>
+                        } @empty {
+                            <p class="nota">Cargando el menú...</p>
+                        }
+                    </div>
+                </section>
+
+                <!-- Pago simulado -->
+                <section class="panel">
+                    <header class="panel-header">
+                        <h2>💳 Pago (simulado)</h2>
+                        <p>No se hace ningún cobro real: es para la demostración.</p>
+                    </header>
+
+                    <form class="form-pago" [formGroup]="formPago" (ngSubmit)="pedirConfirmacion()">
+                        <label>
+                            Titular de la tarjeta
+                            <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
+                            @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
+                        </label>
+
+                        <label>
+                            Número de tarjeta
+                            <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
+                            @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
+                        </label>
+
+                        <div class="fila-doble">
+                            <label>
+                                Vencimiento
+                                <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
+                                @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                            </label>
+
+                            <label>
+                                CVV
+                                <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
+                                @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                            </label>
+                        </div>
+
+                        @if (errorPago()) {
+                            <p class="error-campo">{{ errorPago() }}</p>
+                        }
+
+                        <div class="acciones-pago">
+                            <button class="btn-cancelar-compra" type="button" [disabled]="procesando()"
+                                (click)="pedirCancelar()">Cancelar compra</button>
+                            <button class="btn-confirmar" type="submit" [disabled]="procesando() || bloqueadoPorEdad()">
+                                {{ procesando() ? 'Procesando...' : 'Pagar' }}
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Resumen -->
+            <aside class="panel resumen">
+                <h2>Tu compra</h2>
+
+                <ul class="lineas">
+                    @for (b of asientos(); track b.fila + '-' + b.numero) {
+                        <li>
+                            <span>Butaca {{ b.fila }}-{{ b.numero }}{{ b.tipo === 'vip' ? ' (VIP)' : '' }}</span>
+                            <span>{{ (precioBase() + (b.tipo === 'vip' ? recargoVip() : 0)) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                        </li>
+                    }
+                    @for (item of carrito(); track item.id) {
+                        <li>
+                            <span>{{ item.cantidad }}x {{ item.nombre }}</span>
+                            <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                        </li>
+                    }
+                </ul>
+
+                <div class="linea-subtotal">
+                    <span>Subtotal</span>
+                    <span>{{ subtotal() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                </div>
+
+                <form class="campo-cupon" (ngSubmit)="aplicarCupon(campoCupon.value)">
+                    <label for="cupon-compra">¿Tenés un cupón?</label>
+                    <div class="fila-cupon">
+                        <input #campoCupon id="cupon-compra" type="text" placeholder="Código"
+                            [value]="cuponManual()" />
+                        <button type="submit">Aplicar</button>
+                    </div>
+                </form>
+                @if (cuponInvalido()) {
+                    <p class="error-campo">Ese cupón no existe o no está activo.</p>
+                }
+
+                @if (cuponEfectivo(); as cupon) {
+                    <p class="aviso-cupon">
+                        🎁 Se aplicó el cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% de descuento).
+                        @if (cuponManual()) {
+                            <button type="button" class="btn-quitar-cupon" (click)="quitarCupon()">Quitar</button>
+                        }
+                    </p>
+                    <div class="linea-subtotal">
+                        <span>Descuento</span>
+                        <span>-{{ descuento() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                }
+
+                <div class="total">
+                    <span>Total</span>
+                    <strong>{{ total() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                </div>
+
+                @if (puntosEstimados()) {
+                    <p class="nota">Ganás {{ puntosEstimados() | formatoPuntos }} con esta compra.</p>
+                }
+            </aside>
+        </div>
+    }
+</div>
+
+@if (mostrarConfirmacion()) {
+    <app-ventana-confirmacion
+        titulo="Confirmar compra"
+        [mensaje]="'Vas a pagar ' + (total() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás la compra?'"
+        textoConfirmar="Pagar"
+        (confirmar)="confirmarCompra()"
+        (cancelar)="cancelarConfirmacion()" />
+}
+
+@if (mostrarCancelar()) {
+    <app-ventana-confirmacion
+        titulo="Cancelar compra"
+        mensaje="Vas a perder las butacas que elegiste. ¿Querés cancelar la compra?"
+        textoConfirmar="Sí, cancelar"
+        textoCancelar="Seguir comprando"
+        (confirmar)="confirmarCancelacion()"
+        (cancelar)="cerrarCancelar()" />
+}

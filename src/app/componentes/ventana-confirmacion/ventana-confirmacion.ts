@@ -10,6 +10,8 @@ export class VentanaConfirmacion {
   @Input() titulo: string = 'Confirmar';
   @Input() mensaje: string = '';
   @Input() textoConfirmar: string = 'Confirmar';
+  @Input() textoCancelar: string = 'Cancelar';
+  @Input() color: 'rojo' | 'verde' = 'rojo';
 
   @Output() confirmar = new EventEmitter<void>();
   @Output() cancelar = new EventEmitter<void>();

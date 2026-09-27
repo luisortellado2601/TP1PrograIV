@@ -1,0 +1,481 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+  box-sizing: border-box;
+}
+
+.compra-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.estado {
+  text-align: center;
+  padding: 4rem;
+  font-size: 1.2rem;
+}
+
+/* Cabecera */
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cabecera-info h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.cabecera-info p {
+  margin: 0.3rem 0 0 0;
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  text-transform: capitalize;
+}
+
+.btn-volver {
+  padding: 0.7rem 1.2rem;
+  background-color: transparent;
+  color: #bbb;
+  border: 1px solid #555;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-volver:hover {
+  background-color: #222;
+  color: white;
+  border-color: white;
+}
+
+.aviso-edad {
+  margin: 0 0 1.5rem 0;
+  padding: 0.9rem 1.2rem;
+  background-color: #1a1a1a;
+  border: 1px solid #ca8a04;
+  border-radius: 8px;
+  color: #ddd;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.aviso-bloqueo {
+  margin: 0 0 1.5rem 0;
+  padding: 0.9rem 1.2rem;
+  background-color: #1a1010;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  color: #f87171;
+  font-size: 0.95rem;
+  font-weight: bold;
+}
+
+/* Layout */
+.grilla {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.columna-principal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.panel {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: white;
+}
+
+.panel-header p {
+  margin: 0.4rem 0 1.5rem 0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* Candy */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.producto-card {
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.producto-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.precio {
+  color: #bdbdbd;
+  font-size: 0.9rem;
+}
+
+.btn-agregar {
+  padding: 0.6rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-agregar:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-agregar:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.control-cantidad button {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.control-cantidad button:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.control-cantidad button:disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Pago */
+.form-pago {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-pago label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.form-pago input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-pago input::placeholder {
+  color: #777;
+}
+
+.form-pago input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.fila-doble {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.error-campo {
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.acciones-pago {
+  display: flex;
+  gap: 1rem;
+}
+
+.acciones-pago .btn-confirmar {
+  flex: 1;
+}
+
+.btn-cancelar-compra {
+  flex: 1;
+  padding: 0.9rem;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar-compra:hover:not(:disabled) {
+  background-color: #555;
+}
+
+.btn-cancelar-compra:disabled {
+  background-color: #333;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.btn-confirmar {
+  padding: 0.9rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s ease;
+}
+
+.btn-confirmar:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-confirmar:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Resumen */
+.resumen {
+  position: sticky;
+  top: 2rem;
+}
+
+.resumen h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.lineas {
+  list-style: none;
+  margin: 0 0 1rem 0;
+  padding: 0;
+}
+
+.lineas li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-top: 1px solid rgb(46, 45, 45);
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.linea-subtotal {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  color: #bdbdbd;
+  font-size: 0.9rem;
+}
+
+.campo-cupon {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  color: #bdbdbd;
+  font-weight: 600;
+}
+
+.fila-cupon {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.campo-cupon input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.campo-cupon input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.campo-cupon button {
+  padding: 0.6rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.campo-cupon button:hover {
+  background-color: #0056b3;
+}
+
+.btn-quitar-cupon {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  background: transparent;
+  color: #facc15;
+  border: 1px solid #facc15;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btn-quitar-cupon:hover {
+  background-color: rgba(250, 204, 21, 0.1);
+}
+
+.aviso-cupon {
+  margin: 0.5rem 0;
+  padding: 0.6rem 0.8rem;
+  background-color: #111;
+  border: 1px solid #facc15;
+  border-radius: 8px;
+  color: #facc15;
+  font-size: 0.85rem;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0 1rem 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgb(46, 45, 45);
+  font-size: 1.2rem;
+}
+
+.nota {
+  margin: 0;
+  color: #777;
+  font-size: 0.85rem;
+}
+
+/* Confirmación final */
+.confirmacion {
+  max-width: 480px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.confirmacion h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.6rem;
+}
+
+.confirmacion .codigo {
+  margin: 1rem 0;
+  padding: 0.8rem;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  color: #facc15;
+  font-family: monospace;
+  font-size: 0.95rem;
+  word-break: break-all;
+}
+
+.confirmacion .lineas li.total {
+  border-top: 1px solid rgb(46, 45, 45);
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 900px) {
+  .grilla {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resumen {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .fila-doble {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
