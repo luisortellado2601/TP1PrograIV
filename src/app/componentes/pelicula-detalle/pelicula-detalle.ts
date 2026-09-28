@@ -63,6 +63,15 @@ export class PeliculaDetalle implements OnInit {
     return this.resenas().find(r => r.usuario_id === id);
   });
 
+  // Todavía no se estrenó: no tiene sentido dejar reseña de algo que nadie vio
+  proximoEstreno = computed(() => {
+    const fecha = this.pelicula()?.fecha_estreno;
+    if (!fecha) return false;
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    return new Date(fecha) > hoy;
+  });
+
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 

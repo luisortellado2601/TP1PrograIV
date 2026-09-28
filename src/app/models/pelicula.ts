@@ -10,7 +10,7 @@ export interface Pelicula {
     generos: string []; 
     fecha_fin_preventa: string; 
     precio_preventa: number;
-    fecha_estreno?: string;
+    fecha_estreno: string;
     activa?: boolean;
 }
 

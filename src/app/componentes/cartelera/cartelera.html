@@ -27,6 +27,37 @@
 
     <hr class="divisor">
 
+    @if (proximamente().length) {
+        <section class="proximamente-section" id="proximamente">
+            <h2>PRÓXIMAMENTE</h2>
+            <div class="proximamente-grid">
+                @for (pelicula of proximamente(); track pelicula.id) {
+                    <div class="proximamente-card" [routerLink]="['/pelicula-detalle', pelicula.id]">
+                        <img [src]="pelicula.imagen" [alt]="pelicula.nombre" class="poster">
+                        <div class="proximamente-info">
+                            <h3>{{ pelicula.nombre }}</h3>
+                            <p class="fecha-estreno">Estreno: {{ pelicula.fecha_estreno | date:'dd/MM/yyyy' }}</p>
+
+                            @if (!authService.perfilActual()) {
+                                <a routerLink="/login" class="btn-alerta" (click)="$event.stopPropagation()">Iniciá sesión para avisarte</a>
+                            } @else if (tieneAlertaActiva(pelicula.id)) {
+                                <button class="btn-alerta activa" type="button" disabled (click)="$event.stopPropagation()">🔔 Te vamos a avisar</button>
+                            } @else {
+                                <button class="btn-alerta" type="button"
+                                    [disabled]="alertaEnviando() === pelicula.id"
+                                    (click)="$event.stopPropagation(); activarAlerta(pelicula)">
+                                    {{ alertaEnviando() === pelicula.id ? 'Activando...' : '🔔 Avisarme del estreno' }}
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <hr class="divisor">
+    }
+
     <section class="catalogo-section">
         <h2>BUSCADOR DE PELICULAS</h2>
         

@@ -15,6 +15,20 @@ export class PeliculasService {
         return this.supabase.from('peliculas').select('*');
     }
 
+    // Un id por cada entrada vendida (no cancelada), para armar el ranking en el cliente.
+    // No hay agregación en el servidor (evita crear una vista/función SQL nueva).
+    async getVentasPorPelicula(): Promise<string[]> {
+        const { data, error } = await this.supabase
+            .from('entradas_tickets')
+            .select('funciones(pelicula_id)')
+            .neq('estado', 'cancelada');
+
+        if (error) throw error;
+        return (data ?? [])
+            .map((fila: any) => fila.funciones?.pelicula_id as string | undefined)
+            .filter((id): id is string => !!id);
+    }
+
     async addPelicula(pelicula: Partial<Pelicula>) {
         const { data, error } = await this.supabase
             .from('peliculas')

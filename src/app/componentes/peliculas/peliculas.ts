@@ -35,7 +35,8 @@ export class Peliculas implements OnInit {
     idiomas_disponibles: '',
     generos: [],
     fecha_fin_preventa: '',
-    precio_preventa: 0
+    precio_preventa: 0,
+    fecha_estreno: ''
   });
 
   peliculaForm = form(this.peliculaModel, (schemaPath) => {
@@ -48,6 +49,7 @@ export class Peliculas implements OnInit {
     required(schemaPath.formatos_disponibles, { message: 'Seleccione un formato' });
     required(schemaPath.generos, { message: 'Especifique al menos un género' });
     pattern(schemaPath.fecha_fin_preventa, /^\d{2}\/\d{2}\/\d{4}$/, { message: 'Debe usar el formato DD/MM/AAAA' });
+    pattern(schemaPath.fecha_estreno, /^\d{2}\/\d{2}\/\d{4}$/, { message: 'Debe usar el formato DD/MM/AAAA' });
   });
 
   peliculas = signal<Pelicula[]>([]);
@@ -98,19 +100,20 @@ export class Peliculas implements OnInit {
       formatos_disponibles: pelicula.formatos_disponibles?.[0] || '',
       idiomas_disponibles: pelicula.idiomas_disponibles?.[0] || '',
       generos: pelicula.generos || [],
-      fecha_fin_preventa: pelicula.fecha_fin_preventa ? pelicula.fecha_fin_preventa.split('T')[0].split('-').reverse().join('/') : '',      
-      precio_preventa: pelicula.precio_preventa || 0
+      fecha_fin_preventa: pelicula.fecha_fin_preventa ? pelicula.fecha_fin_preventa.split('T')[0].split('-').reverse().join('/') : '',
+      precio_preventa: pelicula.precio_preventa || 0,
+      fecha_estreno: pelicula.fecha_estreno ? pelicula.fecha_estreno.split('T')[0].split('-').reverse().join('/') : ''
     });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-    formatearFecha(event: Event) {
+    formatearFecha(campo: 'fecha_fin_preventa' | 'fecha_estreno', event: Event) {
     const input = event.target as HTMLInputElement;
-    let valor = input.value.replace(/\D/g, ''); 
+    let valor = input.value.replace(/\D/g, '');
 
     if (valor.length > 8) {
-      valor = valor.substring(0, 8); 
+      valor = valor.substring(0, 8);
     }
 
     if (valor.length > 4) {
@@ -120,7 +123,7 @@ export class Peliculas implements OnInit {
     }
 
     input.value = valor;
-    this.peliculaModel.update(m => ({ ...m, fecha_fin_preventa: valor }));
+    this.peliculaModel.update(m => ({ ...m, [campo]: valor }));
   }
 
   onSubmit(event: Event) {
@@ -151,6 +154,11 @@ export class Peliculas implements OnInit {
           return
         }
         payload.fecha_fin_preventa = `${anio}-${mes}-${dia}`;
+      }
+
+      if (formValues.fecha_estreno) {
+        const [dia, mes, anio] = formValues.fecha_estreno.split('/');
+        payload.fecha_estreno = `${anio}-${mes}-${dia}`;
       }
 
       const idEditando = this.peliculaEditandoId();
@@ -185,9 +193,9 @@ export class Peliculas implements OnInit {
   private limpiarFormulario() {
     this.peliculaEditandoId.set(null);
     this.peliculaModel.set({
-      nombre: '', sinopsis: '', imagen: '', duracion_minutos: 0, 
+      nombre: '', sinopsis: '', imagen: '', duracion_minutos: 0,
       restriccion_edad: '', formatos_disponibles: '', idiomas_disponibles: '',
-      generos: [], fecha_fin_preventa: '', precio_preventa: 0
+      generos: [], fecha_fin_preventa: '', precio_preventa: 0, fecha_estreno: ''
     });
 
     const formObj = this.peliculaForm as any;

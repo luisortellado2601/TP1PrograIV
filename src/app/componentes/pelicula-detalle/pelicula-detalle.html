@@ -1,4 +1,8 @@
 <div class="detalle-container">
+    <div class="nav-volver">
+        <a routerLink="/cartelera" class="btn-secundario">⬅ Volver a Cartelera</a>
+    </div>
+
     @if (cargando()) {
         <div class="loader">Cargando película...</div>
     } @else if (pelicula(); as peli) {
@@ -90,7 +94,9 @@
                 </div>
             </div>
 
-            @if (authService.perfilActual()) {
+            @if (proximoEstreno()) {
+                <p class="aviso-login">Todavía no se estrenó: vas a poder dejar tu reseña después del estreno.</p>
+            } @else if (authService.perfilActual()) {
                 @if (!miResena() || editando()) {
                 <form class="form-resena" [formGroup]="formResena" (ngSubmit)="publicarResena()">
                     <h4>{{ miResena() ? 'Editá tu reseña' : 'Dejá tu reseña' }}</h4>
