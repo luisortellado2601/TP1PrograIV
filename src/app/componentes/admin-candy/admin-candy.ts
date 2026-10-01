@@ -194,7 +194,6 @@ export class Candy implements OnInit {
         }, 0);
     }
 
-    // Abre la ventana de confirmación con el producto elegido
     pedirEliminar(producto: ProductoCandy) {
         this.productoAEliminar.set(producto);
     }

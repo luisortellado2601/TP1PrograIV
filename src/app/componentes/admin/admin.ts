@@ -4,7 +4,7 @@ import { Auth } from '../../services/auth';
 
 @Component({
   selector: 'app-admin',
-  imports: [RouterLink], // RouterLink te sirve si usás routerLink="" en el HTML
+  imports: [RouterLink], 
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })
