@@ -364,16 +364,70 @@
     font-size: 1.6rem;
     }
 
-.confirmacion .codigo {
-    margin: 1rem 0;
+.qr-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 1.2rem 0;
+    }
+
+.qr-imagen {
+    width: 180px;
+    height: 180px;
     padding: 0.8rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px #333333, 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+.qr-cargando {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777777;
+    font-size: 0.85rem;
+    box-sizing: border-box;
+    }
+
+.confirmacion .codigo {
+    margin: 0;
+    padding: 0.6rem 1.1rem;
     background-color: #111111;
     border: 1px solid #333333;
-    border-radius: 8px;
+    border-radius: 999px;
     color: #facc15;
-    font-family: monospace;
-    font-size: 0.9rem;
+    font-family: 'Courier New', Consolas, Menlo, monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
     word-break: break-all;
+    }
+
+.acciones-confirmacion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+    }
+
+.btn-secundario-confirmacion {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: transparent;
+    color: #aaaaaa;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    }
+
+.btn-secundario-confirmacion:hover {
+    background-color: #222222;
+    color: white;
+    border-color: white;
     }
 
 .confirmacion .lineas {

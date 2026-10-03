@@ -188,12 +188,12 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | Combos | 🔧 | Hoy es una categoría más del candy (con marca de "destacado"); falta el combo real de entrada + pochoclos + bebida a precio fijo |
 | Funciones y asignación automática de salas | ✅ | Con recurrencia y validación en la base |
 | Cartelera con buscador y filtro por género | ✅ | |
-| Las 3 películas más vendidas primero | 🔧 | Hoy muestra las tres primeras; falta el ranking real por ventas |
+| Las 3 películas más vendidas primero | ✅ | Ranking real por ventas desde `entradas_tickets` |
 | Detalle de película con funciones y reseñas | ✅ | Funciones por día y horario; reseñas con estrellas, comentario y promedio (una por usuario registrado) |
-| "Próximamente" y alertas de estreno | ⏳ | Tabla `alertas_estreno` creada |
+| "Próximamente" y alertas de estreno | 🔧 | La vista y el botón ya guardan la preferencia en `alertas_estreno`; falta el disparo real del aviso (push) cuando la película se estrena |
 | Mapa de butacas en tiempo real | ✅ | Filas A a T, J accesible, VIP en R, S y T, reserva temporal y máximo de 6 |
 | Confirmación de la compra (pago simulado) | ✅ | Formulario de tarjeta simulado (titular, número, vencimiento no vencido, CVV) con ventana de confirmación antes de pagar; la función SQL `comprar` recalcula precio, recargo VIP, cupón y puntos |
-| PDF con QR, validación por empleados y carga manual del código | ⏳ | La compra ya devuelve un código QR (texto) desde `comprar`; falta generarlo como PDF descargable y el panel de empleados para validarlo o cargarlo a mano |
+| PDF con QR, validación por empleados y carga manual del código | 🔧 | La confirmación de compra genera un PDF descargable (`jspdf` + `qrcode`) con los datos de la función, butacas, candy y el QR; falta el panel de empleados para validarlo o cargarlo a mano |
 | Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
 | Cupón de bienvenida (20 %) y cupón para mayores de 50 | ✅ | Se aplican automáticamente según elegibilidad (o a mano con código) en la compra de entradas y en el candy solo; la base los recalcula y consume |
 | Restricción de edad | ✅ | Bloquea el pago si el usuario logueado no cumple la edad de la película; los anónimos solo ven el aviso |

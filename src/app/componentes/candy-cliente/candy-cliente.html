@@ -7,9 +7,23 @@
         <section class="confirmacion">
             <h1>✅ ¡Pedido confirmado!</h1>
             <p>Mostrá este código en el candy bar para retirarlo.</p>
-            <p class="codigo">{{ r.codigo_qr }}</p>
+
+            <div class="qr-preview">
+                @if (qrPreviewUrl()) {
+                    <img [src]="qrPreviewUrl()" alt="Código QR del pedido" class="qr-imagen">
+                } @else {
+                    <div class="qr-imagen qr-cargando">Generando QR...</div>
+                }
+                <p class="codigo">{{ r.codigo_qr }}</p>
+            </div>
 
             <ul class="lineas">
+                @for (item of itemsConfirmados(); track item.id) {
+                    <li>
+                        <span>{{ item.cantidad }}x {{ item.nombre }}</span>
+                        <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </li>
+                }
                 <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
                 @if (r.descuento) {
                     <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
@@ -20,7 +34,10 @@
                 }
             </ul>
 
-            <button class="btn-comprar" type="button" (click)="pedirOtroPedido()">Hacer otro pedido</button>
+            <div class="acciones-confirmacion">
+                <button class="btn-comprar" type="button" (click)="descargarPdf()">📄 Descargar PDF del pedido</button>
+                <button class="btn-secundario-confirmacion" type="button" (click)="pedirOtroPedido()">Hacer otro pedido</button>
+            </div>
         </section>
     </div>
 } @else {

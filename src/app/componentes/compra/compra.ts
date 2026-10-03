@@ -87,6 +87,7 @@ export class Compra implements OnInit {
   mostrarConfirmacion = signal(false);
   mostrarCancelar = signal(false);
   resultado = signal<ResultadoCompra | null>(null);
+  qrPreviewUrl = signal('');
 
   formPago = this.fb.nonNullable.group({
     titular: ['', [Validators.required, Validators.minLength(3)]],
@@ -312,6 +313,7 @@ export class Compra implements OnInit {
         this.resultado.set(resultado);
         this.procesando.set(false);
         this.auth.refrescarPerfil(); // los puntos y el uso del cupón cambiaron en la base
+        this.generarQrPreview(resultado.codigo_qr);
         try {
           if (isPlatformBrowser(this.platformId)) sessionStorage.removeItem('sesion-butacas');
         } catch {
@@ -323,6 +325,114 @@ export class Compra implements OnInit {
         this.procesando.set(false);
       },
     });
+  }
+
+  private async generarQrPreview(codigoQr: string) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const QRCode = await import('qrcode');
+    this.qrPreviewUrl.set(await QRCode.toDataURL(codigoQr, { width: 300, margin: 1 }));
+  }
+
+  async descargarPdf() {
+    const resultado = this.resultado();
+    const f = this.funcion();
+    if (!resultado || !f || !isPlatformBrowser(this.platformId)) return;
+
+    const [{ default: jsPDF }, qrDataUrl] = await Promise.all([
+      import('jspdf'),
+      this.qrPreviewUrl() || import('qrcode').then(m => m.toDataURL(resultado.codigo_qr, { width: 300, margin: 1 })),
+    ]);
+
+    const doc = new jsPDF({ unit: 'mm', format: 'a5' });
+    const anchoPagina = doc.internal.pageSize.getWidth();
+    const altoPagina = doc.internal.pageSize.getHeight();
+    const centroX = anchoPagina / 2;
+
+    // Fondo y tarjeta oscuros, igual al tema de la app (negro + panel #1a1a1a)
+    doc.setFillColor(0, 0, 0);
+    doc.rect(0, 0, anchoPagina, altoPagina, 'F');
+    doc.setFillColor(26, 26, 26);
+    doc.setDrawColor(46, 45, 45);
+    doc.roundedRect(6, 6, anchoPagina - 12, altoPagina - 12, 6, 6, 'FD');
+
+    let y = 20;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Entrada de cine', centroX, y, { align: 'center' });
+
+    y += 9;
+    doc.setFontSize(13);
+    doc.text(f.peliculas?.nombre ?? '', centroX, y, { align: 'center' });
+
+    y += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(189, 189, 189);
+    doc.text(this.formatoFuncion(f.fecha_hora_inicio) + ' hs', centroX, y, { align: 'center' });
+    y += 6;
+    doc.text(`${f.salas?.nombre ?? ''} · ${f.formato} ${f.idioma}`, centroX, y, { align: 'center' });
+
+    // Tarjeta blanca con el QR (necesita fondo claro para poder escanearse)
+    y += 9;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(222, 222, 222);
+    doc.roundedRect(centroX - 33, y - 3, 66, 66, 4, 4, 'FD');
+    doc.addImage(qrDataUrl, 'PNG', centroX - 30, y, 60, 60);
+
+    // Chip oscuro con el código, igual al de la pantalla (fondo #111, letras doradas)
+    y += 72;
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(12);
+    doc.setCharSpace(0.7);
+    const anchoTexto = doc.getTextWidth(resultado.codigo_qr) + resultado.codigo_qr.length * 0.7;
+    const anchoChip = Math.min(anchoTexto + 14, anchoPagina - 20);
+    const altoChip = 11;
+    doc.setFillColor(17, 17, 17);
+    doc.setDrawColor(46, 45, 45);
+    doc.roundedRect(centroX - anchoChip / 2, y, anchoChip, altoChip, altoChip / 2, altoChip / 2, 'FD');
+    doc.setTextColor(250, 204, 21);
+    doc.text(resultado.codigo_qr, centroX, y + altoChip / 2 + 1.3, { align: 'center' });
+    doc.setCharSpace(0);
+
+    // Datos de la compra, en formato etiqueta: valor
+    y += altoChip + 10;
+    const butacas = this.asientos().map(b => `${b.fila}-${b.numero}${b.tipo === 'vip' ? ' (VIP)' : ''}`).join(', ');
+    const totalFormateado = new Intl.NumberFormat('es-AR', {
+      style: 'currency', currency: 'ARS', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0,
+    }).format(resultado.total);
+
+    const filas: [string, string][] = [['Película', f.peliculas?.nombre ?? ''], ['Butacas', butacas]];
+    if (this.carrito().length) {
+      filas.push(['Candy', this.carrito().map(i => `${i.cantidad}x ${i.nombre}`).join(', ')]);
+    }
+    filas.push(['Puntos ganados', `${resultado.puntos_ganados ?? 0} pts`]);
+    filas.push(['Total pagado', totalFormateado]);
+
+    const inicioX = centroX - 48;
+    const anchoEtiqueta = 32;
+    const anchoValor = 96 - anchoEtiqueta;
+    doc.setFontSize(10);
+    filas.forEach(([etiqueta, valor]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(156, 163, 175);
+      doc.text(`${etiqueta}:`, inicioX, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(255, 255, 255);
+      const lineas = doc.splitTextToSize(valor || '-', anchoValor);
+      doc.text(lineas, inicioX + anchoEtiqueta, y);
+      y += Math.max(lineas.length, 1) * 5.2 + 2;
+    });
+
+    y += 4;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(119, 119, 119);
+    doc.text('Presentá este código para ingresar a la sala' + (this.carrito().length ? ' y retirar tu candy.' : '.'), centroX, y, { align: 'center', maxWidth: 110 });
+
+    doc.save(`entrada-${resultado.compra_id}.pdf`);
   }
 
   pedirCancelar() {

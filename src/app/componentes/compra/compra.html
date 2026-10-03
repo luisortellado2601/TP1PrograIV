@@ -11,9 +11,29 @@
         <section class="panel confirmacion">
             <h1>✅ ¡Compra confirmada!</h1>
             <p>Guardá este código: lo vas a necesitar para entrar a la sala{{ totalArticulosCandy() ? ' y retirar tu candy' : '' }}.</p>
-            <p class="codigo">{{ r.codigo_qr }}</p>
+
+            <div class="qr-preview">
+                @if (qrPreviewUrl()) {
+                    <img [src]="qrPreviewUrl()" alt="Código QR de la entrada" class="qr-imagen">
+                } @else {
+                    <div class="qr-imagen qr-cargando">Generando QR...</div>
+                }
+                <p class="codigo">{{ r.codigo_qr }}</p>
+            </div>
 
             <ul class="lineas">
+                @for (b of asientos(); track b.fila + '-' + b.numero) {
+                    <li>
+                        <span>Butaca {{ b.fila }}-{{ b.numero }}{{ b.tipo === 'vip' ? ' (VIP)' : '' }}</span>
+                        <span>{{ (precioBase() + (b.tipo === 'vip' ? recargoVip() : 0)) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </li>
+                }
+                @for (item of carrito(); track item.id) {
+                    <li>
+                        <span>{{ item.cantidad }}x {{ item.nombre }}</span>
+                        <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </li>
+                }
                 <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
                 @if (r.descuento) {
                     <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
@@ -24,8 +44,10 @@
                 }
             </ul>
 
-            <p class="nota">El PDF de la entrada con el código QR estará disponible próximamente.</p>
-            <a class="btn-confirmar" routerLink="/cartelera">Volver a Cartelera</a>
+            <div class="acciones-confirmacion">
+                <button class="btn-confirmar" type="button" (click)="descargarPdf()">📄 Descargar PDF de la entrada</button>
+                <a class="btn-volver" routerLink="/cartelera">Volver a Cartelera</a>
+            </div>
         </section>
     } @else if (funcion(); as f) {
         <header class="cabecera">

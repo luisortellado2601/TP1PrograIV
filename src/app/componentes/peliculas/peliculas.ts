@@ -145,14 +145,19 @@ export class Peliculas implements OnInit {
       };
 
       if (formValues.fecha_fin_preventa) {
-        const [dia, mes, anio] = formValues.fecha_fin_preventa.split('/');
-        const fechaIngresada = new Date(Number(anio), Number(mes) - 1, Number(dia));
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-        if (fechaIngresada < hoy) {
-          alert('Error: La fecha de fin de preventa no puede ser anterior a la fecha actual')
-          return
+        // Al crear no tiene sentido cargar una preventa ya vencida; al editar sí se permite
+        // (es la forma de cortar la preventa de una película ya cargada antes de tiempo).
+        if (!this.peliculaEditandoId()) {
+          const [dia, mes, anio] = formValues.fecha_fin_preventa.split('/');
+          const fechaIngresada = new Date(Number(anio), Number(mes) - 1, Number(dia));
+          const hoy = new Date();
+          hoy.setHours(0, 0, 0, 0);
+          if (fechaIngresada < hoy) {
+            alert('Error: La fecha de fin de preventa no puede ser anterior a la fecha actual')
+            return
+          }
         }
+        const [dia, mes, anio] = formValues.fecha_fin_preventa.split('/');
         payload.fecha_fin_preventa = `${anio}-${mes}-${dia}`;
       }
 
