@@ -40,6 +40,9 @@
         <a routerLink="/cartelera" (click)="cerrarMenu()">Cartelera</a>
         <a [routerLink]="['/cartelera']" fragment="proximamente" (click)="cerrarMenu()">Próximos Estrenos</a>
         <a routerLink="/candy-cliente" (click)="cerrarMenu()">Candy Bar</a>
+        @if (perfilActual()) {
+            <a routerLink="/mis-compras" (click)="cerrarMenu()">Mis Compras</a>
+        }
         <a routerLink="/fidelizacion" (click)="cerrarMenu()">Programa de Puntos</a>
     </nav>
 

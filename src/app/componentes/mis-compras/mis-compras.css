@@ -1,0 +1,199 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.compras-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.btn-volver {
+  padding: 0.7rem 1rem;
+  background-color: #1a1a1a;
+  color: #aaa;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-volver:hover {
+  background-color: #2a2a2a;
+  color: white;
+}
+
+.credito-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #111;
+  border: 1px solid #facc15;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #facc15;
+}
+
+.credito-card strong {
+  font-size: 1.3rem;
+}
+
+.mensaje {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+
+.mensaje.error {
+  color: #dc2626;
+}
+
+.mensaje.exito {
+  color: #16a34a;
+}
+
+.estado-carga {
+  text-align: center;
+  color: #999;
+  padding: 3rem 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #111;
+  border-radius: 8px;
+  color: #999;
+  border: 2px dashed rgb(46, 45, 45);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.lista-compras {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.compra-card {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.compra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.compra-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.dato {
+  margin: 0.35rem 0;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.dato strong {
+  color: #bdbdbd;
+}
+
+.estados-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background-color: #111;
+  border: 1px solid #555;
+  color: #facc15;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.badge.ok {
+  color: #16a34a;
+  border-color: #14532d;
+  background-color: #0f2a17;
+}
+
+.badge.cancelada {
+  color: #f87171;
+  border-color: #552020;
+  background-color: #3a1717;
+}
+
+.btn-cancelar-compra {
+  width: 100%;
+  padding: 0.7rem;
+  background-color: #3a1717;
+  color: #f87171;
+  border: 1px solid #552020;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar-compra:hover:not(:disabled) {
+  background-color: #521f1f;
+}
+
+.btn-cancelar-compra:disabled {
+  background-color: #333;
+  color: #777;
+  border-color: #444;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .compra-card {
+    padding: 1.2rem;
+  }
+}

@@ -55,6 +55,7 @@ export class Compra implements OnInit {
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
+  private titleCasePipe = new TitleCasePipe();
   private auth = inject(Auth);
   private butacasService = inject(ButacasService);
   private configuracionService = inject(ConfiguracionService);
@@ -109,6 +110,15 @@ export class Compra implements OnInit {
   totalCandy = computed(() => this.carrito().reduce((acc, i) => acc + i.precio * i.cantidad, 0));
   totalArticulosCandy = computed(() => this.carrito().reduce((acc, i) => acc + i.cantidad, 0));
 
+  // Resumen prolijo para la pantalla de confirmación (sin precio por línea, eso ya está en el total)
+  butacasResumen = computed(() => this.asientos()
+    .map(b => `${b.fila}-${b.numero}${b.tipo === 'vip' ? ' (VIP)' : ''}`)
+    .join(', '));
+
+  candyResumen = computed(() => this.carrito()
+    .map(i => `${i.cantidad} ${i.nombre}`)
+    .join(', '));
+
   // Los combos (entrada + pochoclos + bebida a precio fijo) se muestran aparte, destacados.
   // Cualquier categoría que empiece con "Combo" cuenta (Combos, Combo Económico, etc.)
   combos = computed(() => this.productos().filter(p => p.categoria?.startsWith('Combo')));
@@ -139,6 +149,12 @@ export class Compra implements OnInit {
 
   total = computed(() => this.subtotal() - this.descuento());
   puntosEstimados = computed(() => this.perfil() ? Math.floor(this.total() * this.puntosPorPeso()) : 0);
+
+  // Crédito disponible (de cancelaciones previas): se puede combinar con el pago simulado con tarjeta
+  usarCredito = signal(false);
+  creditoDisponible = computed(() => Number(this.perfil()?.credito_extra ?? 0));
+  creditoAplicado = computed(() => this.usarCredito() ? Math.min(this.creditoDisponible(), this.total()) : 0);
+  totalConCredito = computed(() => this.total() - this.creditoAplicado());
 
   // 13 o 18 si la película tiene restricción de edad
   edadMinima = computed(() => {
@@ -308,7 +324,7 @@ export class Compra implements OnInit {
     const candy = this.carrito().map(i => ({ producto_id: i.id!, cantidad: i.cantidad }));
     const cuponCodigo = this.cuponElegible()?.codigo ?? null;
 
-    this.comprasService.comprar(this.funcionId, this.sesionId, cuponCodigo, candy).subscribe({
+    this.comprasService.comprar(this.funcionId, this.sesionId, cuponCodigo, candy, this.usarCredito()).subscribe({
       next: resultado => {
         this.resultado.set(resultado);
         this.procesando.set(false);
@@ -364,7 +380,7 @@ export class Compra implements OnInit {
 
     y += 9;
     doc.setFontSize(13);
-    doc.text(f.peliculas?.nombre ?? '', centroX, y, { align: 'center' });
+    doc.text(this.titleCasePipe.transform(f.peliculas?.nombre ?? ''), centroX, y, { align: 'center' });
 
     y += 7;
     doc.setFont('helvetica', 'normal');
@@ -393,7 +409,9 @@ export class Compra implements OnInit {
     doc.setDrawColor(46, 45, 45);
     doc.roundedRect(centroX - anchoChip / 2, y, anchoChip, altoChip, altoChip / 2, altoChip / 2, 'FD');
     doc.setTextColor(250, 204, 21);
-    doc.text(resultado.codigo_qr, centroX, y + altoChip / 2 + 1.3, { align: 'center' });
+    // jsPDF no suma el letter-spacing (setCharSpace) al calcular el centro con align:'center',
+    // por eso el texto queda descentrado; se posiciona a mano con el ancho real (anchoTexto) ya calculado.
+    doc.text(resultado.codigo_qr, centroX - anchoTexto / 2, y + altoChip / 2 + 1.3);
     doc.setCharSpace(0);
 
     // Datos de la compra, en formato etiqueta: valor
@@ -403,9 +421,18 @@ export class Compra implements OnInit {
       style: 'currency', currency: 'ARS', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0,
     }).format(resultado.total);
 
-    const filas: [string, string][] = [['Película', f.peliculas?.nombre ?? ''], ['Butacas', butacas]];
+    const filas: [string, string][] = [
+      ['Película', this.titleCasePipe.transform(f.peliculas?.nombre ?? '')],
+      ['Butacas', butacas],
+    ];
     if (this.carrito().length) {
-      filas.push(['Candy', this.carrito().map(i => `${i.cantidad}x ${i.nombre}`).join(', ')]);
+      filas.push(['Producto', this.carrito().map(i => `${i.cantidad} ${this.titleCasePipe.transform(i.nombre)}`).join(', ')]);
+    }
+    if (resultado.credito_usado) {
+      const creditoFormateado = new Intl.NumberFormat('es-AR', {
+        style: 'currency', currency: 'ARS', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0,
+      }).format(resultado.credito_usado);
+      filas.push(['Crédito aplicado', `-${creditoFormateado}`]);
     }
     filas.push(['Puntos ganados', `${resultado.puntos_ganados ?? 0} pts`]);
     filas.push(['Total pagado', totalFormateado]);

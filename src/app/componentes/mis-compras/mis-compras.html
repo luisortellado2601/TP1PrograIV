@@ -1,0 +1,82 @@
+<div class="compras-container">
+    <header class="cabecera">
+        <h1>Mis compras</h1>
+        <button class="btn-volver" type="button" (click)="volverAtras()">⬅ Volver a Cartelera</button>
+    </header>
+
+    <div class="credito-card">
+        <span>Crédito disponible</span>
+        <strong>{{ credito() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+    </div>
+
+    @if (mensaje()) {
+        <p class="mensaje exito">{{ mensaje() }}</p>
+    }
+    @if (error()) {
+        <p class="mensaje error">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p class="estado-carga">Cargando tus compras...</p>
+    } @else if (!compras().length) {
+        <div class="empty-state">
+            <p>Todavía no hiciste ninguna compra.</p>
+        </div>
+    } @else {
+        <div class="lista-compras">
+            @for (c of compras(); track c.id) {
+                <div class="compra-card">
+                    <div class="compra-header">
+                        <h3>{{ (funcionInfo(c)?.peliculas?.nombre | titlecase) || 'Candy Bar' }}</h3>
+                        <span class="badge" [class.cancelada]="c.estado === 'cancelada'">
+                            {{ c.estado === 'cancelada' ? 'Cancelada' : 'Pagada' }}
+                        </span>
+                    </div>
+
+                    <p class="dato">Comprada el {{ formatoFuncion(c.creada_en) }} hs</p>
+
+                    @if (funcionInfo(c); as f) {
+                        <p class="dato">
+                            {{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}
+                        </p>
+                        <p class="dato"><strong>Butacas:</strong> {{ butacasTexto(c) }}</p>
+                    }
+
+                    @if (c.compra_items.length) {
+                        <p class="dato"><strong>Producto:</strong> {{ candyTexto(c) | titlecase }}</p>
+                    }
+
+                    <p class="dato"><strong>Total:</strong> {{ c.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</p>
+
+                    <div class="estados-fila">
+                        @if (c.estado_entrada !== 'sin_entrada') {
+                            <span class="badge" [class.ok]="c.estado_entrada === 'validada'" [class.cancelada]="c.estado_entrada === 'cancelada'">
+                                Entrada: {{ c.estado_entrada }}
+                            </span>
+                        }
+                        @if (c.estado_candy !== 'sin_candy') {
+                            <span class="badge" [class.ok]="c.estado_candy === 'entregado'" [class.cancelada]="c.estado_candy === 'cancelada'">
+                                Candy: {{ c.estado_candy }}
+                            </span>
+                        }
+                    </div>
+
+                    @if (puedeCancelar(c)) {
+                        <button type="button" class="btn-cancelar-compra" [disabled]="cancelandoId() === c.id" (click)="pedirCancelar(c)">
+                            {{ cancelandoId() === c.id ? 'Cancelando...' : 'Cancelar compra' }}
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@if (compraACancelar(); as c) {
+    <app-ventana-confirmacion
+        titulo="Cancelar compra"
+        mensaje="Se va a cancelar esta compra y se te va a acreditar el total pagado como crédito. ¿Confirmás?"
+        textoConfirmar="Sí, cancelar"
+        (confirmar)="confirmarCancelar()"
+        (cancelar)="cerrarCancelar()" />
+}

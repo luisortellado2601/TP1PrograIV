@@ -17,22 +17,19 @@
                 <p class="codigo">{{ r.codigo_qr }}</p>
             </div>
 
-            <ul class="lineas">
-                @for (item of itemsConfirmados(); track item.id) {
-                    <li>
-                        <span>{{ item.cantidad }}x {{ item.nombre }}</span>
-                        <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
-                    </li>
-                }
-                <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+            <div class="resumen-compra">
+                <p class="linea-resumen"><span>Producto</span><span>{{ candyResumen() | titlecase }}</span></p>
                 @if (r.descuento) {
-                    <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                    <p class="linea-resumen"><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
                 }
-                <li class="total"><span>Total pagado</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.credito_usado) {
+                    <p class="linea-resumen"><span>Crédito aplicado</span><span>-{{ r.credito_usado | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
+                }
+                <p class="linea-resumen total"><span>Total</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
                 @if (r.puntos_ganados) {
-                    <li><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></li>
+                    <p class="linea-resumen"><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></p>
                 }
-            </ul>
+            </div>
 
             <div class="acciones-confirmacion">
                 <button class="btn-comprar" type="button" (click)="descargarPdf()">📄 Descargar PDF del pedido</button>
@@ -42,15 +39,15 @@
     </div>
 } @else {
 
+<header class="seccion-header">
+    <h2>🍿 Candy Bar</h2>
+    <p>Agregá snacks y bebidas a tu entrada</p>
+</header>
+
 <div class="cliente-container">
-    
+
     <!-- Sección del Menú -->
     <section class="menu-section">
-        <header class="seccion-header">
-            <h2>🍿 Candy Bar</h2>
-            <p>Agregá snacks y bebidas a tu entrada</p>
-        </header>
-
         <div class="productos-grid">
             @for (producto of productos(); track producto.id) {
                 <div class="producto-card">
@@ -133,9 +130,23 @@
                     </div>
                 }
 
+                @if (creditoDisponible() > 0) {
+                    <label class="checkbox-credito">
+                        <input type="checkbox" [checked]="usarCredito()" (change)="usarCredito.set(!usarCredito())" />
+                        Usar mi crédito disponible ({{ creditoDisponible() | currency:'ARS':'symbol-narrow':'1.0-0' }})
+                    </label>
+                }
+
+                @if (creditoAplicado() > 0) {
+                    <div class="total-fila secundaria">
+                        <span>Crédito aplicado:</span>
+                        <span>-{{ creditoAplicado() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                }
+
                 <div class="total-fila">
                     <span>Total:</span>
-                    <strong>{{ totalFinal() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                    <strong>{{ totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
                 </div>
 
                 @if (carrito().length) {
@@ -184,7 +195,7 @@
 @if (mostrarConfirmacion()) {
     <app-ventana-confirmacion
         titulo="Confirmar pedido"
-        [mensaje]="'Vas a pagar ' + (totalFinal() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás el pedido?'"
+        [mensaje]="'Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás el pedido?'"
         textoConfirmar="Pagar"
         (confirmar)="confirmarCompra()"
         (cancelar)="cancelarConfirmacion()" />

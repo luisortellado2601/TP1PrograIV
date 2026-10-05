@@ -21,28 +21,27 @@
                 <p class="codigo">{{ r.codigo_qr }}</p>
             </div>
 
-            <ul class="lineas">
-                @for (b of asientos(); track b.fila + '-' + b.numero) {
-                    <li>
-                        <span>Butaca {{ b.fila }}-{{ b.numero }}{{ b.tipo === 'vip' ? ' (VIP)' : '' }}</span>
-                        <span>{{ (precioBase() + (b.tipo === 'vip' ? recargoVip() : 0)) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
-                    </li>
+            <div class="resumen-compra">
+                @if (funcion(); as f) {
+                    <p class="linea-resumen"><span>Película</span><span>{{ f.peliculas?.nombre | titlecase }}</span></p>
                 }
-                @for (item of carrito(); track item.id) {
-                    <li>
-                        <span>{{ item.cantidad }}x {{ item.nombre }}</span>
-                        <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
-                    </li>
+                @if (asientos().length) {
+                    <p class="linea-resumen"><span>Butacas</span><span>{{ butacasResumen() }}</span></p>
                 }
-                <li><span>Subtotal</span><span>{{ r.subtotal | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (carrito().length) {
+                    <p class="linea-resumen"><span>Producto</span><span>{{ candyResumen() | titlecase }}</span></p>
+                }
                 @if (r.descuento) {
-                    <li><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                    <p class="linea-resumen"><span>Descuento</span><span>-{{ r.descuento | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
                 }
-                <li class="total"><span>Total pagado</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></li>
+                @if (r.credito_usado) {
+                    <p class="linea-resumen"><span>Crédito aplicado</span><span>-{{ r.credito_usado | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
+                }
+                <p class="linea-resumen total"><span>Total</span><span>{{ r.total | currency:'ARS':'symbol-narrow':'1.0-0' }}</span></p>
                 @if (r.puntos_ganados) {
-                    <li><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></li>
+                    <p class="linea-resumen"><span>Puntos ganados</span><span>{{ r.puntos_ganados | formatoPuntos }}</span></p>
                 }
-            </ul>
+            </div>
 
             <div class="acciones-confirmacion">
                 <button class="btn-confirmar" type="button" (click)="descargarPdf()">📄 Descargar PDF de la entrada</button>
@@ -209,7 +208,7 @@
                     }
                     @for (item of carrito(); track item.id) {
                         <li>
-                            <span>{{ item.cantidad }}x {{ item.nombre }}</span>
+                            <span>{{ item.cantidad }} {{ item.nombre | titlecase }}</span>
                             <span>{{ (item.precio * item.cantidad) | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
                         </li>
                     }
@@ -230,9 +229,23 @@
                     </div>
                 }
 
+                @if (creditoDisponible() > 0) {
+                    <label class="checkbox-credito">
+                        <input type="checkbox" [checked]="usarCredito()" (change)="usarCredito.set(!usarCredito())" />
+                        Usar mi crédito disponible ({{ creditoDisponible() | currency:'ARS':'symbol-narrow':'1.0-0' }})
+                    </label>
+                }
+
+                @if (creditoAplicado() > 0) {
+                    <div class="linea-subtotal">
+                        <span>Crédito aplicado</span>
+                        <span>-{{ creditoAplicado() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                }
+
                 <div class="total">
                     <span>Total</span>
-                    <strong>{{ total() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+                    <strong>{{ totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
                 </div>
 
                 @if (puntosEstimados()) {
@@ -246,7 +259,7 @@
 @if (mostrarConfirmacion()) {
     <app-ventana-confirmacion
         titulo="Confirmar compra"
-        [mensaje]="'Vas a pagar ' + (total() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás la compra?'"
+        [mensaje]="'Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás la compra?'"
         textoConfirmar="Pagar"
         (confirmar)="confirmarCompra()"
         (cancelar)="cancelarConfirmacion()" />

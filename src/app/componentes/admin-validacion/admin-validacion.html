@@ -1,0 +1,100 @@
+<div class="validacion-container">
+    <section class="panel">
+        <h2>Validar entrada / candy</h2>
+        <header>
+            <p>Buscá la compra por el código del QR para marcar el ingreso o el retiro del candy</p>
+        </header>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver</button>
+
+        <div class="escaner-container">
+            <div id="lector-qr" [hidden]="!escaneando()"></div>
+
+            @if (!escaneando()) {
+                <button type="button" class="btn-escanear" (click)="iniciarEscaneo()">📷 Escanear QR con la cámara</button>
+            } @else {
+                <button type="button" class="btn-cancelar" (click)="detenerEscaneo()">Cancelar escaneo</button>
+            }
+
+            @if (errorCamara()) {
+                <p class="mensaje error">{{ errorCamara() }}</p>
+            }
+        </div>
+
+        <p class="separador">o escribí el código a mano</p>
+
+        <div class="form-busqueda">
+            <input
+                type="text"
+                placeholder="Pegá o escribí el código del QR..."
+                [ngModel]="codigo()"
+                (ngModelChange)="codigo.set($event)"
+                (keyup.enter)="buscar()"
+                class="input-codigo" />
+            <button type="button" [disabled]="buscando() || !codigo().trim()" (click)="buscar()">
+                {{ buscando() ? 'Buscando...' : 'Buscar' }}
+            </button>
+        </div>
+
+        @if (error()) {
+            <p class="mensaje error">{{ error() }}</p>
+        }
+        @if (mensaje()) {
+            <p class="mensaje exito">{{ mensaje() }}</p>
+        }
+    </section>
+
+    @if (compra(); as c) {
+        <section class="panel resultado">
+            <div class="resultado-header">
+                <h3>{{ funcionInfo(c)?.peliculas?.nombre ?? 'Compra de candy' }}</h3>
+                <span class="badge" [class.cancelada]="c.estado === 'cancelada'">
+                    {{ c.estado === 'cancelada' ? 'Compra cancelada' : 'Compra pagada' }}
+                </span>
+            </div>
+
+            @if (funcionInfo(c); as f) {
+                <p class="dato">
+                    {{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}
+                </p>
+                <p class="dato"><strong>Butacas:</strong> {{ butacasTexto(c) }}</p>
+            }
+
+            @if (c.compra_items.length) {
+                <p class="dato"><strong>Candy:</strong> {{ candyTexto(c) }}</p>
+            }
+
+            <p class="dato"><strong>Cliente:</strong> {{ nombreCliente(c) }}</p>
+            <p class="dato"><strong>Total:</strong> {{ c.total | currency:'ARS':'symbol-narrow':'1.0-0' }} · {{ c.puntos_ganados }} pts</p>
+
+            <div class="acciones-validacion">
+                @if (c.estado_entrada !== 'sin_entrada') {
+                    <div class="accion">
+                        <span class="badge" [class.ok]="c.estado_entrada === 'validada'" [class.cancelada]="c.estado_entrada === 'cancelada'">
+                            Entrada: {{ c.estado_entrada }}
+                        </span>
+                        @if (c.estado_entrada === 'pendiente' && c.estado !== 'cancelada') {
+                            <button type="button" class="btn-validar" [disabled]="validandoEntrada()" (click)="validarEntrada()">
+                                {{ validandoEntrada() ? 'Validando...' : 'Validar entrada' }}
+                            </button>
+                        }
+                    </div>
+                }
+
+                @if (c.estado_candy !== 'sin_candy') {
+                    <div class="accion">
+                        <span class="badge" [class.ok]="c.estado_candy === 'entregado'" [class.cancelada]="c.estado_candy === 'cancelada'">
+                            Candy: {{ c.estado_candy }}
+                        </span>
+                        @if (c.estado_candy === 'pendiente' && c.estado !== 'cancelada') {
+                            <button type="button" class="btn-validar" [disabled]="validandoCandy()" (click)="validarCandy()">
+                                {{ validandoCandy() ? 'Entregando...' : 'Validar candy' }}
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <button type="button" class="btn-cancelar" (click)="nuevaBusqueda()">Nueva búsqueda</button>
+        </section>
+    }
+</div>

@@ -363,6 +363,27 @@
   font-size: 0.85rem;
 }
 
+.checkbox-credito {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+  padding: 0.7rem 0.9rem;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.checkbox-credito input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 .total {
   display: flex;
   justify-content: space-between;
@@ -419,6 +440,8 @@
 
 .confirmacion .codigo {
   margin: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 0.6rem 1.1rem;
   background-color: #111;
   border: 1px solid rgb(46, 45, 45);
@@ -429,12 +452,40 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   word-break: break-all;
+  overflow-wrap: break-word;
 }
 
-.confirmacion .lineas li.total {
+.resumen-compra {
+  text-align: left;
+  margin: 0 0 1rem 0;
+}
+
+.linea-resumen {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.5rem 0;
   border-top: 1px solid rgb(46, 45, 45);
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.linea-resumen span:first-child {
+  color: #bdbdbd;
+  flex-shrink: 0;
+}
+
+.linea-resumen span:last-child {
+  text-align: right;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.linea-resumen.total {
   font-weight: bold;
   font-size: 1.05rem;
+  color: white;
 }
 
 .acciones-confirmacion {

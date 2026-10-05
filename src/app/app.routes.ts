@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './guards/admin-guard';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,11 @@ export const routes: Routes = [
         loadComponent: ()=> import('./componentes/candy-cliente/candy-cliente').then(m => m.CandyCliente),
     },
     {
+        path: 'mis-compras',
+        loadComponent: () => import('./componentes/mis-compras/mis-compras').then(m => m.MisCompras),
+        canMatch: [authGuard]
+    },
+    {
         path: 'admin',
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin),
         canMatch: [adminGuard]
@@ -58,6 +64,11 @@ export const routes: Routes = [
     {
         path: 'admin-configuracion',
         loadComponent: () => import('./componentes/admin-configuracion/admin-configuracion').then(m => m.AdminConfiguracion),
+        canMatch: [adminGuard]
+    },
+    {
+        path: 'admin-validacion',
+        loadComponent: () => import('./componentes/admin-validacion/admin-validacion').then(m => m.AdminValidacion),
         canMatch: [adminGuard]
     },
 

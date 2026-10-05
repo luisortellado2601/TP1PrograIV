@@ -1,0 +1,294 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.validacion-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.panel {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(35, 33, 30, 0.05);
+  padding: 2rem;
+  border: 1px solid rgb(46, 45, 45);
+}
+
+.panel h2, .panel h3 {
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
+.panel h2 { font-size: 1.5rem; }
+
+.panel header p {
+  margin: 0.5rem 0 2rem;
+  color: #bdbdbd;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.btn-volver {
+  margin-bottom: 20px;
+  padding: 0.7rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.escaner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+#lector-qr {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#lector-qr:not([hidden]) {
+  border: 1px solid rgb(46, 45, 45);
+}
+
+.btn-escanear {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-escanear:hover {
+  background-color: #0056b3;
+}
+
+.separador {
+  text-align: center;
+  color: #777;
+  font-size: 0.85rem;
+  margin: 1.2rem 0;
+}
+
+.form-busqueda {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.input-codigo {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 0.8rem;
+  background-color: #111;
+  color: white;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+}
+
+.input-codigo:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.form-busqueda button {
+  padding: 0.8rem 1.4rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.form-busqueda button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.form-busqueda button:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.mensaje {
+  margin: 1rem 0 0;
+  font-size: 0.9rem;
+  color: #16a34a;
+}
+
+.mensaje.error {
+  color: #dc2626;
+}
+
+.mensaje.exito {
+  color: #16a34a;
+}
+
+.resultado-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.resultado-header h3 {
+  text-align: left;
+  font-size: 1.2rem;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.dato {
+  margin: 0.4rem 0;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+}
+
+.dato strong {
+  color: #bdbdbd;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background-color: #111;
+  border: 1px solid #555;
+  color: #facc15;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.badge.ok {
+  color: #16a34a;
+  border-color: #14532d;
+  background-color: #0f2a17;
+}
+
+.badge.cancelada {
+  color: #f87171;
+  border-color: #552020;
+  background-color: #3a1717;
+}
+
+.acciones-validacion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgb(46, 45, 45);
+}
+
+.accion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn-validar {
+  padding: 0.6rem 1rem;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-validar:hover:not(:disabled) {
+  background-color: #128a3c;
+}
+
+.btn-validar:disabled {
+  background-color: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.btn-cancelar {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background-color: #555;
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .panel {
+    padding: 1.2rem;
+  }
+
+  .form-busqueda {
+    flex-direction: column;
+  }
+
+  .form-busqueda button {
+    width: 100%;
+  }
+
+  .resultado-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .accion {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .btn-validar {
+    width: 100%;
+  }
+}

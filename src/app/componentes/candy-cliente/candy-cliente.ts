@@ -60,6 +60,7 @@ export class CandyCliente implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private configuracionService = inject(ConfiguracionService);
   private comprasService = inject(ComprasService);
+  private titleCasePipe = new TitleCasePipe();
 
   productos = signal<ProductoCandy[]>([]);
   carrito = signal<ItemCarrito[]>([]);
@@ -115,6 +116,17 @@ export class CandyCliente implements OnInit {
   });
 
   totalFinal = computed(() => this.totalPagar() - this.descuento());
+
+  // Crédito disponible (de cancelaciones previas): se puede combinar con el pago simulado con tarjeta
+  usarCredito = signal(false);
+  creditoDisponible = computed(() => Number(this.perfil()?.credito_extra ?? 0));
+  creditoAplicado = computed(() => this.usarCredito() ? Math.min(this.creditoDisponible(), this.totalFinal()) : 0);
+  totalConCredito = computed(() => this.totalFinal() - this.creditoAplicado());
+
+  // Resumen prolijo para la pantalla de confirmación (sin precio por línea, eso ya está en el total)
+  candyResumen = computed(() => this.itemsConfirmados()
+    .map(i => `${i.cantidad} ${i.nombre}`)
+    .join(', '));
 
   constructor(private candyService: CandyService) {}
 
@@ -204,7 +216,7 @@ export class CandyCliente implements OnInit {
 
     this.itemsConfirmados.set(this.carrito());
 
-    this.comprasService.comprar(null, null, cuponCodigo, candy).subscribe({
+    this.comprasService.comprar(null, null, cuponCodigo, candy, this.usarCredito()).subscribe({
       next: resultado => {
         this.resultado.set(resultado);
         this.carrito.set([]);
@@ -278,7 +290,9 @@ export class CandyCliente implements OnInit {
     doc.setDrawColor(46, 45, 45);
     doc.roundedRect(centroX - anchoChip / 2, y, anchoChip, altoChip, altoChip / 2, altoChip / 2, 'FD');
     doc.setTextColor(250, 204, 21);
-    doc.text(resultado.codigo_qr, centroX, y + altoChip / 2 + 1.3, { align: 'center' });
+    // jsPDF no suma el letter-spacing (setCharSpace) al calcular el centro con align:'center',
+    // por eso el texto queda descentrado; se posiciona a mano con el ancho real (anchoTexto) ya calculado.
+    doc.text(resultado.codigo_qr, centroX - anchoTexto / 2, y + altoChip / 2 + 1.3);
     doc.setCharSpace(0);
 
     // Datos del pedido, en formato etiqueta: valor
@@ -288,10 +302,16 @@ export class CandyCliente implements OnInit {
     }).format(resultado.total);
 
     const filas: [string, string][] = [
-      ['Productos', this.itemsConfirmados().map(i => `${i.cantidad}x ${i.nombre}`).join(', ')],
-      ['Puntos ganados', `${resultado.puntos_ganados ?? 0} pts`],
-      ['Total pagado', totalFormateado],
+      ['Productos', this.itemsConfirmados().map(i => `${i.cantidad} ${this.titleCasePipe.transform(i.nombre)}`).join(', ')],
     ];
+    if (resultado.credito_usado) {
+      const creditoFormateado = new Intl.NumberFormat('es-AR', {
+        style: 'currency', currency: 'ARS', currencyDisplay: 'narrowSymbol', maximumFractionDigits: 0,
+      }).format(resultado.credito_usado);
+      filas.push(['Crédito aplicado', `-${creditoFormateado}`]);
+    }
+    filas.push(['Puntos ganados', `${resultado.puntos_ganados ?? 0} pts`]);
+    filas.push(['Total pagado', totalFormateado]);
 
     const inicioX = centroX - 48;
     const anchoEtiqueta = 32;
