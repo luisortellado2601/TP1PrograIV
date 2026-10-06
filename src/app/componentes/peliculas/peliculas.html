@@ -187,6 +187,7 @@
                     </div>
                     <div class="movie-actions">
                         <button class="btn-edit" (click)="cargarParaEditar(pelicula)" style="margin-right: 5px;">✏️</button>
+                        <button class="btn-notify" (click)="pedirNotificar(pelicula)" style="margin-right: 5px;" title="Notificar estreno">🔔</button>
                         <button class="btn-delete" (click)="pedirEliminar(pelicula)">🗑️</button>
                     </div>
                 </div>
@@ -205,6 +206,15 @@
             textoConfirmar="Eliminar"
             (confirmar)="confirmarEliminar()"
             (cancelar)="cancelarEliminar()" />
+    }
+
+    @if (peliculaANotificar(); as pelicula) {
+        <app-ventana-confirmacion
+            titulo="Notificar estreno"
+            [mensaje]="'¿Notificar a los suscriptos que ' + pelicula.nombre + ' ya estrenó?'"
+            textoConfirmar="Notificar"
+            (confirmar)="confirmarNotificar()"
+            (cancelar)="cancelarNotificar()" />
     }
 
 </div>

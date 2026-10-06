@@ -24,6 +24,7 @@ export class Peliculas implements OnInit {
   mostrarFormulario = signal(true);
   peliculaEditandoId = signal<string | null>(null);
   peliculaAEliminar = signal<Pelicula | null>(null);
+  peliculaANotificar = signal<Pelicula | null>(null);
 
   peliculaModel = signal<Pelicula>({
     nombre: '',
@@ -235,6 +236,25 @@ export class Peliculas implements OnInit {
 
   volverAtras(){
     this.router.navigate(['/admin'])
+  }
+
+  // Abre la ventana de confirmación con la película elegida
+  pedirNotificar(pelicula: Pelicula) {
+    this.peliculaANotificar.set(pelicula);
+  }
+
+  cancelarNotificar() {
+    this.peliculaANotificar.set(null);
+  }
+
+  confirmarNotificar() {
+    const pelicula = this.peliculaANotificar();
+    this.peliculaANotificar.set(null);
+    if (!pelicula?.id) return;
+
+    this.peliculasService.notificarEstreno(pelicula.id)
+      .then(res => alert(`Se notificó a ${res.enviados} usuario(s).`))
+      .catch(err => alert('Error al notificar: ' + err.message));
   }
 
 }

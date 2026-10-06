@@ -68,6 +68,18 @@ export class PeliculasService {
         return data;
     }
 
+    async notificarEstreno(peliculaId: string): Promise<{ enviados: number }> {
+        const { data, error } = await this.supabase.functions.invoke('notificar-estreno', {
+            body: { peliculaId },
+        });
+
+        if (error) {
+            console.error('Error al notificar el estreno:', error.message);
+            throw error;
+        }
+        return data as { enviados: number };
+    }
+
     async getPeliculaById(id: string) {
         const { data, error } = await this.supabase
             .from('peliculas')

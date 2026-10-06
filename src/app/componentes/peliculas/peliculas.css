@@ -269,6 +269,22 @@ button[type="submit"]:disabled {
   background: #153b50;
 }
 
+/* Botón notificar estreno */
+.btn-notify {
+  background: #3a2e10;
+  color: #facc15;
+  border: 1px solid #5c4a16;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.btn-notify:hover {
+  background: #50401a;
+}
+
 /* Botón cancelar */
 .btn-cancelar {
   padding: 0.8rem;

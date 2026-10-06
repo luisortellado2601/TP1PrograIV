@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PeliculasService } from '../../services/peliculas';
 import { AlertasService } from '../../services/alertas';
+import { PushService } from '../../services/push';
 import { Pelicula, GENEROS } from '../../models/pelicula';
 import { FormatoDuracionPipe } from '../../pipes/formato-duracion-pipe-pipe';
 import { EdadColorDirective } from '../../directives/edad-color-directive';
@@ -62,6 +63,7 @@ export class Cartelera implements OnInit {
   constructor(
     private peliculasService: PeliculasService,
     private alertasService: AlertasService,
+    private pushService: PushService,
     public authService: Auth,
     private router: Router) {}
 
@@ -114,6 +116,13 @@ export class Cartelera implements OnInit {
       console.error('Error al activar la alerta:', err.message);
     } finally {
       this.alertaEnviando.set(null);
+    }
+
+    // Suscripción push separada: si el navegador bloquea el permiso, la alerta ya quedó guardada igual
+    try {
+      await this.pushService.suscribir(usuarioId);
+    } catch (err) {
+      console.error('No se pudo suscribir a las notificaciones push:', err);
     }
   }
 
