@@ -187,7 +187,7 @@ export class AdminConfiguracion implements OnInit {
     this.mostrar(
       this.omitidos.length
         ? `Se guardaron los cambios válidos. No se guardó: ${this.omitidos.join(', ')} (vacío o inválido).`
-        : '✅ Cambios guardados.',
+        : 'Cambios guardados.',
       this.omitidos.length > 0,
     );
     this.cargarValores();

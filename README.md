@@ -1,6 +1,6 @@
 # Sistema de Cine · TP1 Programación IV
 
-Aplicación web (PWA) para un establecimiento de cine: cartelera, programación de funciones con asignación automática de salas, candy bar y, próximamente, compra de entradas con mapa de butacas en tiempo real, QR y fidelización.
+Aplicación web (PWA) para un establecimiento de cine: cartelera, programación de funciones con asignación automática de salas, candy bar, compra de entradas con mapa de butacas en tiempo real, PDF con QR, validación y cancelación, notificaciones push de estreno, fidelización (canje de puntos y "Mis películas") y, próximamente, reportes para el administrador.
 
 - **URL desplegada:** https://tp1programacion-3f7a9.web.app
 - **Repositorio:** https://github.com/luisortellado2601/TP1PrograIV
@@ -73,9 +73,12 @@ src/app/
 │   ├── selector-horario/   Selector de hora reutilizable (@Input / @Output)
 │   ├── ventana-confirmacion/  Ventana de confirmación centrada (@Input / @Output)
 │   ├── mapa-butacas/       Mapa de butacas en tiempo real con reserva temporal
-│   └── compra/             Compra de entradas + candy: cupón, bloqueo por edad y pago simulado
-├── services/               auth, peliculas, candy, funciones, configuracion, resenas, butacas, compras (acceso a Supabase)
-├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts, butaca.ts, compra.ts
+│   ├── compra/             Compra de entradas + candy: cupón, bloqueo por edad, pago simulado y PDF con QR
+│   ├── mis-compras/        Historial de compras del usuario, con cancelación hasta 2 horas antes
+│   ├── admin-validacion/   Panel de empleados: escaneo de QR por cámara o código manual, entrada y candy por separado
+│   └── fidelizacion/       Perfil: puntos, crédito, canje de recompensas, historial de canjes y "Mis películas"
+├── services/               auth, peliculas, candy, funciones, configuracion, resenas, butacas, compras, alertas, push, validacion, fidelizacion (acceso a Supabase)
+├── models/                 pelicula.ts, funcion.ts, configuracion.ts, resena.ts, butaca.ts, compra.ts, canje.ts
 ├── guards/                 auth-guard, admin-guard
 ├── directives/             edad-color, destacado-color
 └── pipes/                  formato-duracion, formato-puntos
@@ -91,8 +94,9 @@ src/app/
 | `/butacas/:funcionId` | Público (también compradores anónimos) | Lazy |
 | `/compra/:funcionId` | Público (también compradores anónimos) | Lazy |
 | `/candy-cliente` | Público (candy solo, sin butacas; también anónimos) | Lazy |
+| `/mis-compras`, `/fidelizacion` | Solo usuarios registrados (`authGuard`) | Lazy |
 | `/admin` | Empleado o gerente (`adminGuard`) | Lazy |
-| `/peliculas`, `/admin-candy`, `/admin-funciones`, `/admin-configuracion` | Empleado o gerente (`adminGuard`) | Lazy |
+| `/peliculas`, `/admin-candy`, `/admin-funciones`, `/admin-configuracion`, `/admin-validacion` | Empleado o gerente (`adminGuard`) | Lazy |
 
 ## Modelo de datos
 
@@ -130,6 +134,9 @@ erDiagram
 | Una butaca no se vende dos veces | Índice único parcial sobre `(funcion_id, fila, columna)` para entradas no canceladas |
 | Reserva temporal (5 min) y máximo de 6 butacas por compra | Función SQL `reservar_butaca` (con clave primaria por función, fila y columna: dos personas no pueden reservar la misma butaca) |
 | Precio, recargo VIP, cupón, edad y puntos siempre calculados por el servidor | Función SQL `comprar`: recibe solo lo elegido (butacas reservadas, candy y código de cupón) y devuelve el total y el QR ya validados |
+| Cancelación solo hasta 2 horas antes, sin devolución de dinero | Función SQL `cancelar_compra`: valida dueño y horario límite, libera la butaca, invalida el QR y otorga el crédito |
+| Canje de puntos siempre validado y descontado por el servidor | Función SQL `canjear_puntos`: valida que el usuario tenga los puntos suficientes y los descuenta. Si es candy, genera directamente una compra real a $0 con su QR; si es una entrada, guarda un voucher pendiente (no toca `credito_extra`, que es solo de cancelaciones) |
+| El voucher de entrada gratis se usa una sola vez | `comprar` (parámetro `p_usar_voucher`) busca con `for update` un voucher propio sin consumir, descuenta su valor antes de calcular los puntos de esa compra (para no generar puntos sobre algo pagado con puntos) y lo marca consumido al confirmarse |
 | Solo existen butacas válidas | Constraint `butaca_valida` (ver distribución abajo) |
 | Cada usuario solo ve lo suyo | Políticas RLS por tabla |
 | Registro de actividad | Trigger `log_cambio` sobre funciones, precios, configuración, productos y combos |
@@ -190,20 +197,20 @@ Referencias: ✅ terminado · 🔧 parcial · ⏳ pendiente.
 | Cartelera con buscador y filtro por género | ✅ | |
 | Las 3 películas más vendidas primero | ✅ | Ranking real por ventas desde `entradas_tickets` |
 | Detalle de película con funciones y reseñas | ✅ | Funciones por día y horario; reseñas con estrellas, comentario y promedio (una por usuario registrado) |
-| "Próximamente" y alertas de estreno | 🔧 | La vista y el botón ya guardan la preferencia en `alertas_estreno`; falta el disparo real del aviso (push) cuando la película se estrena |
+| "Próximamente" y alertas de estreno | 🔧 | La vista y el botón guardan la preferencia en `alertas_estreno` y suscriben al push (`PushService`); el aviso real ya se envía (edge function `notificar-estreno` con Web Push + VAPID), pero el disparo es manual: lo dispara un admin desde el panel de películas, no se envía solo en la fecha de estreno |
 | Mapa de butacas en tiempo real | ✅ | Filas A a T, J accesible, VIP en R, S y T, reserva temporal y máximo de 6 |
 | Confirmación de la compra (pago simulado) | ✅ | Formulario de tarjeta simulado (titular, número, vencimiento no vencido, CVV) con ventana de confirmación antes de pagar; la función SQL `comprar` recalcula precio, recargo VIP, cupón y puntos |
-| PDF con QR, validación por empleados y carga manual del código | 🔧 | La confirmación de compra genera un PDF descargable (`jspdf` + `qrcode`) con los datos de la función, butacas, candy y el QR; falta el panel de empleados para validarlo o cargarlo a mano |
+| PDF con QR, validación por empleados y carga manual del código | ✅ | La confirmación de compra genera un PDF descargable (`jspdf` + `qrcode`) con los datos de la función, butacas, candy y el QR; el panel `/admin-validacion` lo valida por cámara (`html5-qrcode`) o código manual, con estados de entrada y candy independientes |
 | Precios por formato, recargo VIP, puntos y cancelación | ✅ | Configurables desde el panel de administración |
 | Cupón de bienvenida (20 %) y cupón para mayores de 50 | ✅ | Se aplican automáticamente según elegibilidad (o a mano con código) en la compra de entradas y en el candy solo; la base los recalcula y consume |
 | Restricción de edad | ✅ | Bloquea el pago si el usuario logueado no cumple la edad de la película; los anónimos solo ven el aviso |
-| Puntos, canjes y crédito | 🔧 | Se calculan y suman en cada compra (`puntos_ganados`); falta la pantalla de canje y el crédito visible en el perfil |
-| Cancelación hasta 2 horas antes, con crédito | ⏳ | |
+| Puntos, canjes y crédito | ✅ | Los puntos se calculan y suman en cada compra (`puntos_ganados`); desde `/fidelizacion` (y también desde el Candy Bar) se canjean por candy o por una entrada gratis (2D). El candy sale al toque como una compra real a $0 con su propio QR; la entrada gratis genera un voucher que se aplica en la próxima compra de butacas (independiente del `credito_extra`, que sigue siendo solo el de las cancelaciones). Queda historial de canjes con su estado (pendiente/usado) |
+| Cancelación hasta 2 horas antes, con crédito | ✅ | Desde `/mis-compras`: libera la butaca, invalida el QR y acredita el crédito según el límite horario configurado |
 | Preventa por película | 🔧 | Campos cargados; falta aplicar el precio en la compra |
-| "Mis películas" | ⏳ | |
+| "Mis películas" | ✅ | Desde `/fidelizacion`: películas con entrada pagada, con póster, fecha de la función y calificación propia editable (reutiliza las reseñas de `pelicula-detalle`) |
 | Reportes, gráficos y exportación a PDF y Excel | ⏳ | |
 | Log de actividad | 🔧 | Se registra en la base; falta la pantalla para consultarlo |
-| PWA | 🔧 | Instalable y con service worker; faltan las notificaciones push |
+| PWA | 🔧 | Instalable, con service worker y notificaciones push funcionando (ver fila de "Próximamente" arriba); falta el disparo automático en la fecha de estreno |
 | Despliegue con URL funcional | ✅ | Firebase Hosting |
 
 ### Funcionalidad opcional

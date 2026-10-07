@@ -4,12 +4,12 @@
     } @else if (error()) {
         <div class="estado">
             <p>{{ error() }}</p>
-            <button class="btn-volver" type="button" (click)="volverAlMapa()">⬅ Volver al mapa de butacas</button>
+            <button class="btn-volver" type="button" (click)="volverAlMapa()">Volver al mapa de butacas</button>
         </div>
     } @else if (resultado(); as r) {
         <!-- Confirmación -->
         <section class="panel confirmacion">
-            <h1>✅ ¡Compra confirmada!</h1>
+            <h1>¡Compra confirmada!</h1>
             <p>Guardá este código: lo vas a necesitar para entrar a la sala{{ totalArticulosCandy() ? ' y retirar tu candy' : '' }}.</p>
 
             <div class="qr-preview">
@@ -44,13 +44,13 @@
             </div>
 
             <div class="acciones-confirmacion">
-                <button class="btn-confirmar" type="button" (click)="descargarPdf()">📄 Descargar PDF de la entrada</button>
+                <button class="btn-confirmar" type="button" (click)="descargarPdf()">Descargar PDF de la entrada</button>
                 <a class="btn-volver" routerLink="/cartelera">Volver a Cartelera</a>
             </div>
         </section>
     } @else if (funcion(); as f) {
         <header class="cabecera">
-            <button class="btn-volver" type="button" (click)="volverAlMapa()">⬅ Volver al mapa</button>
+            <button class="btn-volver" type="button" (click)="volverAlMapa()">Volver al mapa</button>
             <div class="cabecera-info">
                 <h1>{{ f.peliculas?.nombre }}</h1>
                 <p>{{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}</p>
@@ -59,13 +59,13 @@
 
         @if (edadMinima() && !bloqueadoPorEdad()) {
             <p class="aviso-edad">
-                ⚠️ Clasificación +{{ edadMinima() }}: no pueden ingresar los menores de {{ edadMinima() }} años sin un adulto.
+                Clasificación +{{ edadMinima() }}: no pueden ingresar los menores de {{ edadMinima() }} años sin un adulto.
             </p>
         }
 
         @if (bloqueadoPorEdad()) {
             <p class="aviso-bloqueo">
-                🚫 Esta película es +{{ edadMinima() }}. Con tu cuenta actual no podés comprar esta entrada.
+                Esta película es +{{ edadMinima() }}. Con tu cuenta actual no podés comprar esta entrada.
             </p>
         }
 
@@ -75,7 +75,7 @@
                 @if (combos().length) {
                     <section class="panel panel-combos">
                         <header class="panel-header">
-                            <h2>🔥 Combos</h2>
+                            <h2>Combos</h2>
                             <p>Entrada + pochoclos + bebida a precio fijo</p>
                         </header>
 
@@ -112,7 +112,7 @@
 
                 <section class="panel">
                     <header class="panel-header">
-                        <h2>🍿 Sumá candy (opcional)</h2>
+                        <h2>Sumá candy (opcional)</h2>
                         <p>Hasta {{ maxCandy }} artículos por compra</p>
                     </header>
 
@@ -122,7 +122,6 @@
                                 <div class="producto-info">
                                     <h3 [appDestacadoColor]="producto.es_combo_destacado">
                                         {{ producto.nombre | titlecase }}
-                                        @if (producto.es_combo_destacado) { <span>🔥</span> }
                                     </h3>
                                     <span class="precio">{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
                                 </div>
@@ -149,36 +148,40 @@
                 <!-- Pago simulado -->
                 <section class="panel">
                     <header class="panel-header">
-                        <h2>💳 Pago (simulado)</h2>
+                        <h2>Pago (simulado)</h2>
                         <p>No se hace ningún cobro real: es para la demostración.</p>
                     </header>
 
                     <form class="form-pago" [formGroup]="formPago" (ngSubmit)="pedirConfirmacion()">
-                        <label>
-                            Titular de la tarjeta
-                            <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
-                            @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
-                        </label>
-
-                        <label>
-                            Número de tarjeta
-                            <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
-                            @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
-                        </label>
-
-                        <div class="fila-doble">
+                        @if (nadaQueCobrar()) {
+                            <p class="aviso-sin-cobro">Tu entrada canjeada ya cubre el total: no hay nada para cobrar.</p>
+                        } @else {
                             <label>
-                                Vencimiento
-                                <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
-                                @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                                Titular de la tarjeta
+                                <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
+                                @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
                             </label>
 
                             <label>
-                                CVV
-                                <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
-                                @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                                Número de tarjeta
+                                <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
+                                @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
                             </label>
-                        </div>
+
+                            <div class="fila-doble">
+                                <label>
+                                    Vencimiento
+                                    <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
+                                    @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                                </label>
+
+                                <label>
+                                    CVV
+                                    <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
+                                    @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                                </label>
+                            </div>
+                        }
 
                         @if (errorPago()) {
                             <p class="error-campo">{{ errorPago() }}</p>
@@ -188,7 +191,7 @@
                             <button class="btn-cancelar-compra" type="button" [disabled]="procesando()"
                                 (click)="pedirCancelar()">Cancelar compra</button>
                             <button class="btn-confirmar" type="submit" [disabled]="procesando() || bloqueadoPorEdad()">
-                                {{ procesando() ? 'Procesando...' : 'Pagar' }}
+                                {{ procesando() ? 'Procesando...' : (nadaQueCobrar() ? 'Confirmar' : 'Pagar') }}
                             </button>
                         </div>
                     </form>
@@ -221,11 +224,25 @@
 
                 @if (cuponElegible(); as cupon) {
                     <p class="aviso-cupon">
-                        🎁 Se aplicó el cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% de descuento).
+                        Se aplicó el cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% de descuento).
                     </p>
                     <div class="linea-subtotal">
                         <span>Descuento</span>
                         <span>-{{ descuento() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                    </div>
+                }
+
+                @if (tengoVoucherEntrada()) {
+                    <label class="checkbox-credito">
+                        <input type="checkbox" [checked]="usarVoucher()" (change)="usarVoucher.set(!usarVoucher())" />
+                        Usar mi entrada gratis canjeada
+                    </label>
+                }
+
+                @if (voucherAplicado() > 0) {
+                    <div class="linea-subtotal">
+                        <span>Entrada canjeada</span>
+                        <span>-{{ voucherAplicado() | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
                     </div>
                 }
 
@@ -259,8 +276,9 @@
 @if (mostrarConfirmacion()) {
     <app-ventana-confirmacion
         titulo="Confirmar compra"
-        [mensaje]="'Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás la compra?'"
+        [mensaje]="nadaQueCobrar() ? '¿Confirmás la compra? No hay nada que pagar.' : ('Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás la compra?')"
         textoConfirmar="Pagar"
+        color="verde"
         (confirmar)="confirmarCompra()"
         (cancelar)="cancelarConfirmacion()" />
 }

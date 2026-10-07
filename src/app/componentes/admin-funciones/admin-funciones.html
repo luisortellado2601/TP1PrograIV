@@ -121,8 +121,8 @@
         @if (resultados().length) {
             <div class="resultados">
                 <p class="resumen">
-                    ✅ {{ creadas() }} creada(s)
-                    @if (fallidas()) { · ⚠️ {{ fallidas() }} sin sala disponible }
+                    {{ creadas() }} creada(s)
+                    @if (fallidas()) { · {{ fallidas() }} sin sala disponible }
                 </p>
                 @if (fallidas()) {
                     <ul>
@@ -156,7 +156,7 @@
                             </p>
                         </div>
                         <div class="movie-actions">
-                            <button class="btn-delete" type="button" (click)="pedirEliminar(f)">🗑️</button>
+                            <button class="btn-delete" type="button" (click)="pedirEliminar(f)">Eliminar</button>
                         </div>
                     </div>
                 } @empty {

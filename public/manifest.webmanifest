@@ -1,6 +1,6 @@
 {
-  "name": "TP1PrograIV",
-  "short_name": "TP1PrograIV",
+  "name": "CineMaster",
+  "short_name": "CineMaster",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

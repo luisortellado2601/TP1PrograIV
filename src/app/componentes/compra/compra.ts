@@ -10,6 +10,7 @@ import { ButacasService } from '../../services/butacas';
 import { CandyService } from '../../services/candy';
 import { ComprasService } from '../../services/compras';
 import { ConfiguracionService } from '../../services/configuracion';
+import { FidelizacionService } from '../../services/fidelizacion';
 import { DestacadoColorDirective } from '../../directives/destacado-color-directive';
 import { FormatoPuntosPipe } from '../../pipes/formato-puntos-pipe-pipe';
 import { VentanaConfirmacion } from '../ventana-confirmacion/ventana-confirmacion';
@@ -61,6 +62,7 @@ export class Compra implements OnInit {
   private configuracionService = inject(ConfiguracionService);
   private candyService = inject(CandyService);
   private comprasService = inject(ComprasService);
+  private fidelizacionService = inject(FidelizacionService);
 
   readonly maxCandy = MAX_CANDY;
 
@@ -150,11 +152,17 @@ export class Compra implements OnInit {
   total = computed(() => this.subtotal() - this.descuento());
   puntosEstimados = computed(() => this.perfil() ? Math.floor(this.total() * this.puntosPorPeso()) : 0);
 
+  // Voucher de entrada gratis (canje de puntos): cubre el valor de una entrada 2D, antes del crédito
+  tengoVoucherEntrada = signal(false);
+  usarVoucher = signal(false);
+  voucherAplicado = computed(() => this.usarVoucher() ? Math.min(this.precios()['2D'] ?? 0, this.totalEntradas()) : 0);
+  totalConVoucher = computed(() => Math.max(this.total() - this.voucherAplicado(), 0));
+
   // Crédito disponible (de cancelaciones previas): se puede combinar con el pago simulado con tarjeta
   usarCredito = signal(false);
   creditoDisponible = computed(() => Number(this.perfil()?.credito_extra ?? 0));
-  creditoAplicado = computed(() => this.usarCredito() ? Math.min(this.creditoDisponible(), this.total()) : 0);
-  totalConCredito = computed(() => this.total() - this.creditoAplicado());
+  creditoAplicado = computed(() => this.usarCredito() ? Math.min(this.creditoDisponible(), this.totalConVoucher()) : 0);
+  totalConCredito = computed(() => this.totalConVoucher() - this.creditoAplicado());
 
   // 13 o 18 si la película tiene restricción de edad
   edadMinima = computed(() => {
@@ -222,6 +230,13 @@ export class Compra implements OnInit {
     });
 
     this.candyService.getProductos().then(res => this.productos.set(res.data || []));
+
+    const usuarioId = this.perfil()?.id;
+    if (usuarioId) {
+      this.fidelizacionService.tengoVoucherEntrada(usuarioId).subscribe({
+        next: tiene => this.tengoVoucherEntrada.set(tiene),
+      });
+    }
   }
 
   private cargarMisButacas() {
@@ -303,9 +318,13 @@ export class Compra implements OnInit {
     return mensajes[campo];
   }
 
+  // Si el voucher y/o el crédito ya cubren todo, no hay nada que cobrar: no tiene sentido pedir
+  // los datos de una tarjeta que ni siquiera se envían al backend (son solo de esta pantalla).
+  nadaQueCobrar = computed(() => this.totalConCredito() <= 0);
+
   pedirConfirmacion() {
     if (this.bloqueadoPorEdad()) return;
-    if (this.formPago.invalid) {
+    if (!this.nadaQueCobrar() && this.formPago.invalid) {
       this.formPago.markAllAsTouched();
       return;
     }
@@ -324,7 +343,7 @@ export class Compra implements OnInit {
     const candy = this.carrito().map(i => ({ producto_id: i.id!, cantidad: i.cantidad }));
     const cuponCodigo = this.cuponElegible()?.codigo ?? null;
 
-    this.comprasService.comprar(this.funcionId, this.sesionId, cuponCodigo, candy, this.usarCredito()).subscribe({
+    this.comprasService.comprar(this.funcionId, this.sesionId, cuponCodigo, candy, this.usarCredito(), this.usarVoucher()).subscribe({
       next: resultado => {
         this.resultado.set(resultado);
         this.procesando.set(false);

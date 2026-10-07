@@ -203,15 +203,6 @@ button[type="submit"]:disabled {
     gap: 0.5rem;
 }
 
-.badge-destacado {
-    background-color: #ef4444;
-    color: white;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 12px;
-    font-weight: bold;
-}
-
 .product-meta {
     margin: 0;
     color: #aaaaaa;

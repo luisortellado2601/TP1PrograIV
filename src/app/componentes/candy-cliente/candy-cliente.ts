@@ -6,6 +6,7 @@ import { CandyService } from '../../services/candy';
 import { ComprasService } from '../../services/compras';
 import { ConfiguracionService } from '../../services/configuracion';
 import { Auth } from '../../services/auth';
+import { FidelizacionService } from '../../services/fidelizacion';
 import { Cupon } from '../../models/configuracion';
 import { ResultadoCompra } from '../../models/compra';
 import { FormatoPuntosPipe } from '../../pipes/formato-puntos-pipe-pipe';
@@ -23,6 +24,14 @@ export interface ProductoCandy {
 
 interface ItemCarrito extends ProductoCandy {
   cantidad: number;
+}
+
+// Lo que queda de un canje de puntos ya resuelto, para mostrar el QR y poder descargar el PDF
+interface CanjeCandyListo {
+  compraId: string;
+  codigoQr: string;
+  productoNombre: string;
+  puntosUsados: number;
 }
 
 // La tarjeta no puede estar vencida (el pattern del campo ya garantiza el formato MM/AA)
@@ -60,6 +69,7 @@ export class CandyCliente implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private configuracionService = inject(ConfiguracionService);
   private comprasService = inject(ComprasService);
+  private fidelizacionService = inject(FidelizacionService);
   private titleCasePipe = new TitleCasePipe();
 
   productos = signal<ProductoCandy[]>([]);
@@ -73,6 +83,13 @@ export class CandyCliente implements OnInit {
   itemsConfirmados = signal<ItemCarrito[]>([]);
   qrPreviewUrl = signal('');
 
+  // Canje de puntos (independiente del carrito/pago con tarjeta)
+  canjePendienteProducto = signal<ProductoCandy | null>(null);
+  canjeando = signal(false);
+  errorCanje = signal('');
+  canjeCandyListo = signal<CanjeCandyListo | null>(null);
+  qrCanjePreviewUrl = signal('');
+
   LIMITE_ITEMS = 6;
 
   formPago = this.fb.nonNullable.group({
@@ -83,6 +100,7 @@ export class CandyCliente implements OnInit {
   });
 
   private perfil = computed(() => this.auth.perfilActual());
+  puntosFidelizacion = computed(() => Number(this.perfil()?.puntos_fidelizacion ?? 0));
 
   // Computed signal que recalcula el total automáticamente cada vez que cambia el carrito
   totalPagar = computed(() => {
@@ -193,9 +211,13 @@ export class CandyCliente implements OnInit {
     return mensajes[campo];
   }
 
+  // Si el crédito ya cubre todo, no hay nada que cobrar: no tiene sentido pedir una tarjeta
+  // que ni siquiera se envía al backend (es solo de esta pantalla).
+  nadaQueCobrar = computed(() => this.totalConCredito() <= 0);
+
   pedirConfirmacion() {
     if (!this.carrito().length) return;
-    if (this.formPago.invalid) {
+    if (!this.nadaQueCobrar() && this.formPago.invalid) {
       this.formPago.markAllAsTouched();
       return;
     }
@@ -350,5 +372,139 @@ export class CandyCliente implements OnInit {
     this.itemsConfirmados.set([]);
     this.qrPreviewUrl.set('');
     this.formPago.reset();
+  }
+
+  // ----- Canje de puntos (genera una compra real a $0, con su propio QR, sin pasar por el carrito) -----
+  puedeCanjearPuntos(producto: ProductoCandy): boolean {
+    return producto.costo_en_puntos > 0 && this.puntosFidelizacion() >= producto.costo_en_puntos;
+  }
+
+  pedirCanjePuntos(producto: ProductoCandy) {
+    if (!this.puedeCanjearPuntos(producto)) return;
+    this.errorCanje.set('');
+    this.canjeCandyListo.set(null);
+    this.canjePendienteProducto.set(producto);
+  }
+
+  cerrarCanjePuntos() {
+    this.canjePendienteProducto.set(null);
+  }
+
+  confirmarCanjePuntos() {
+    const producto = this.canjePendienteProducto();
+    if (!producto?.id) return;
+
+    this.canjePendienteProducto.set(null);
+    this.canjeando.set(true);
+    this.errorCanje.set('');
+
+    this.fidelizacionService.canjear('candy', producto.id).subscribe({
+      next: resultado => {
+        this.canjeando.set(false);
+        this.auth.refrescarPerfil();
+
+        if (resultado.compra_id && resultado.codigo_qr) {
+          this.canjeCandyListo.set({
+            compraId: resultado.compra_id,
+            codigoQr: resultado.codigo_qr,
+            productoNombre: producto.nombre,
+            puntosUsados: producto.costo_en_puntos,
+          });
+          this.generarQrCanjePreview(resultado.codigo_qr);
+        }
+      },
+      error: err => {
+        this.canjeando.set(false);
+        this.errorCanje.set(err.message);
+      },
+    });
+  }
+
+  private async generarQrCanjePreview(codigoQr: string) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.qrCanjePreviewUrl.set(await this.qrToDataUrl(codigoQr));
+  }
+
+  cerrarCanjeListo() {
+    this.canjeCandyListo.set(null);
+    this.qrCanjePreviewUrl.set('');
+  }
+
+  async descargarPdfCanje() {
+    const canje = this.canjeCandyListo();
+    if (!canje || !isPlatformBrowser(this.platformId)) return;
+
+    const [{ default: jsPDF }, qrDataUrl] = await Promise.all([
+      import('jspdf'),
+      this.qrCanjePreviewUrl() || this.qrToDataUrl(canje.codigoQr),
+    ]);
+
+    const doc = new jsPDF({ unit: 'mm', format: 'a5' });
+    const anchoPagina = doc.internal.pageSize.getWidth();
+    const altoPagina = doc.internal.pageSize.getHeight();
+    const centroX = anchoPagina / 2;
+
+    doc.setFillColor(0, 0, 0);
+    doc.rect(0, 0, anchoPagina, altoPagina, 'F');
+    doc.setFillColor(26, 26, 26);
+    doc.setDrawColor(46, 45, 45);
+    doc.roundedRect(6, 6, anchoPagina - 12, altoPagina - 12, 6, 6, 'FD');
+
+    let y = 20;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Candy canjeado con puntos', centroX, y, { align: 'center', maxWidth: anchoPagina - 20 });
+
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(189, 189, 189);
+    doc.text('Mostrá este código en el candy bar para retirarlo', centroX, y, { align: 'center' });
+
+    y += 10;
+    doc.setFillColor(255, 255, 255);
+    doc.setDrawColor(222, 222, 222);
+    doc.roundedRect(centroX - 33, y - 3, 66, 66, 4, 4, 'FD');
+    doc.addImage(qrDataUrl, 'PNG', centroX - 30, y, 60, 60);
+
+    y += 72;
+    doc.setFont('courier', 'bold');
+    doc.setFontSize(12);
+    doc.setCharSpace(0.7);
+    const anchoTexto = doc.getTextWidth(canje.codigoQr) + canje.codigoQr.length * 0.7;
+    const anchoChip = Math.min(anchoTexto + 14, anchoPagina - 20);
+    const altoChip = 11;
+    doc.setFillColor(17, 17, 17);
+    doc.setDrawColor(46, 45, 45);
+    doc.roundedRect(centroX - anchoChip / 2, y, anchoChip, altoChip, altoChip / 2, altoChip / 2, 'FD');
+    doc.setTextColor(250, 204, 21);
+    doc.text(canje.codigoQr, centroX - anchoTexto / 2, y + altoChip / 2 + 1.3);
+    doc.setCharSpace(0);
+
+    y += altoChip + 10;
+    const filas: [string, string][] = [
+      ['Producto', canje.productoNombre],
+      ['Puntos usados', `${canje.puntosUsados} pts`],
+      ['Total pagado', '$0 (canjeado con puntos)'],
+    ];
+
+    const inicioX = centroX - 48;
+    const anchoEtiqueta = 32;
+    const anchoValor = 96 - anchoEtiqueta;
+    doc.setFontSize(10);
+    filas.forEach(([etiqueta, valor]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(156, 163, 175);
+      doc.text(`${etiqueta}:`, inicioX, y);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(255, 255, 255);
+      const lineas = doc.splitTextToSize(valor || '-', anchoValor);
+      doc.text(lineas, inicioX + anchoEtiqueta, y);
+      y += Math.max(lineas.length, 1) * 5.2 + 2;
+    });
+
+    doc.save(`canje-candy-${canje.compraId}.pdf`);
   }
 }

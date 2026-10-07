@@ -1,0 +1,332 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.fidelizacion-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.btn-volver {
+  padding: 0.7rem 1rem;
+  background-color: #1a1a1a;
+  color: #aaa;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-volver:hover {
+  background-color: #2a2a2a;
+  color: white;
+}
+
+.resumen-fila {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.resumen-card {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  background-color: #111;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+}
+
+.resumen-card.puntos {
+  border: 1px solid #facc15;
+  color: #facc15;
+}
+
+.resumen-card.credito {
+  border: 1px solid #16a34a;
+  color: #4ade80;
+}
+
+.resumen-card strong {
+  font-size: 1.3rem;
+}
+
+.mensaje {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+
+.mensaje.error {
+  color: #dc2626;
+}
+
+.mensaje.exito {
+  color: #16a34a;
+}
+
+.estado-carga {
+  text-align: center;
+  color: #999;
+  padding: 3rem 0;
+}
+
+.seccion {
+  margin-bottom: 2rem;
+}
+
+.seccion h2 {
+  font-size: 1.2rem;
+  margin: 0 0 1rem;
+  border-bottom: 1px solid rgb(46, 45, 45);
+  padding-bottom: 0.5rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  background-color: #111;
+  border-radius: 8px;
+  color: #999;
+  border: 2px dashed rgb(46, 45, 45);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.grid-recompensas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.recompensa-card {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.recompensa-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.costo-pts {
+  margin: 0;
+  color: #facc15;
+  font-weight: 600;
+}
+
+.btn-canjear {
+  padding: 0.6rem;
+  background-color: #0f2a17;
+  color: #4ade80;
+  border: 1px solid #14532d;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-canjear:hover:not(:disabled) {
+  background-color: #14532d;
+}
+
+.btn-canjear:disabled {
+  background-color: #222;
+  color: #666;
+  border-color: #333;
+  cursor: not-allowed;
+}
+
+.canje-listo {
+  background-color: #1a1a1a;
+  border: 1px solid #facc15;
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+}
+
+.canje-listo h3 {
+  margin: 0;
+}
+
+.qr-preview {
+  width: 160px;
+  height: 160px;
+  border-radius: 8px;
+  background-color: white;
+  padding: 8px;
+}
+
+.canje-listo .codigo {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1rem;
+  background-color: #111;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 999px;
+  color: #facc15;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background-color: #111;
+  border: 1px solid #555;
+  color: #facc15;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge.ok {
+  color: #16a34a;
+  border-color: #14532d;
+  background-color: #0f2a17;
+}
+
+.lista-canjes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.canje-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  flex-wrap: wrap;
+}
+
+.canje-nombre {
+  font-weight: 600;
+  flex: 1 1 150px;
+}
+
+.canje-dato {
+  color: #bdbdbd;
+  font-size: 0.9rem;
+}
+
+.canje-fecha {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+.grid-peliculas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.2rem;
+}
+
+.pelicula-card {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 12px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pelicula-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  overflow-wrap: break-word;
+}
+
+.fecha-vista {
+  margin: 0;
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.estrellas-elegir {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.estrellas-elegir .estrella {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1.4rem;
+  color: #444;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.estrellas-elegir .estrella.llena {
+  color: #facc15;
+}
+
+.estrellas-elegir .estrella:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.estrellas-elegir .estrella:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .resumen-fila {
+    flex-direction: column;
+  }
+}

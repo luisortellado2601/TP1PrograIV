@@ -186,9 +186,9 @@
                         </p>
                     </div>
                     <div class="movie-actions">
-                        <button class="btn-edit" (click)="cargarParaEditar(pelicula)" style="margin-right: 5px;">✏️</button>
-                        <button class="btn-notify" (click)="pedirNotificar(pelicula)" style="margin-right: 5px;" title="Notificar estreno">🔔</button>
-                        <button class="btn-delete" (click)="pedirEliminar(pelicula)">🗑️</button>
+                        <button class="btn-edit" (click)="cargarParaEditar(pelicula)" style="margin-right: 5px;">Editar</button>
+                        <button class="btn-notify" (click)="pedirNotificar(pelicula)" style="margin-right: 5px;" title="Notificar estreno">Notificar</button>
+                        <button class="btn-delete" (click)="pedirEliminar(pelicula)">Eliminar</button>
                     </div>
                 </div>
             } @empty {
@@ -213,6 +213,7 @@
             titulo="Notificar estreno"
             [mensaje]="'¿Notificar a los suscriptos que ' + pelicula.nombre + ' ya estrenó?'"
             textoConfirmar="Notificar"
+            color="verde"
             (confirmar)="confirmarNotificar()"
             (cancelar)="cancelarNotificar()" />
     }

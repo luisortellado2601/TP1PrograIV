@@ -149,10 +149,6 @@
 
                         <h3 [appDestacadoColor]="producto.es_combo_destacado">
                             {{ producto.nombre | titlecase }}
-
-                            @if (producto.es_combo_destacado) {
-                                <span class="badge-destacado">🔥</span>
-                            }
                         </h3>
 
                         <p class="product-meta">
@@ -162,7 +158,7 @@
                             |
                             {{ producto.categoria }}
                             |
-                            ⭐ {{ producto.costo_en_puntos | formatoPuntos }}
+                            {{ producto.costo_en_puntos | formatoPuntos }}
                         </p>
 
                     </div>
@@ -172,14 +168,14 @@
                             class="btn-edit"
                             (click)="cargarParaEditar(producto)"
                         >
-                            ✏️
+                            Editar
                         </button>
 
                         <button
                             class="btn-delete"
                             (click)="pedirEliminar(producto)"
                         >
-                            🗑️
+                            Eliminar
                         </button>
                     </div>
 

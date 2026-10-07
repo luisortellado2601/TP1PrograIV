@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <pattern id="stripes" width="46" height="46" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="46" height="46" fill="#111111"/>
+      <rect width="23" height="46" fill="#facc15"/>
+    </pattern>
+  </defs>
+
+  <!-- Fondo: negro, igual que el resto de la app -->
+  <rect width="512" height="512" rx="104" fill="#000000"/>
+
+  <!-- Claqueta -->
+  <g>
+    <!-- Cuerpo -->
+    <rect x="108" y="256" width="296" height="176" rx="20" fill="#f5f5f5"/>
+    <rect x="132" y="302" width="248" height="10" rx="5" fill="#cfcfcf"/>
+    <rect x="132" y="340" width="248" height="10" rx="5" fill="#cfcfcf"/>
+    <rect x="132" y="378" width="248" height="10" rx="5" fill="#cfcfcf"/>
+
+    <!-- Barra fija (base) -->
+    <rect x="108" y="214" width="296" height="52" rx="10" fill="url(#stripes)"/>
+
+    <!-- Barra móvil (abierta) -->
+    <rect x="108" y="214" width="296" height="52" rx="10" fill="url(#stripes)"
+          transform="rotate(-22 118 240)"/>
+
+    <!-- Bisagra -->
+    <circle cx="118" cy="240" r="16" fill="#facc15"/>
+  </g>
+</svg>

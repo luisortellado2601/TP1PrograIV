@@ -21,7 +21,7 @@
         .select();
 
     if (error) {
-        console.error('🛑 Error al insertar producto:', error);
+        console.error('Error al insertar producto:', error);
         throw error;
     }
     return data;
@@ -35,7 +35,7 @@
         .select();
 
     if (error) {
-        console.error('🛑 Error al actualizar producto:', error);
+        console.error('Error al actualizar producto:', error);
         throw error;
     }
     return data;

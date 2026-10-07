@@ -1,11 +1,11 @@
 <div class="nav-volver">
-    <a routerLink="/cartelera" class="btn-secundario">⬅ Volver a Cartelera</a>
+    <a routerLink="/cartelera" class="btn-secundario">Volver a Cartelera</a>
 </div>
 
 @if (resultado(); as r) {
     <div class="confirmacion-container">
         <section class="confirmacion">
-            <h1>✅ ¡Pedido confirmado!</h1>
+            <h1>¡Pedido confirmado!</h1>
             <p>Mostrá este código en el candy bar para retirarlo.</p>
 
             <div class="qr-preview">
@@ -32,7 +32,7 @@
             </div>
 
             <div class="acciones-confirmacion">
-                <button class="btn-comprar" type="button" (click)="descargarPdf()">📄 Descargar PDF del pedido</button>
+                <button class="btn-comprar" type="button" (click)="descargarPdf()">Descargar PDF del pedido</button>
                 <button class="btn-secundario-confirmacion" type="button" (click)="pedirOtroPedido()">Hacer otro pedido</button>
             </div>
         </section>
@@ -40,9 +40,41 @@
 } @else {
 
 <header class="seccion-header">
-    <h2>🍿 Candy Bar</h2>
+    <h2>Candy Bar</h2>
     <p>Agregá snacks y bebidas a tu entrada</p>
 </header>
+
+@if (canjeCandyListo(); as c) {
+    <div class="confirmacion-container">
+        <section class="confirmacion">
+            <h1>¡Canjeado! {{ c.productoNombre | titlecase }}</h1>
+            <p>Mostrá este código en el candy bar para retirarlo.</p>
+
+            <div class="qr-preview">
+                @if (qrCanjePreviewUrl()) {
+                    <img [src]="qrCanjePreviewUrl()" alt="Código QR del canje" class="qr-imagen">
+                } @else {
+                    <div class="qr-imagen qr-cargando">Generando QR...</div>
+                }
+                <p class="codigo">{{ c.codigoQr }}</p>
+            </div>
+
+            <div class="resumen-compra">
+                <p class="linea-resumen"><span>Puntos usados</span><span>{{ c.puntosUsados }} pts</span></p>
+                <p class="linea-resumen total"><span>Total</span><span>$0</span></p>
+            </div>
+
+            <div class="acciones-confirmacion">
+                <button class="btn-comprar" type="button" (click)="descargarPdfCanje()">Descargar PDF</button>
+                <button class="btn-secundario-confirmacion" type="button" (click)="cerrarCanjeListo()">Cerrar</button>
+            </div>
+        </section>
+    </div>
+}
+
+@if (errorCanje()) {
+    <p class="error-campo">{{ errorCanje() }}</p>
+}
 
 <div class="cliente-container">
 
@@ -58,15 +90,12 @@
                     <div class="producto-info">
                         <h3 [appDestacadoColor]="producto.es_combo_destacado">
                             {{ producto.nombre | titlecase }}
-                            @if (producto.es_combo_destacado) {
-                                <span class="badge-fuego">🔥</span>
-                            }
                         </h3>
                         <span class="categoria-tag">{{ producto.categoria }}</span>
-                        
+
                         <div class="precios-wrapper">
                             <span class="precio-plata">{{ producto.precio | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
-                            <span class="precio-puntos">⭐ {{ producto.costo_en_puntos | formatoPuntos }}</span>
+                            <span class="precio-puntos">{{ producto.costo_en_puntos | formatoPuntos }}</span>
                         </div>
                     </div>
 
@@ -79,6 +108,12 @@
                                 <span class="cantidad-actual">{{ obtenerCantidad(producto.id) }}</span>
                                 <button class="btn-sumar" [disabled]="totalArticulos() >= LIMITE_ITEMS" (click)="agregarAlCarrito(producto)">+</button>
                             </div>
+                        }
+                        @if (producto.costo_en_puntos > 0) {
+                            <button class="btn-canjear-puntos" [disabled]="!puedeCanjearPuntos(producto) || canjeando()"
+                                (click)="pedirCanjePuntos(producto)">
+                                Canjear con puntos
+                            </button>
                         }
                     </div>
                 </div>
@@ -96,7 +131,7 @@
             <h3>Tu Pedido</h3>
 
             @if (totalArticulos() >= LIMITE_ITEMS) {
-                <p class="alerta-limite">⚠️ Alcanzaste el límite de artículos.</p>
+                <p class="alerta-limite">Alcanzaste el límite de artículos.</p>
             }
             
             <div class="carrito-items">
@@ -110,15 +145,17 @@
                     </div>
                 } @empty {
                     <div class="carrito-vacio">
-                        <p>No agregaste nada aún 😢</p>
+                        <p>No agregaste nada aún</p>
                     </div>
                 }
             </div>
 
             <div class="carrito-footer">
+                <p class="aviso-puntos">Tenés {{ puntosFidelizacion() }} puntos acumulados</p>
+
                 @if (cuponElegible(); as cupon) {
                     <p class="aviso-cupon">
-                        🎁 Cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% off) aplicado automáticamente
+                        Cupón <strong>{{ cupon.codigo }}</strong> ({{ cupon.porcentaje }}% off) aplicado automáticamente
                     </p>
                     <div class="total-fila secundaria">
                         <span>Subtotal:</span>
@@ -151,38 +188,42 @@
 
                 @if (carrito().length) {
                     <form class="form-pago" [formGroup]="formPago" (ngSubmit)="pedirConfirmacion()">
-                        <label>
-                            Titular de la tarjeta
-                            <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
-                            @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
-                        </label>
-
-                        <label>
-                            Número de tarjeta
-                            <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
-                            @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
-                        </label>
-
-                        <div class="fila-doble">
+                        @if (nadaQueCobrar()) {
+                            <p class="aviso-sin-cobro">Tu crédito ya cubre el total: no hay nada para cobrar.</p>
+                        } @else {
                             <label>
-                                Vencimiento
-                                <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
-                                @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                                Titular de la tarjeta
+                                <input type="text" formControlName="titular" placeholder="Como figura en la tarjeta" />
+                                @if (invalidoPago('titular')) { <span class="error-campo">{{ mensajePago('titular') }}</span> }
                             </label>
 
                             <label>
-                                CVV
-                                <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
-                                @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                                Número de tarjeta
+                                <input type="text" formControlName="numero" maxlength="16" placeholder="16 números" />
+                                @if (invalidoPago('numero')) { <span class="error-campo">{{ mensajePago('numero') }}</span> }
                             </label>
-                        </div>
+
+                            <div class="fila-doble">
+                                <label>
+                                    Vencimiento
+                                    <input type="text" formControlName="vencimiento" maxlength="5" placeholder="MM/AA" />
+                                    @if (invalidoPago('vencimiento')) { <span class="error-campo">{{ mensajePago('vencimiento') }}</span> }
+                                </label>
+
+                                <label>
+                                    CVV
+                                    <input type="text" formControlName="cvv" maxlength="3" placeholder="123" />
+                                    @if (invalidoPago('cvv')) { <span class="error-campo">{{ mensajePago('cvv') }}</span> }
+                                </label>
+                            </div>
+                        }
 
                         @if (errorPago()) {
                             <p class="error-campo">{{ errorPago() }}</p>
                         }
 
                         <button class="btn-comprar" type="submit" [disabled]="procesando()">
-                            {{ procesando() ? 'Procesando...' : 'Pagar' }}
+                            {{ procesando() ? 'Procesando...' : (nadaQueCobrar() ? 'Confirmar' : 'Pagar') }}
                         </button>
                     </form>
                 }
@@ -195,10 +236,21 @@
 @if (mostrarConfirmacion()) {
     <app-ventana-confirmacion
         titulo="Confirmar pedido"
-        [mensaje]="'Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás el pedido?'"
+        [mensaje]="nadaQueCobrar() ? '¿Confirmás el pedido? No hay nada que pagar.' : ('Vas a pagar ' + (totalConCredito() | currency:'ARS':'symbol-narrow':'1.0-0') + '. ¿Confirmás el pedido?')"
         textoConfirmar="Pagar"
+        color="verde"
         (confirmar)="confirmarCompra()"
         (cancelar)="cancelarConfirmacion()" />
+}
+
+@if (canjePendienteProducto(); as p) {
+    <app-ventana-confirmacion
+        titulo="Canjear puntos"
+        [mensaje]="'Vas a canjear ' + p.costo_en_puntos + ' puntos por ' + p.nombre + '. ¿Confirmás?'"
+        textoConfirmar="Sí, canjear"
+        color="verde"
+        (confirmar)="confirmarCanjePuntos()"
+        (cancelar)="cerrarCanjePuntos()" />
 }
 
 }

@@ -1,0 +1,130 @@
+<div class="fidelizacion-container">
+    <header class="cabecera">
+        <h1>Mi perfil</h1>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver a Cartelera</button>
+    </header>
+
+    @if (error()) {
+        <p class="mensaje error">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p class="estado-carga">Cargando tu perfil...</p>
+    } @else {
+        <div class="resumen-fila">
+            <div class="resumen-card puntos">
+                <span>Puntos acumulados</span>
+                <strong>{{ puntos() }} pts</strong>
+            </div>
+            <div class="resumen-card credito">
+                <span>Crédito disponible</span>
+                <strong>{{ credito() | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong>
+            </div>
+        </div>
+
+        @if (mensaje()) {
+            <p class="mensaje exito">{{ mensaje() }}</p>
+        }
+
+        @if (canjeCandyListo(); as c) {
+            <section class="seccion">
+                <div class="canje-listo">
+                    <h3>¡Canjeado! {{ c.productoNombre | titlecase }}</h3>
+                    <p class="dato">Mostrá este código en el candy bar para retirarlo.</p>
+                    @if (qrPreviewUrl()) {
+                        <img [src]="qrPreviewUrl()" alt="Código QR" class="qr-preview" />
+                    }
+                    <p class="codigo">{{ c.codigoQr }}</p>
+                    <button type="button" class="btn-canjear" (click)="descargarPdfCanje()">Descargar PDF</button>
+                </div>
+            </section>
+        }
+
+        <section class="seccion">
+            <h2>Canjear recompensas</h2>
+            <div class="grid-recompensas">
+                <div class="recompensa-card">
+                    <h3>Entrada gratis (2D)</h3>
+                    <p class="costo-pts">{{ costoPuntosEntrada() }} pts</p>
+                    <button type="button" class="btn-canjear"
+                        [disabled]="!puedeCanjearEntrada() || canjeando()"
+                        (click)="pedirCanjeEntrada()">
+                        Canjear
+                    </button>
+                </div>
+
+                @for (producto of recompensasCandy(); track producto.id) {
+                    <div class="recompensa-card">
+                        <h3>{{ producto.nombre | titlecase }}</h3>
+                        <p class="costo-pts">{{ producto.costo_en_puntos }} pts</p>
+                        <button type="button" class="btn-canjear"
+                            [disabled]="!puedeCanjearCandy(producto) || canjeando()"
+                            (click)="pedirCanjeCandy(producto)">
+                            Canjear
+                        </button>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="seccion">
+            <h2>Historial de canjes</h2>
+            @if (!canjes().length) {
+                <div class="empty-state">
+                    <p>Todavía no canjeaste puntos.</p>
+                </div>
+            } @else {
+                <div class="lista-canjes">
+                    @for (c of canjes(); track c.id) {
+                        <div class="canje-fila">
+                            <span class="canje-nombre">{{ c.producto_nombre }}</span>
+                            <span class="canje-dato">{{ c.puntos_usados }} pts</span>
+                            @if (c.tipo === 'entrada') {
+                                <span class="badge" [class.ok]="c.consumido">{{ c.consumido ? 'Usado' : 'Pendiente' }}</span>
+                            } @else {
+                                <span class="canje-dato">{{ c.valor | currency:'ARS':'symbol-narrow':'1.0-0' }}</span>
+                            }
+                            <span class="canje-fecha">{{ formatoFecha(c.creada_en) }}</span>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+
+        <section class="seccion">
+            <h2>Mis películas</h2>
+            @if (!peliculas().length) {
+                <div class="empty-state">
+                    <p>Todavía no viste ninguna película.</p>
+                </div>
+            } @else {
+                <div class="grid-peliculas">
+                    @for (p of peliculas(); track p.pelicula_id) {
+                        <div class="pelicula-card">
+                            <img [src]="p.imagen" [alt]="p.nombre" class="poster" />
+                            <h3>{{ p.nombre | titlecase }}</h3>
+                            <p class="fecha-vista">{{ formatoFecha(p.fecha_hora_inicio) }}</p>
+                            <div class="estrellas-elegir">
+                                @for (n of rango; track n) {
+                                    <button type="button" class="estrella" [class.llena]="n <= miCalificacion(p.pelicula_id)"
+                                        [disabled]="guardandoCalificacion() === p.pelicula_id"
+                                        (click)="calificar(p, n)">★</button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </section>
+    }
+</div>
+
+@if (canjePendiente(); as c) {
+    <app-ventana-confirmacion
+        titulo="Canjear puntos"
+        [mensaje]="'Vas a canjear ' + c.costoPuntos + ' puntos por: ' + c.nombre + '. Se te va a acreditar como crédito. ¿Confirmás?'"
+        textoConfirmar="Sí, canjear"
+        color="verde"
+        (confirmar)="confirmarCanje()"
+        (cancelar)="cerrarCanje()" />
+}

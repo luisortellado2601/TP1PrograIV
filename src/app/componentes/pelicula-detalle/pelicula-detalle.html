@@ -1,6 +1,6 @@
 <div class="detalle-container">
     <div class="nav-volver">
-        <a routerLink="/cartelera" class="btn-secundario">⬅ Volver a Cartelera</a>
+        <a routerLink="/cartelera" class="btn-secundario">Volver a Cartelera</a>
     </div>
 
     @if (cargando()) {
@@ -38,7 +38,7 @@
 
                 @if (peli.restriccion_edad === '+13' || peli.restriccion_edad === '+18') {
                     <p class="aviso-edad">
-                        ⚠️ Clasificación {{ peli.restriccion_edad }}: no pueden comprar entradas los menores de
+                        Clasificación {{ peli.restriccion_edad }}: no pueden comprar entradas los menores de
                         {{ peli.restriccion_edad === '+18' ? 18 : 13 }} años. Las entradas indican que debe asistir un adulto.
                     </p>
                 }

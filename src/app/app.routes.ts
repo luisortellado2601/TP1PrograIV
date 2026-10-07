@@ -42,6 +42,11 @@ export const routes: Routes = [
         canMatch: [authGuard]
     },
     {
+        path: 'fidelizacion',
+        loadComponent: () => import('./componentes/fidelizacion/fidelizacion').then(m => m.Fidelizacion),
+        canMatch: [authGuard]
+    },
+    {
         path: 'admin',
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin),
         canMatch: [adminGuard]

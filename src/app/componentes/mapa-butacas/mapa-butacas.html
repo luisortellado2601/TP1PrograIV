@@ -8,7 +8,7 @@
         </div>
     } @else if (funcion(); as f) {
         <header class="cabecera">
-            <button class="btn-volver" type="button" (click)="volver()">⬅ Volver</button>
+            <button class="btn-volver" type="button" (click)="volver()">Volver</button>
             <div class="cabecera-info">
                 <h1>{{ f.peliculas?.nombre }}</h1>
                 <p>{{ formatoFuncion(f.fecha_hora_inicio) }} hs · {{ f.salas?.nombre }} · {{ f.formato }} {{ f.idioma }}</p>
@@ -17,7 +17,7 @@
 
         @if (edadMinima()) {
             <p class="aviso-edad">
-                ⚠️ Clasificación +{{ edadMinima() }}: no pueden comprar entradas los menores de {{ edadMinima() }} años.
+                Clasificación +{{ edadMinima() }}: no pueden comprar entradas los menores de {{ edadMinima() }} años.
                 Las entradas indican que debe asistir un adulto.
             </p>
         }
@@ -86,7 +86,7 @@
 
                 @if (tieneVip()) {
                     <p class="aviso-vip">
-                        ⭐ Tu selección incluye butacas VIP, con un recargo de
+                        Tu selección incluye butacas VIP, con un recargo de
                         {{ recargoVip() | currency:'ARS':'symbol-narrow':'1.0-0' }} cada una.
                     </p>
                 }

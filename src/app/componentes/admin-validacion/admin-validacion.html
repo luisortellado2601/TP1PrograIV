@@ -10,7 +10,7 @@
             <div id="lector-qr" [hidden]="!escaneando()"></div>
 
             @if (!escaneando()) {
-                <button type="button" class="btn-escanear" (click)="iniciarEscaneo()">📷 Escanear QR con la cámara</button>
+                <button type="button" class="btn-escanear" (click)="iniciarEscaneo()">Escanear QR con la cámara</button>
             } @else {
                 <button type="button" class="btn-cancelar" (click)="detenerEscaneo()">Cancelar escaneo</button>
             }

@@ -36,7 +36,7 @@ export class PeliculasService {
             .select();
 
         if (error) {
-            console.error('🛑 Error de Supabase al insertar:', error);
+            console.error('Error de Supabase al insertar:', error);
             throw error; 
         }
         return data;
@@ -49,7 +49,7 @@ export class PeliculasService {
                 .eq('id', pelicula.id)
                 .select();
             if (error) {
-                console.error('🛑 Error de Supabase al actualizar:', error);
+                console.error('Error de Supabase al actualizar:', error);
                 throw error;
             }
             return data;

@@ -26,6 +26,20 @@ export class ResenasService {
         );
     }
 
+    // Todas las reseñas propias, para cruzar la calificación por película en "Mis películas"
+    misResenas(usuarioId: string): Observable<Resena[]> {
+        return from(this.supabase
+            .from('resenas')
+            .select('id, usuario_id, pelicula_id, estrellas, comentario_corto, nombre_autor, creada_en')
+            .eq('usuario_id', usuarioId)
+        ).pipe(
+            map(({ data, error }) => {
+                if (error) throw new Error(error.message);
+                return (data ?? []) as Resena[];
+            })
+        );
+    }
+
     guardarResena(resena: NuevaResena): Observable<void> {
         return from(this.supabase
             .from('resenas')
