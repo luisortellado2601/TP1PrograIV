@@ -34,6 +34,14 @@ export class Cartelera implements OnInit {
   // Con fecha de estreno futura: sección aparte, sin funciones para comprar todavía
   proximamente = computed(() => this.listaPeliculas().filter(p => this.esProximamente(p)));
 
+  // Solo se ofrecen como filtro los géneros que de verdad tienen alguna película en cartelera
+  // (si nadie cargó una de Crimen, por ejemplo, ese botón ni aparece)
+  generosDisponibles = computed(() => {
+    const presentes = new Set<string>();
+    this.enCartelera().forEach(p => p.generos?.forEach(g => presentes.add(g)));
+    return this.listaGeneros.filter(g => presentes.has(g));
+  });
+
   peliculasFiltradas = computed(() => {
     const genero = this.generoSeleccionado();
     const busqueda = this.terminoBusqueda().toLowerCase();

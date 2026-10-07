@@ -139,6 +139,10 @@
             <p>Productos disponibles en el Candy Bar</p>
         </header>
 
+        @if (error()) {
+            <p class="mensaje-error">{{ error() }}</p>
+        }
+
         <div class="products-grid">
 
             @for (producto of productos(); track producto.id) {

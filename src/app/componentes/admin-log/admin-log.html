@@ -1,0 +1,39 @@
+<div class="log-container">
+    <header class="cabecera">
+        <h1>Log de actividad</h1>
+        <button class="btn-volver" type="button" (click)="volverAtras()">Volver al panel</button>
+    </header>
+
+    @if (error()) {
+        <p class="mensaje error">{{ error() }}</p>
+    }
+
+    @if (cargando()) {
+        <p class="estado-carga">Cargando el log...</p>
+    } @else if (!logs().length) {
+        <div class="empty-state">
+            <p>Todavía no hay movimientos registrados.</p>
+        </div>
+    } @else {
+        <div class="lista-logs">
+            @for (log of logs(); track log.id) {
+                <div class="log-card">
+                    <div class="log-header" (click)="toggleDetalle(log.id)">
+                        <div class="log-info">
+                            <span class="accion">{{ tituloLog(log) }}</span>
+                            <span class="dato">{{ nombreEmpleado(log) }} · {{ formatoFecha(log.fecha_hora) }}</span>
+                        </div>
+                        <span class="chevron" [class.abierto]="estaExpandido(log.id)">▾</span>
+                    </div>
+                    @if (estaExpandido(log.id)) {
+                        <div class="detalle">
+                            @for (campo of camposDetalle(log); track campo.etiqueta) {
+                                <p class="campo"><span class="etiqueta">{{ campo.etiqueta }}:</span> {{ campo.valor }}</p>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

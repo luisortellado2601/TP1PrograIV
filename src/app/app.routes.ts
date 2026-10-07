@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './guards/admin-guard';
 import { authGuard } from './guards/auth-guard';
+import { gerenteGuard } from './guards/gerente-guard';
 
 export const routes: Routes = [
     {
@@ -75,6 +76,15 @@ export const routes: Routes = [
         path: 'admin-validacion',
         loadComponent: () => import('./componentes/admin-validacion/admin-validacion').then(m => m.AdminValidacion),
         canMatch: [adminGuard]
+    },
+    {
+        path: 'admin-log',
+        loadComponent: () => import('./componentes/admin-log/admin-log').then(m => m.AdminLog),
+        canMatch: [gerenteGuard]
+    },
+    {
+        path: '**',
+        redirectTo: 'cartelera'
     },
 
 ]

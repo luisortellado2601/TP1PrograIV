@@ -101,7 +101,15 @@ export class Compra implements OnInit {
 
   private perfil = computed(() => this.auth.perfilActual());
 
+  // Si la película está en preventa (hoy <= fecha_fin_preventa), ese precio fijo reemplaza al de la tabla por formato.
+  // Comparación en texto 'YYYY-MM-DD' para no arrastrar corrimientos de huso horario con new Date().
   precioBase = computed(() => {
+    const pelicula = this.funcion()?.peliculas;
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (pelicula?.precio_preventa && pelicula.fecha_fin_preventa && hoy <= pelicula.fecha_fin_preventa.slice(0, 10)) {
+      return Number(pelicula.precio_preventa);
+    }
+
     const formato = this.funcion()?.formato;
     return formato ? (this.precios()[formato] ?? 0) : 0;
   });

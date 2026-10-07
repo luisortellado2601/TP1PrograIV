@@ -49,6 +49,8 @@ export class Candy implements OnInit {
 
     productoAEliminar = signal<ProductoCandy | null>(null);
 
+    error = signal('');
+
     productoModel = signal<ProductoCandy>({
         nombre: '',
         categoria: '',
@@ -195,6 +197,7 @@ export class Candy implements OnInit {
     }
 
     pedirEliminar(producto: ProductoCandy) {
+        this.error.set('');
         this.productoAEliminar.set(producto);
     }
 
@@ -212,6 +215,8 @@ export class Candy implements OnInit {
 
         this.candyService.deleteProducto(id).then(() => {
             this.cargarProductos();
+        }).catch((err: Error) => {
+            this.error.set(err.message);
         });
     }
 }

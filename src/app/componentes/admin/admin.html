@@ -35,10 +35,18 @@
             <a routerLink="/admin-validacion" class="btn-primary">Ir a Validación</a>
         </div>
 
-        <div class="module-card">
-            <h3>Reportes</h3>
-            <p>Facturación, estadísticas, entradas vendidas y exportación a PDF.</p>
-            <button class="btn-secondary" disabled>Próximamente</button>
-        </div>
+        @if (esGerente()) {
+            <div class="module-card">
+                <h3>Log de actividad</h3>
+                <p>Quién creó una función, modificó un precio o validó un QR, con fecha y hora.</p>
+                <a routerLink="/admin-log" class="btn-primary">Ir al Log</a>
+            </div>
+
+            <div class="module-card">
+                <h3>Reportes</h3>
+                <p>Facturación, estadísticas, entradas vendidas y exportación a PDF.</p>
+                <button class="btn-secondary" disabled>Próximamente</button>
+            </div>
+        }
     </div>
 </div>

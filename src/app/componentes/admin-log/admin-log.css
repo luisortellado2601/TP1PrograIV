@@ -1,0 +1,145 @@
+:host {
+  display: block;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: black;
+  min-height: 100vh;
+  color: white;
+}
+
+.log-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cabecera h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.btn-volver {
+  padding: 0.7rem 1rem;
+  background-color: #1a1a1a;
+  color: #aaa;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.btn-volver:hover {
+  background-color: #2a2a2a;
+  color: white;
+}
+
+.mensaje.error {
+  color: #dc2626;
+  margin: 0 0 1rem;
+}
+
+.estado-carga {
+  text-align: center;
+  color: #999;
+  padding: 3rem 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #111;
+  border-radius: 8px;
+  color: #999;
+  border: 2px dashed rgb(46, 45, 45);
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.lista-logs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.log-card {
+  background-color: #1a1a1a;
+  border: 1px solid rgb(46, 45, 45);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+}
+
+.log-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.accion {
+  font-weight: 600;
+  color: #facc15;
+  text-transform: capitalize;
+}
+
+.dato {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.chevron {
+  color: #666;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chevron.abierto {
+  transform: rotate(180deg);
+}
+
+.detalle {
+  padding: 0.6rem 1.2rem 1rem;
+  background-color: #111;
+  border-top: 1px solid rgb(46, 45, 45);
+}
+
+.campo {
+  margin: 0.4rem 0;
+  color: #e0e0e0;
+  font-size: 0.85rem;
+}
+
+.campo .etiqueta {
+  color: #999;
+  margin-right: 0.3rem;
+}
+
+@media (max-width: 480px) {
+  :host {
+    padding: 1rem;
+  }
+
+  .cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

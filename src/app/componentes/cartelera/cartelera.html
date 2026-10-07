@@ -77,7 +77,7 @@
                 Todos
             </button>
             
-            @for (genero of listaGeneros; track genero) {
+            @for (genero of generosDisponibles(); track genero) {
                 <button 
                     [class.activo]="generoSeleccionado() === genero"
                     (click)="cambiarFiltro(genero)">

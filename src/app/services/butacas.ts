@@ -15,7 +15,7 @@ export class ButacasService {
     getFuncion(funcionId: string): Observable<FuncionMapa> {
         return from(this.supabase
             .from('funciones')
-            .select('id, fecha_hora_inicio, formato, idioma, peliculas(id, nombre, restriccion_edad), salas(nombre)')
+            .select('id, fecha_hora_inicio, formato, idioma, peliculas(id, nombre, restriccion_edad, precio_preventa, fecha_fin_preventa), salas(nombre)')
             .eq('id', funcionId)
             .single()
         ).pipe(

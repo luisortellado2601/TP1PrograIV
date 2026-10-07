@@ -413,6 +413,14 @@ export class CandyCliente implements OnInit {
     });
   }
 
+  // `qrcode` es un módulo CommonJS puro (exports.toDataURL = ...); según cómo lo trate el bundler,
+  // el import dinámico a veces devuelve el objeto directo y a veces lo envuelve en `.default`.
+  private async qrToDataUrl(texto: string): Promise<string> {
+    const mod: any = await import('qrcode');
+    const QRCode = mod.toDataURL ? mod : mod.default;
+    return QRCode.toDataURL(texto, { width: 300, margin: 1 });
+  }
+
   private async generarQrCanjePreview(codigoQr: string) {
     if (!isPlatformBrowser(this.platformId)) return;
     this.qrCanjePreviewUrl.set(await this.qrToDataUrl(codigoQr));

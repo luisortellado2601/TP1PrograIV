@@ -49,7 +49,11 @@
 
     if (error) {
         console.error('Error al eliminar producto:', error.message);
-        throw error;
+        // 23503 = el producto ya se vendió alguna vez (compra_items lo referencia)
+        if (error.code === '23503') {
+            throw new Error('No se puede eliminar: el producto ya se vendió en alguna compra.');
+        }
+        throw new Error(error.message);
     }
     return data;
     }

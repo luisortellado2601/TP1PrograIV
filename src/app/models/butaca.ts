@@ -17,7 +17,10 @@ export interface FuncionMapa {
     fecha_hora_inicio: string;
     formato: string | null;
     idioma: string | null;
-    peliculas: { id: string; nombre: string; restriccion_edad: string | null } | null;
+    peliculas: {
+        id: string; nombre: string; restriccion_edad: string | null;
+        precio_preventa: number | null; fecha_fin_preventa: string | null;
+    } | null;
     salas: { nombre: string } | null;
 }
 

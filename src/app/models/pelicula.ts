@@ -18,4 +18,7 @@ export const RESTRICCIONES_EDAD = ['ATP', '+13', '+18'];
 export const IDIOMAS = ['Castellano', 'Subtitulada'];
 export const FORMATOS = ['2D', '3D', '4D', '5D'];
 
-export const GENEROS = ['Acción', 'Comedia', 'Drama', 'Terror', 'Ciencia Ficción', 'Animación', 'Suspenso', 'Romance'];
+export const GENEROS = [
+    'Acción', 'Aventura', 'Animación', 'Bélico', 'Ciencia Ficción', 'Comedia', 'Crimen',
+    'Documental', 'Drama', 'Familiar', 'Fantasía', 'Misterio', 'Musical', 'Romance', 'Suspenso', 'Terror',
+];
