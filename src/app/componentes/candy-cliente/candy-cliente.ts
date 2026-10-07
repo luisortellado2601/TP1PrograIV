@@ -253,17 +253,10 @@ export class CandyCliente implements OnInit {
     });
   }
 
-  // `qrcode` es un módulo CommonJS puro (exports.toDataURL = ...); según cómo lo trate el bundler,
-  // el import dinámico a veces devuelve el objeto directo y a veces lo envuelve en `.default`.
-  private async qrToDataUrl(texto: string): Promise<string> {
-    const mod: any = await import('qrcode');
-    const QRCode = mod.toDataURL ? mod : mod.default;
-    return QRCode.toDataURL(texto, { width: 300, margin: 1 });
-  }
-
   private async generarQrPreview(codigoQr: string) {
     if (!isPlatformBrowser(this.platformId)) return;
-    this.qrPreviewUrl.set(await this.qrToDataUrl(codigoQr));
+    const QRCode = await import('qrcode');
+    this.qrPreviewUrl.set(await QRCode.toDataURL(codigoQr, { width: 300, margin: 1 }));
   }
 
   async descargarPdf() {
@@ -272,7 +265,7 @@ export class CandyCliente implements OnInit {
 
     const [{ default: jsPDF }, qrDataUrl] = await Promise.all([
       import('jspdf'),
-      this.qrPreviewUrl() || this.qrToDataUrl(resultado.codigo_qr),
+      this.qrPreviewUrl() || import('qrcode').then(m => m.toDataURL(resultado.codigo_qr, { width: 300, margin: 1 })),
     ]);
 
     const doc = new jsPDF({ unit: 'mm', format: 'a5' });
