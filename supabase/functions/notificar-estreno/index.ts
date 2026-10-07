@@ -125,6 +125,10 @@ Deno.serve(async (req) => {
       await supabaseAdmin.from("push_subscriptions").delete().in("id", vencidas);
     }
 
+    // El aviso ya se mandó (o se intentó): se libera el pedido de alerta para que el botón
+    // "Avisarme del estreno" vuelva a aparecer. Si alguien lo quiere de nuevo, lo vuelve a activar.
+    await supabaseAdmin.from("alertas_estreno").delete().eq("pelicula_id", peliculaId);
+
     return new Response(JSON.stringify({ enviados }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
