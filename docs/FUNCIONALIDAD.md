@@ -2,8 +2,6 @@
 
 Esta es una guía de todo lo que la aplicación permite hacer, explicada en lenguaje simple, sin términos técnicos. Pensala como el manual de uso que le mostrarías a alguien que nunca programó y quiere entender para qué sirve el sistema.
 
-Para el detalle técnico de cómo está construido ver [ARQUITECTURA.md](ARQUITECTURA.md); para la lista de requerimientos del cliente ver [REQUERIMIENTOS.md](REQUERIMIENTOS.md).
-
 ## ¿Qué es?
 
 Es el sistema completo de un cine: la página donde cualquier persona entra a ver qué películas están dando, elige sus butacas, compra la entrada y el candy, y después el cine usa el mismo sistema para controlar el ingreso a la sala y administrar todo el negocio (películas, horarios, precios, empleados).
